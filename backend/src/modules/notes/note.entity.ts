@@ -12,6 +12,6 @@ export class Note {
     @Column({ type: "text"})
     text: string;
 
-    @ManyToOne(() => User, user => user.notes, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, user => user.notes, { onDelete: 'CASCADE', eager: true })
     user: User;
 }

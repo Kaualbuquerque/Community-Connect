@@ -2,8 +2,8 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Service } from "../services/service.entity";
 import { Favorite } from "../favorites/favorite.entity";
 import { Note } from "../notes/note.entity";
-import { ServiceHistory } from "../history/service-history.entity";
-import { ConversationParticipant } from "../chat/conversation-participant.entity";
+import { History } from "../history/history.entity";
+import { ConversationParticipant } from "../conversations/conversation-participant.entity";
 import { Message } from "../messages/message.entity";
 
 @Entity("users")
@@ -41,8 +41,8 @@ export class User {
     @OneToMany(() => Note, note => note.user)
     notes: Note[];
 
-    @OneToMany(() => ServiceHistory, history => history.consumer)
-    history: ServiceHistory[];
+    @OneToMany(() => History, history => history.consumer)
+    history: History[];
 
     @OneToMany(() => Message, msg => msg.sender)
     messages: Message[];

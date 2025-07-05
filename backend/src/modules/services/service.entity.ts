@@ -1,7 +1,7 @@
 import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../users/user.entity";
 import { Favorite } from "../favorites/favorite.entity";
-import { ServiceHistory } from "../history/service-history.entity";
+import { History } from "../history/history.entity";
 
 @Entity("services")
 @Check(`"price" >= 1`)
@@ -33,12 +33,12 @@ export class Service {
     @Column({ type: "text", array: true, nullable: true })
     images: Text[];
 
-    @ManyToOne(() => User, user => user.services, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, user => user.services, { onDelete: 'CASCADE', eager: true })
     provider: User;
 
     @OneToMany(() => Favorite, favorite => favorite.service)
     favorites: Favorite[];
 
-    @OneToMany(() => ServiceHistory, history => history.service)
-    history: ServiceHistory[];
+    @OneToMany(() => History, history => history.service)
+    history: History[];
 }

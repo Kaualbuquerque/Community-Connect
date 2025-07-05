@@ -1,0 +1,28 @@
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+
+export class CreateServiceDto {
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsString()
+    description: string;
+
+    @IsNumber({ maxDecimalPlaces: 2 })
+    @IsPositive()
+    price: number;
+
+    @IsOptional()
+    @IsString()
+    location?: string;
+
+    @IsNotEmpty()
+    @IsString()
+    category: string;
+
+    @IsArray()
+    @IsOptional()
+    @IsString({ each: true })
+    images?: string[];
+}
