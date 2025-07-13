@@ -17,7 +17,11 @@ html.light {
 
     /* Card */
     --card-description-color: #94ADC7;
-
+    --feature-card-color: #F7FAFC;
+    --feature-card-color-hover: #1A2633;
+    --feature-card-border: #0071FF;
+    --feature-card-border-hover: #334D66;
+    --feature-card-text-hover: #ffffff;
 
     /* Buttons */
     --button-color-primary: #1A80E5;
@@ -31,6 +35,9 @@ html.light {
 
     /* Border */
     --border-background-color: #334D66;
+
+    /* Box-shadow */
+    --box-shadow: #00000027;
 }
 
 /* Tema escuro */
@@ -44,6 +51,11 @@ html.dark {
 
     /* Card */
     --card-description-color: #94ADC7;
+    --feature-card-color: #1A2633;
+    --feature-card-color-hover: #F7FAFC;
+    --feature-card-border: #334D66;
+    --feature-card-border-hover: #0071FF;
+    --feature-card-text-hover: #0D141C;
 
     --button-color-primary: #1A80E5;
     --button-color-secondary: #243647;

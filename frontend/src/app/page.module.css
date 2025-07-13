@@ -6,6 +6,7 @@
     justify-content: center;
     flex-direction: column;
     gap: 5rem;
+    padding-bottom: 5rem;
 }
 
 .home_page_banner {
@@ -56,11 +57,47 @@
 }
 
 .cards {
-    width: 80%;
+    width: 90%;
     align-self: center;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
 
     gap: 1rem;
+}
+
+.feature_cards {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.feature_cards .cards{
+    grid-template-rows: 1fr;
+}
+
+.feature_cards>h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.get_started{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.get_started h2{
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
+.get_started button{
+    width: 125px;
+    height: 50px;
+    border-radius: 15px;
+    font-size: 1rem;
 }

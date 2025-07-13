@@ -1,6 +1,9 @@
+import FeatureCard from "@/components/FeatureCard/FeatureCard";
 import styles from "./page.module.css"
 import HomeCard from "@/components/serviceCard/ServiceCard";
-import { serviceCardsData } from "@/components/serviceCard/ServiceCardsData";
+import { FeatureCardsData } from "@/components/FeatureCard/FeatureCardsData";
+import { serviceCardData } from "@/components/serviceCard/serviceCardData";
+import Button from "@/components/button/Button";
 
 export default function Home() {
   return (
@@ -17,10 +20,26 @@ export default function Home() {
       <section className={styles.services_cards}>
         <h2>What kind of service are you looking for?</h2>
         <div className={styles.cards}>
-          {serviceCardsData.map((data, index) => (
+          {serviceCardData.map((data, index) => (
             <HomeCard key={index} image={data.image} title={data.title} description={data.description} />
           ))}
         </div>
+      </section>
+
+      <section className={styles.feature_cards}>
+        <h2>Why use Community Connect</h2>
+        <div className={styles.cards}>
+          {FeatureCardsData.map((data, index) => (
+            <FeatureCard key={index} iconLight={data.iconLight} iconDark={data.iconDark} text={data.text} />
+          ))
+          }
+        </div>
+      </section>
+
+      <section className={styles.get_started}>
+          <h2>Ready to find or offer services in your community?</h2>
+          <p>Sign up now and be part of the network that connects local people and talent.</p>
+          <Button type="primary" text="Get Started"/>
       </section>
     </div>
   );

@@ -2,8 +2,8 @@
 
 import styles from "./Header.module.scss"
 
-import logo from "@/icons/community_connect_logo_light.png"
-import logo_dark from "@/icons/community_connect_logo_dark.png"
+import logo from "@/icons/logo/community_connect_logo_light.png"
+import logo_dark from "@/icons/logo/community_connect_logo_dark.png"
 
 import Button from "../button/Button";
 import Image from "next/image";
@@ -17,9 +17,9 @@ export default function Header() {
         <div className={styles.header}>
             <div className={styles.title}>
                 {theme === "light" ?
-                    <Image src={logo} alt="communit connect logo" />
-                    :
                     <Image src={logo_dark} alt="Logo modo claro" />
+                    :
+                    <Image src={logo} alt="communit connect logo" />
                 }
                 <h1> Communit Connect </h1>
             </div>

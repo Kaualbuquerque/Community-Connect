@@ -1,8 +1,8 @@
 "use client"
 import { useTheme } from '@/context/ThemeContext';
 import styles from './ThemeButton.module.scss';
-import sun from '@/icons/sun.png';
-import moon from '@/icons/moon.png';
+import sun from '@/icons/theme/sun.png';
+import moon from '@/icons/theme/moon.png';
 import Image from 'next/image';
 
 export default function ThemeButton() {
