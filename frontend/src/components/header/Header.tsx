@@ -1,0 +1,33 @@
+"use client"
+
+import styles from "./Header.module.scss"
+
+import logo from "@/icons/community_connect_logo_light.png"
+import logo_dark from "@/icons/community_connect_logo_dark.png"
+
+import Button from "../button/Button";
+import Image from "next/image";
+import ThemeButton from "../themeButton/ThemeButton";
+import { useTheme } from "@/context/ThemeContext";
+
+export default function Header() {
+    const { theme } = useTheme();
+
+    return (
+        <div className={styles.header}>
+            <div className={styles.title}>
+                {theme === "light" ?
+                    <Image src={logo} alt="communit connect logo" />
+                    :
+                    <Image src={logo_dark} alt="Logo modo claro" />
+                }
+                <h1> Communit Connect </h1>
+            </div>
+            <div className={styles.buttons}>
+                <Button text="Log In" type="primary" />
+                <Button text="Sign Up" type="secondary" />
+                <ThemeButton />
+            </div>
+        </div>
+    )
+}

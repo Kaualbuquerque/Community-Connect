@@ -1,0 +1,57 @@
+// styles/variables.scss
+
+:root {
+    --font-family: 'Inter', sans-serif;
+}
+
+/* Tema claro */
+html.light {
+    /* Background */
+    --background-color: #ffffff;
+
+    /* Text */
+    --text-color: #0D141C;
+
+    /* Banner text color */
+    --banner-text-color: #ffffff;
+
+    /* Card */
+    --card-description-color: #94ADC7;
+
+
+    /* Buttons */
+    --button-color-primary: #1A80E5;
+    --button-color-secondary: #E8EDF2;
+    --button-color-secondary-dark: #243647;
+
+    /* Hover */
+    --button-color-primary-hover: #145ea8;
+    --button-color-secondary-hover: #adb1b4;
+    --button-color-secondary-dark-hover: #39556e;
+
+    /* Border */
+    --border-background-color: #334D66;
+}
+
+/* Tema escuro */
+html.dark {
+    --background-color: #121A21;
+
+    --text-color: #ffffff;
+
+    /* Banner text color */
+    --banner-text-color: #ffffff;
+
+    /* Card */
+    --card-description-color: #94ADC7;
+
+    --button-color-primary: #1A80E5;
+    --button-color-secondary: #243647;
+    --button-color-secondary-dark: #39556e;
+
+    --button-color-primary-hover: #145ea8;
+    --button-color-secondary-hover: #39556e;
+    --button-color-secondary-dark-hover: #2e4a5c;
+
+    --border-background-color: #334D66;
+}

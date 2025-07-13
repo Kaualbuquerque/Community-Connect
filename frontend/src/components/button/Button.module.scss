@@ -1,0 +1,29 @@
+@import "../../styles/variables.scss";
+
+.button {
+    width: 75px;
+    max-width: 75px;
+    height: 35px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.primary {
+    background-color: var(--button-color-primary);
+    color: #fff;
+
+    &:hover {
+        background-color: var(--button-color-primary-hover);
+    }
+}
+
+.secondary {
+    background-color: var(--button-color-secondary);
+    color: var(--text-color);
+
+    &:hover {
+        background-color: var(--button-color-secondary-hover);
+    }
+}

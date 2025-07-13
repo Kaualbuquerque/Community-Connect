@@ -58,9 +58,9 @@ O Catálogo Comunitário de Serviços Locais é uma aplicação Full‑Stack vol
 
 **5. Arquitetura e Tecnologias Sugeridas**
 
-* **Front‑end**: Next.js + Tailwind CSS.
+* **Front‑end**: Next.js.
 * **Back‑end**: NestJS.
-* **Banco de Dados**: PostgreSQL ou MongoDB.
+* **Banco de Dados**: PostgreSQL.
 * **Autenticação**: JWT.
 * **Chat**: Socket.io (ou alternativa).
 * **Deploy**: Vercel (Front) + Railway (Back).
