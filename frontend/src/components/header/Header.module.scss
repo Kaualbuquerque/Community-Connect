@@ -1,9 +1,11 @@
+@import url("../../styles/variables.scss");
+
 .header{
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: .5rem 1rem;
-    border-bottom: 1px solid #E5E8EB;
+    border-bottom: 1px solid var(--border-bottom);
 }
 
 .title{

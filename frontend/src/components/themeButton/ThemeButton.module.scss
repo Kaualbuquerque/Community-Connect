@@ -9,18 +9,10 @@
     align-items: center;
     justify-content: center;
     user-select: none;
-    border: 2px solid var(--border-background-color);
+    border: 2px solid $border-background-color;
 }
 
 .button img {
     width: 50%;
     height: 50%;
-}
-
-.primary {
-    background-color: var(--button-color-secondary-dark); // usado no tema CLARO
-}
-
-.secundary {
-    background-color: var(--button-color-secondary); // usado no tema ESCURO
 }

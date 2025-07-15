@@ -1,0 +1,53 @@
+@import url("../../styles/variables.scss");
+
+.form_input {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    width: 100%;
+
+    label {
+        font-weight: 600;
+    }
+
+    input {
+        background-color: var(--button-color-secondary);
+        height: 50px;
+        border: none;
+        border-radius: 15px;
+        padding-left: 1rem;
+        color: var(--text-color);
+    }
+
+    input::placeholder {
+        color: var(--card-description-color);
+    }
+}
+
+.radio_box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    margin-right: 1rem;
+    border: 2px solid var(--button-color-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    span {
+        pointer-events: none;
+    }
+
+    &:has(input[type="radio"]:checked) {
+        color: var(--text-color);
+        border-color: var(--form-profile-button-border);
+    }
+}

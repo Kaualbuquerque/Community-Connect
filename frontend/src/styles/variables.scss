@@ -4,6 +4,11 @@
     --font-family: 'Inter', sans-serif;
 }
 
+$button-color-primary: #1A80E5;
+$button-color-primary-hover: #145ea8;
+
+$border-background-color: #334D66;
+
 /* Tema claro */
 html.light {
     /* Background */
@@ -11,8 +16,6 @@ html.light {
 
     /* Text */
     --text-color: #0D141C;
-
-    /* Banner text color */
     --banner-text-color: #ffffff;
 
     /* Card */
@@ -20,33 +23,30 @@ html.light {
     --feature-card-color: #F7FAFC;
     --feature-card-color-hover: #1A2633;
     --feature-card-border: #0071FF;
-    --feature-card-border-hover: #334D66;
-    --feature-card-text-hover: #ffffff;
 
     /* Buttons */
-    --button-color-primary: #1A80E5;
     --button-color-secondary: #E8EDF2;
-    --button-color-secondary-dark: #243647;
 
     /* Hover */
-    --button-color-primary-hover: #145ea8;
     --button-color-secondary-hover: #adb1b4;
     --button-color-secondary-dark-hover: #39556e;
 
-    /* Border */
-    --border-background-color: #334D66;
+    /* Form */
+    --form-background-color: #F7FAFC;
+    --form-border-color: #0071FF;
+    --form-profile-button-border: #0071FF;
 
-    /* Box-shadow */
+    --border-bottom: #E5E8EB;
     --box-shadow: #00000027;
 }
 
 /* Tema escuro */
 html.dark {
+    /* Background */
     --background-color: #121A21;
 
+    /* Text */
     --text-color: #ffffff;
-
-    /* Banner text color */
     --banner-text-color: #ffffff;
 
     /* Card */
@@ -54,16 +54,19 @@ html.dark {
     --feature-card-color: #1A2633;
     --feature-card-color-hover: #F7FAFC;
     --feature-card-border: #334D66;
-    --feature-card-border-hover: #0071FF;
-    --feature-card-text-hover: #0D141C;
 
-    --button-color-primary: #1A80E5;
+    /* Buttons */
     --button-color-secondary: #243647;
-    --button-color-secondary-dark: #39556e;
 
-    --button-color-primary-hover: #145ea8;
+    /* Hover */
     --button-color-secondary-hover: #39556e;
     --button-color-secondary-dark-hover: #2e4a5c;
 
-    --border-background-color: #334D66;
+    /* Form */
+    --form-background-color: #1A2633;
+    --form-border-color: #334D66;
+    --form-profile-button-border: #39556e;
+
+    
+    --border-bottom: #334D66;
 }

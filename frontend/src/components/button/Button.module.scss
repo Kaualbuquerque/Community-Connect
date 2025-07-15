@@ -10,11 +10,11 @@
 }
 
 .primary {
-    background-color: var(--button-color-primary);
+    background-color: $button-color-primary;
     color: #fff;
 
     &:hover {
-        background-color: var(--button-color-primary-hover);
+        background-color: $button-color-primary-hover;
     }
 }
 
@@ -25,4 +25,8 @@
     &:hover {
         background-color: var(--button-color-secondary-hover);
     }
+}
+
+.other{
+    background-color: #E8EDF2;
 }
