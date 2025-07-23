@@ -4,6 +4,7 @@ import "@/styles/global.scss";
 import Header from "@/components/Header/Header";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { usePathname } from "next/navigation";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 export default function RootLayout({
   children,
@@ -15,6 +16,9 @@ export default function RootLayout({
   const noHeaderRoutes = ['/login', '/register'];
   const shouldShowHeader = !noHeaderRoutes.includes(pathname);
 
+  const noSidebarRoutes = ['/', '/login', '/register'];
+  const shouldShowSidebar = !noSidebarRoutes.includes(pathname);
+
   return (
     <html lang="pt-br">
       <body>
@@ -24,7 +28,10 @@ export default function RootLayout({
               <Header />
             </header>
           )}
-          {children}
+          <main>
+            {shouldShowSidebar && (<Sidebar />)}
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>

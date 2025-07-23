@@ -4,11 +4,6 @@
     --font-family: 'Inter', sans-serif;
 }
 
-$button-color-primary: #1A80E5;
-$button-color-primary-hover: #145ea8;
-
-$border-background-color: #334D66;
-
 /* Tema claro */
 html.light {
     /* Background */
@@ -16,6 +11,7 @@ html.light {
 
     /* Text */
     --text-color: #0D141C;
+    --text-alert: #C52222;
     --banner-text-color: #ffffff;
 
     /* Card */
@@ -25,17 +21,22 @@ html.light {
     --feature-card-border: #0071FF;
 
     /* Buttons */
+    --button-color-primary: #1A80E5;
+    --button-color-primary-hover: #145ea8;
     --button-color-secondary: #E8EDF2;
+
+    --border-background-color: #334D66;
+
 
     /* Hover */
     --button-color-secondary-hover: #adb1b4;
-    --button-color-secondary-dark-hover: #39556e;
 
     /* Form */
     --form-background-color: #F7FAFC;
     --form-border-color: #0071FF;
     --form-profile-button-border: #0071FF;
 
+    /* Others */
     --border-bottom: #E5E8EB;
     --box-shadow: #00000027;
 }
@@ -47,6 +48,7 @@ html.dark {
 
     /* Text */
     --text-color: #ffffff;
+    --text-alert: #C52222;
     --banner-text-color: #ffffff;
 
     /* Card */
@@ -56,17 +58,21 @@ html.dark {
     --feature-card-border: #334D66;
 
     /* Buttons */
+    --button-color-primary: #1A80E5;
+    --button-color-primary-hover: #145ea8;
     --button-color-secondary: #243647;
+
+    --border-background-color: #334D66;
 
     /* Hover */
     --button-color-secondary-hover: #39556e;
-    --button-color-secondary-dark-hover: #2e4a5c;
 
     /* Form */
     --form-background-color: #1A2633;
     --form-border-color: #334D66;
     --form-profile-button-border: #39556e;
 
-    
+    /* Others */
     --border-bottom: #334D66;
+
 }

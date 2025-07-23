@@ -9,7 +9,7 @@ export default function ThemeButton() {
     const { theme, toggleTheme } = useTheme();
 
     return (
-        <div
+        <section
             className={`${styles.button} ${theme === 'dark' ? styles.primary : styles.secondary}`}
             onClick={toggleTheme}
         >
@@ -18,6 +18,6 @@ export default function ThemeButton() {
             ) : (
                 <Image src={sun} alt="sun icon" />
             )}
-        </div>
+        </section>
     );
 }

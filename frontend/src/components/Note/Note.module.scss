@@ -1,0 +1,21 @@
+.note{
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid var(--border-bottom);
+    padding-bottom: 1rem;
+}
+
+.text{
+    display: flex;
+    flex-direction: column;
+
+    span{
+        color: var(--card-description-color);
+    }
+}
+
+.actions{
+    color: var(--text-alert);
+    cursor: pointer;
+}

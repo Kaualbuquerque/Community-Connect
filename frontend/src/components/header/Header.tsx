@@ -5,29 +5,40 @@ import styles from "./Header.module.scss"
 import logo from "@/icons/logo/community_connect_logo_light.png"
 import logo_dark from "@/icons/logo/community_connect_logo_dark.png"
 
-import Button from "../Button/Button";
-import Image from "next/image";
-import ThemeButton from "../themeButton/ThemeButton";
-import { useTheme } from "@/context/ThemeContext";
+import Button from "../Button/Button"
+import Image from "next/image"
+import ThemeButton from "../themeButton/ThemeButton"
+import { useTheme } from "@/context/ThemeContext"
+import { usePathname } from "next/navigation"
 
 export default function Header() {
-    const { theme } = useTheme();
+    const { theme } = useTheme()
+    const pathname = usePathname()
+
+    const isHome = pathname === "/"
 
     return (
-        <div className={styles.header}>
+        <section className={styles.header}>
             <div className={styles.title}>
-                {theme === "light" ?
+                {theme === "light" ? (
                     <Image src={logo_dark} alt="Logo modo claro" />
-                    :
-                    <Image src={logo} alt="communit connect logo" />
-                }
-                <h1> Communit Connect </h1>
+                ) : (
+                    <Image src={logo} alt="Community Connect logo" />
+                )}
+                <h1>Community Connect</h1>
             </div>
+
             <div className={styles.buttons}>
-                <Button text="Log In" type="primary" href="/login"/>
-                <Button text="Sign Up" type="secondary" href="/register"/>
+                {isHome && (
+                    <div>
+                        <Button text="Log In" type="primary" href="/login" />
+                        <Button text="Sign Up" type="secondary" href="/register" />
+                    </div>
+                )}
+
+                {/* Sempre visível, independente da rota */}
                 <ThemeButton />
             </div>
-        </div>
+        </section>
     )
 }

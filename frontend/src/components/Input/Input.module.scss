@@ -1,6 +1,4 @@
-@import url("../../styles/variables.scss");
-
-.form_input {
+.input {
     display: flex;
     flex-direction: column;
     gap: .5rem;
@@ -10,7 +8,7 @@
         font-weight: 600;
     }
 
-    input {
+    input, textarea, select {
         background-color: var(--button-color-secondary);
         height: 50px;
         border: none;
@@ -49,5 +47,11 @@
     &:has(input[type="radio"]:checked) {
         color: var(--text-color);
         border-color: var(--form-profile-button-border);
+    }
+}
+
+.input{
+    textarea{
+        padding: .5rem;
     }
 }
