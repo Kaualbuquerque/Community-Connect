@@ -30,7 +30,7 @@ export default function NoteModal({ onClose }: NoteModalProps) {
         <h3>Add a new note</h3>
 
         <div className={styles.inputs}>
-          <Input required={true} type="textarea" label="Note Text" max_lenght={400} />
+          <Input required={true} type="textarea" label="Note" placeholder="What do you want to remember?" max_lenght={400} />
           <Input required={false} type="select" label="Category" placeholder="Select a Category" options={options} />
         </div>
 

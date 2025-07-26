@@ -10,14 +10,16 @@
 
     input, textarea, select {
         background-color: var(--button-color-secondary);
+        font-family: var(--font-family);
         height: 50px;
         border: none;
         border-radius: 15px;
         padding-left: 1rem;
         color: var(--text-color);
+        resize: none;
     }
 
-    input::placeholder {
+    input::placeholder, textarea::placeholder, select::placeholder {
         color: var(--card-description-color);
     }
 }

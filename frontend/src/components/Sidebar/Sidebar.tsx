@@ -14,6 +14,7 @@ import chats_icon_dark from "@/icons/sidebar/chats-dark.png"
 
 import { useTheme } from "@/context/ThemeContext"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function Sidebar() {
     const { theme } = useTheme()
@@ -32,24 +33,34 @@ export default function Sidebar() {
             <div className={styles.menu}>
                 <ul>
                     <li>
-                        <Image src={icons.dashboard.src} alt="Dashboard" width={24} height={24} />
-                        <span>Dashboard</span>
+                        <Link href="/dashboard">
+                            <Image src={icons.dashboard.src} alt="Dashboard" width={24} height={24} />
+                            <span>Dashboard</span>
+                        </Link>
                     </li>
                     <li>
-                        <Image src={icons.search.src} alt="Search Services" width={24} height={24} />
-                        <span>Search Services</span>
+                        <Link href="/services/search">
+                            <Image src={icons.search.src} alt="Search Services" width={24} height={24} />
+                            <span>Search Services</span>
+                        </Link>
                     </li>
                     <li>
-                        <Image src={icons.favorites.src} alt="Favorites" width={24} height={24} />
-                        <span>Favorites</span>
+                        <Link href="/dashboard/favorites">
+                            <Image src={icons.favorites.src} alt="Favorites" width={24} height={24} />
+                            <span>Favorites</span>
+                        </Link>
                     </li>
                     <li>
-                        <Image src={icons.services.src} alt="Your Services" width={24} height={24} />
-                        <span>Your Services</span>
+                        <Link href="/dashboard/your-services">
+                            <Image src={icons.services.src} alt="Your Services" width={24} height={24} />
+                            <span>Your Services</span>
+                        </Link>
                     </li>
                     <li>
-                        <Image src={icons.chats.src} alt="Chats" width={24} height={24} />
-                        <span>Chats</span>
+                        <Link href="/">
+                            <Image src={icons.chats.src} alt="Chats" width={24} height={24} />
+                            <span>Chats</span>
+                        </Link>
                     </li>
                 </ul>
             </div>

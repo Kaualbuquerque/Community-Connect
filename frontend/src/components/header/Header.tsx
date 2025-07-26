@@ -31,8 +31,8 @@ export default function Header() {
             <div className={styles.buttons}>
                 {isHome && (
                     <div>
-                        <Button text="Log In" type="primary" href="/login" />
-                        <Button text="Sign Up" type="secondary" href="/register" />
+                        <Button text="Log In" type="primary" href="/auth/login" />
+                        <Button text="Sign Up" type="secondary" href="/auth/register" />
                     </div>
                 )}
 

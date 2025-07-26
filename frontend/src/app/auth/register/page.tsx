@@ -40,8 +40,8 @@ export default function Register() {
                     <Input label="Phone:" type="phone" placeholder="(xx) xxxxx-xxxx" required={true} min_lenght={11} max_lenght={11} />
                     <Input label="Location:" type="text" placeholder="Your location" required={true} />
                     <div className={styles.buttons}>
-                        <Button text="Sign up" type="primary" href="/login" />
-                        <Link href="/login"><p>Already have an account?</p></Link>
+                        <Button text="Sign up" type="primary" href="/auth/login" />
+                        <Link href="/auth/login"><p>Already have an account?</p></Link>
                     </div>
                 </Form>
             </section>

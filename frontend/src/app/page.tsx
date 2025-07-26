@@ -1,8 +1,8 @@
 import FeatureCard from "@/components/FeatureCard/FeatureCard";
 import styles from "./page.module.scss"
-import HomeCard from "@/components/serviceCard/ServiceCard";
+import HomeCard from "@/components/ServiceCard/ServiceCard";
 import { FeatureCardsData } from "@/components/FeatureCard/FeatureCardsData";
-import { serviceCardData } from "@/components/serviceCard/serviceCardData";
+import { serviceCardData } from "@/components/ServiceCard/serviceCardData";
 import Button from "@/components/Button/Button";
 
 export default function Home() {
@@ -39,7 +39,7 @@ export default function Home() {
       <section className={styles.get_started}>
           <h2>Ready to find or offer services in your community?</h2>
           <p>Sign up now and be part of the network that connects local people and talent.</p>
-          <Button type="primary" text="Get Started" href="/register"/>
+          <Button type="primary" text="Get Started" href="/auth/register"/>
       </section>
     </div>
   );

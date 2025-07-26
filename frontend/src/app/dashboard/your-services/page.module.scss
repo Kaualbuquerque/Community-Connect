@@ -1,0 +1,18 @@
+.services_page {
+    padding: 5rem 15rem 10rem 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5rem;
+}
+
+.services {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem 3rem;
+
+    button {
+        width: 25%;
+    }
+}

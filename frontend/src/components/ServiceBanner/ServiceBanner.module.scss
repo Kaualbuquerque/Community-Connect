@@ -19,7 +19,6 @@
     }
 
     span {
-        margin-top: -10px;
         color: var(--card-description-color);
     }
 
@@ -29,6 +28,19 @@
         grid-column: 2;
         grid-row-start: 1;
         grid-row-end: 7;
+        object-fit: contain;
+    }
+}
+
+.service_banner>div {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    img {
+        width: 75%;
+        height: 100%;
+        cursor: pointer;
     }
 }
 
@@ -36,4 +48,30 @@
     font-size: .9rem;
     font-weight: 700;
     margin-bottom: -1rem;
+}
+
+.heart {
+    width: 75%;
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.heart.pop {
+    animation: pop 0.3s ease;
+}
+
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

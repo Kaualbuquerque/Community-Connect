@@ -13,10 +13,10 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const noHeaderRoutes = ['/login', '/register'];
+  const noHeaderRoutes = ['/auth/login', '/auth/register'];
   const shouldShowHeader = !noHeaderRoutes.includes(pathname);
 
-  const noSidebarRoutes = ['/', '/login', '/register'];
+  const noSidebarRoutes = ['/', '/auth/login', '/auth/register'];
   const shouldShowSidebar = !noSidebarRoutes.includes(pathname);
 
   return (
