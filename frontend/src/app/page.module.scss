@@ -1,4 +1,4 @@
-.home_page {
+.homePage {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,7 +8,7 @@
     padding-top: 5rem;
 }
 
-.home_page_banner {
+.homePageBanner {
     width: 65%;
     height: 600px;
     display: flex;
@@ -22,7 +22,7 @@
     border-radius: 25px;
 }
 
-.banner_content {
+.bannerContent {
     color: var(--banner-text-color);
     width: 100%;
     height: 100%;
@@ -32,24 +32,24 @@
     flex-direction: column;
 }
 
-.banner_content h1 {
+.bannerContent h1 {
     font-weight: 800;
     font-size: 2rem;
     margin-bottom: 0;
 }
 
-.banner_content p {
+.bannerContent p {
     margin-top: 0;
 }
 
-.services_cards {
+.servicesCards {
     width: 65%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.services_cards>h2 {
+.servicesCards>h2 {
     font-size: 1.5rem;
     font-weight: 800;
 
@@ -65,36 +65,36 @@
     gap: 1rem;
 }
 
-.feature_cards {
+.featureCards {
     width: 65%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.feature_cards .cards{
+.featureCards .cards {
     grid-template-rows: 1fr;
 }
 
-.feature_cards>h2 {
+.featureCards>h2 {
     font-size: 1.5rem;
     font-weight: 800;
 }
 
-.get_started{
+.getStarted {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.get_started h2{
+.getStarted h2 {
     font-size: 2rem;
     font-weight: 800;
     margin-bottom: 0;
 }
 
-.get_started button{
+.getStarted button {
     width: 125px;
     height: 50px;
     border-radius: 15px;

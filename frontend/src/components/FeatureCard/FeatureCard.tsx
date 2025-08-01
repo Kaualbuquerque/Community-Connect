@@ -16,7 +16,7 @@ export default function FeatureCard({ iconLight, iconDark, text }: FeatureCardPr
     const icon = theme === "dark" ? iconDark : iconLight;
 
     return (
-        <section className={styles.feature_card}>
+        <section className={styles.featureCard}>
             <Image src={icon} alt="" width={32} height={32} />
             <p>{text}</p>
         </section>

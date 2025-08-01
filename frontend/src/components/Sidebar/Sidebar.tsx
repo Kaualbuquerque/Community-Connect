@@ -35,29 +35,29 @@ export default function Sidebar() {
                     <li>
                         <Link href="/dashboard">
                             <Image src={icons.dashboard.src} alt="Dashboard" width={24} height={24} />
-                            <span>Dashboard</span>
+                            <span>Painel</span>
                         </Link>
                     </li>
                     <li>
-                        <Link href="/services/search">
+                        <Link href="/dashboard/search-service">
                             <Image src={icons.search.src} alt="Search Services" width={24} height={24} />
-                            <span>Search Services</span>
+                            <span>Buscar serviços</span>
                         </Link>
                     </li>
                     <li>
                         <Link href="/dashboard/favorites">
                             <Image src={icons.favorites.src} alt="Favorites" width={24} height={24} />
-                            <span>Favorites</span>
+                            <span>Favoritos</span>
                         </Link>
                     </li>
                     <li>
                         <Link href="/dashboard/your-services">
                             <Image src={icons.services.src} alt="Your Services" width={24} height={24} />
-                            <span>Your Services</span>
+                            <span>Seus serviços</span>
                         </Link>
                     </li>
                     <li>
-                        <Link href="/">
+                        <Link href="/dashboard/chats">
                             <Image src={icons.chats.src} alt="Chats" width={24} height={24} />
                             <span>Chats</span>
                         </Link>
@@ -66,7 +66,7 @@ export default function Sidebar() {
             </div>
 
             <div className={styles.logout}>
-                <p>log out</p>
+                <p>Sair</p>
             </div>
         </section>
     )

@@ -13,47 +13,27 @@ import filter_dark from "@/icons/favorite/filter_dark.png"
 const tempServices = [
   {
     id: 1,
-    name: "House Cleaning",
+    name: "Limpeza Residencial",
     provider: "Maria Souza",
-    description: "Professional residential cleaning services.",
+    description: "Serviços profissionais de limpeza residencial.",
     location: "São Paulo, SP",
-    date: "Today, 10:00 AM",
-    category: "cleaning",
+    date: "Hoje, 10:00",
+    category: "limpeza",
     images: [],
   },
   {
     id: 2,
-    name: "Gardening",
+    name: "Jardinagem",
     provider: "Carlos Silva",
-    description: "Lawn mowing and garden maintenance.",
+    description: "Corte de grama e manutenção de jardins.",
     location: "Rio de Janeiro, RJ",
-    date: "Yesterday, 2:00 PM",
-    category: "gardening",
-    images: [],
-  },
-  {
-    id: 3,
-    name: "Tutoring",
-    provider: "Ana Pereira",
-    description: "Math and science tutoring for all ages.",
-    location: "Belo Horizonte, MG",
-    date: "Last week, 9:00 AM",
-    category: "education",
-    images: [],
-  },
-  {
-    id: 4,
-    name: "Dog Walking",
-    provider: "João Lima",
-    description: "Reliable and caring dog walking services.",
-    location: "Curitiba, PR",
-    date: "Today, 5:00 PM",
-    category: "pet care",
+    date: "Ontem, 14:00",
+    category: "jardinagem",
     images: [],
   },
 ]
 
-export default function Search() {
+export default function SearchServicePage() {
   const { theme } = useTheme()
   const [isFilterVisible, setIsFilterVisible] = useState(false)
 
@@ -64,11 +44,11 @@ export default function Search() {
   }
 
   return (
-    <section className={styles.search_page}>
-      <h2>What do you need today?</h2>
+    <section className={styles.searchServicePage}>
+      <h2>O que você precisa hoje?</h2>
 
       <div className={styles.inputs}>
-        <Input type="text" placeholder="Search by service" />
+        <Input type="text" placeholder="Pesquisar por serviço" />
         <Button text="" type="secondary" icon={filter} handleFunction={toggleFilter} />
       </div>
 

@@ -9,12 +9,12 @@ import Input from "@/components/Input/Input"
 import Button from "@/components/Button/Button"
 import Form from "@/components/Form/Form"
 
-export default function Login() {
+export default function LoginPage() {
     const { theme } = useTheme();
 
     return (
-        <div className={styles.login_page}>
-            <section className={styles.login_form}>
+        <div className={styles.loginPage}>
+            <section className={styles.loginForm}>
                 <Form>
                     <div className={styles.logo}>
                         {theme === "light" ?
@@ -25,12 +25,10 @@ export default function Login() {
                         <h3>Communit Connect</h3>
                     </div>
                     <h2>Login</h2>
-                    <Input label="Email:" type="email" placeholder="you@example.com" required={true} />
-                    <Input label="Password:" type="Password" placeholder="your password" required={true} min_lenght={6} max_lenght={12} />
+                    <Input label="Email:" type="email" placeholder="Seu@email.com" required={true} />
+                    <Input label="Senha:" type="Password" placeholder="Sua senha" required={true} min_length={6} max_length={12} />
                     <div className={styles.buttons}>
                         <Button text="Login" type="primary" href="/dashboard" />
-                        <p>or</p>
-                        <Button text="Log in with Google" type="other" href="/dashboard" />
                     </div>
                 </Form>
             </section>

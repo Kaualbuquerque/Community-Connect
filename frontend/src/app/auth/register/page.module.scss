@@ -1,5 +1,5 @@
-.signup_page {
-    height: 100vh;
+.registerPage {
+    padding: 2rem 0 ;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,7 +21,7 @@
 }
 
 
-.signup_form {
+.registerForm {
     background-color: var(--form-background-color);
     width: 25%;
     height: fit-content;
@@ -31,29 +31,36 @@
     border: 2px solid var(--form-border-color);
     border-radius: 20px;
 
-    h2{
+    h2 {
         margin: 0;
         margin-bottom: -1rem;
     }
 
-    .profile{
+    .profile {
         width: 100%;
         display: flex;
         flex-direction: column;
 
-        p{
+        p {
             font-weight: 700;
         }
 
-        div{
+        div {
             display: flex;
             align-self: center;
         }
 
-        input{
+        input {
             width: 20px;
             height: 20px;
         }
+    }
+
+    .location {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
 
     .buttons {
@@ -77,8 +84,9 @@
             margin-bottom: -5px;
         }
 
-        a{
+        a {
             color: var(--text-color);
         }
     }
+
 }

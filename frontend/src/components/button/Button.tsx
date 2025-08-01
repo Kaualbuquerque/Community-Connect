@@ -6,15 +6,16 @@ interface ButtonProps {
     text: string,
     type: string,
     href?: string;
-    handleFunction?: any;
+    handleFunction?: () => void;
     icon?: any;
+    disabled?: boolean;
 }
 
-export default function Button({ text, type, href, handleFunction, icon }: ButtonProps) {
+export default function Button({ text, type, href, handleFunction, icon, disabled }: ButtonProps) {
     const button = (
-        <button className={`${styles.button} ${styles[type]}`} onClick={handleFunction}>
+        <button className={`${styles.button} ${styles[type]}`} onClick={handleFunction} disabled={disabled}>
             {text}
-            {icon && <Image  src={icon} alt=""/>}
+            {icon && <Image src={icon} alt="" />}
         </button>
     );
 

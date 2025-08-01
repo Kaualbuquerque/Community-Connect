@@ -4,6 +4,7 @@ import styles from "./ServiceModal.module.scss"
 import { useState, useEffect } from "react"
 import Button from "../Button/Button"
 import Input from "../Input/Input"
+import { options } from "@/utils/options"
 
 interface ServiceModalProps {
     isOpen: boolean
@@ -11,7 +12,6 @@ interface ServiceModalProps {
     serviceData: {
         name: string
         description: string
-        location: string
         category: string
         images: string[] // URLs ou base64
     }
@@ -39,66 +39,43 @@ export default function ServiceModal({ isOpen, onClose, serviceData }: ServiceMo
         setImages(selected)
     }
 
-    const options = [
-        { value: "repairs", label: "Repairs and Maintenance" },
-        { value: "cleaning", label: "Cleaning Services" },
-        { value: "it", label: "IT and Tech Support" },
-        { value: "tutoring", label: "Tutoring and Education" },
-        { value: "beauty", label: "Beauty and Aesthetics" },
-        { value: "events", label: "Events and Parties" },
-        { value: "delivery", label: "Deliveries and Moving" },
-        { value: "construction", label: "Construction and Renovation" },
-        { value: "consulting", label: "Professional Consulting" },
-        { value: "other", label: "Other" },
-    ]
-
     return (
-        <div className={styles.modal_overlay}>
+        <div className={styles.overlay}>
             <div className={styles.modal}>
                 <h3>Edit Service</h3>
 
                 <Input
-                    label="Service Name"
+                    label="Nome do serviço"
                     type="text"
                     name="name"
-                    placeholder="Enter service name"
+                    placeholder="Digite o nome do serviço"
                     required={true}
                     value={form.name}
                     onChange={handleInputChange}
                 />
 
                 <Input
-                    label="Description"
+                    label="Descrição"
                     type="textarea"
                     name="description"
-                    placeholder="Enter a description"
+                    placeholder="Digite a descrição do serviço"
                     required={true}
                     value={form.description}
                     onChange={handleInputChange}
                 />
 
                 <Input
-                    label="Location"
-                    type="text"
-                    name="location"
-                    placeholder="Enter location"
-                    required={true}
-                    value={form.location}
-                    onChange={handleInputChange}
-                />
-
-                <Input
-                    label="Category"
+                    label="Categoria"
                     type="select"
                     name="category"
-                    placeholder="Select a Category"
+                    placeholder="Selecione uma categoria"
                     value={form.category}
                     required={true}
                     onChange={handleInputChange}
                     options={options}
                 />
 
-                <div className={styles.image_upload}>
+                <div className={styles.imageUpload}>
                     <label>Upload up to 5 images:</label>
                     <input type="file" accept="image/*" multiple onChange={handleImageUpload} />
                     <div className={styles.preview}>
@@ -108,8 +85,8 @@ export default function ServiceModal({ isOpen, onClose, serviceData }: ServiceMo
                     </div>
                 </div>
 
-                <div className={styles.modal_buttons}>
-                    <Button text="Save Changes" type="primary" />
+                <div className={styles.buttons}>
+                    <Button text="Confirm" type="primary" />
                     <Button text="Cancel" type="secondary" handleFunction={onClose} />
                 </div>
             </div>

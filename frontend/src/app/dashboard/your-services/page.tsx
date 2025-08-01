@@ -4,6 +4,7 @@ import { useState } from "react"
 import ServiceBanner from "@/components/ServiceBanner/ServiceBanner"
 import styles from "./page.module.scss"
 import ServiceModal from "@/components/ServiceModal/ServiceModal"
+import Button from "@/components/Button/Button"
 
 interface Service {
     id: number
@@ -19,43 +20,48 @@ interface Service {
 const servicesData: Service[] = [
     {
         id: 1,
-        name: "House Cleaning",
+        name: "Limpeza Residencial",
         provider: "João da Silva",
-        description: "I carry out residential and commercial electrical installations and small repairs safely and quickly.",
+        description: "Realizo limpezas residenciais e comerciais com segurança e agilidade.",
         location: "Boa Vista, Recife",
-        date: "Today, 3:00 PM",
-        category: "cleaning",
+        date: "Hoje, 15:00",
+        category: "limpeza",
         images: [],
     },
     {
         id: 2,
-        name: "Electrical Repair",
+        name: "Reparo Elétrico",
         provider: "João da Silva",
-        description: "Quick and safe electrical repairs.",
+        description: "Reparos elétricos rápidos e seguros.",
         location: "Recife",
-        date: "Yesterday, 5:00 PM",
-        category: "electrical",
+        date: "Ontem, 17:00",
+        category: "elétrica",
         images: [],
-    },
+    },    
 ]
 
-export default function YourServices() {
+export default function YourServicesPage() {
     const [selectedService, setSelectedService] = useState<Service | null>(null)
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [showModal, setShowModal] = useState(false)
 
-    const handleEditClick = (service: Service) => {
+    const handleEditService = (service: Service) => {
         setSelectedService(service)
-        setIsModalOpen(true)
+        setShowModal(true)
+    }
+
+    const handleAddNewService = () => {
+        setSelectedService(null) // Novo serviço
+        setShowModal(true)
     }
 
     const handleCloseModal = () => {
-        setIsModalOpen(false)
+        setShowModal(false)
         setSelectedService(null)
     }
 
     return (
-        <section className={styles.services_page}>
-            <h2>Check your services</h2>
+        <section className={styles.yourServicesPage}>
+            <h2>Verifique seus serviços</h2>
 
             <div className={styles.services}>
                 {servicesData.map((service) => (
@@ -63,22 +69,36 @@ export default function YourServices() {
                         key={service.id}
                         role="provider"
                         service={service}
-                        onEdit={() => handleEditClick(service)}
+                        onEdit={() => handleEditService(service)}
                     />
                 ))}
             </div>
 
-            {isModalOpen && selectedService && (
+            <div className={styles.addService}>
+                <Button text="+ Adicionar novo serviço" type="secondary" handleFunction={handleAddNewService} />
+            </div>
+
+            {showModal && (
                 <ServiceModal
-                    isOpen={isModalOpen}
+                    isOpen={showModal}
                     onClose={handleCloseModal}
-                    serviceData={{
-                        name: selectedService.name,
-                        description: selectedService.description,
-                        location: selectedService.location,
-                        category: selectedService.category,
-                        images: selectedService.images,
-                    }}
+                    serviceData={
+                        selectedService
+                            ? {
+                                name: selectedService.name,
+                                description: selectedService.description,
+                                location: selectedService.location,
+                                category: selectedService.category,
+                                images: selectedService.images,
+                            }
+                            : {
+                                name: "",
+                                description: "",
+                                location: "",
+                                category: "",
+                                images: [],
+                            }
+                    }
                 />
             )}
         </section>

@@ -1,43 +1,42 @@
 export const serviceCardData = [
     {
-        title: "Beauty & Aesthetics",
-        description: "Transform your look with those who understand the subject!",
+        title: "Beleza & Estética",
+        description: "Transforme seu visual com quem entende do assunto!",
         image: "/imgs/serviceCard/Beauty-&-Aesthetics.png",
     },
     {
-        title: "Renovations & Construction",
-        description: "Professionals who build and care for your home.",
+        title: "Reformas & Construção",
+        description: "Profissionais que constroem e cuidam da sua casa.",
         image: "/imgs/serviceCard/Renovations-&-Construction.png",
     },
     {
-        title: "Technology & IT",
-        description: "Digital solutions to make your life easier.",
+        title: "Tecnologia & TI",
+        description: "Soluções digitais para facilitar sua vida.",
         image: "/imgs/serviceCard/Technology-&-IT.png",
-
     },
     {
-        title: "Classes & Tutoring",
-        description: "Learning at your fingertips, at your own pace.",
+        title: "Aulas & Reforço",
+        description: "Aprendizado na sua mão, no seu ritmo.",
         image: "/imgs/serviceCard/Classes-&-Tutoring.png",
     },
     {
-        title: "Animal Services",
-        description: "Your pet well cared for by people who love animals.",
+        title: "Serviços para Animais",
+        description: "Seu pet bem cuidado por quem ama os animais.",
         image: "/imgs/serviceCard/Animal-Services.png",
     },
     {
-        title: "Cleaning & Organization",
-        description: "Get your home spotless with local help.",
+        title: "Limpeza & Organização",
+        description: "Deixe sua casa impecável com ajuda local.",
         image: "/imgs/serviceCard/Cleaning-&-Organization.png",
     },
     {
-        title: "Cars & Motorcycles",
-        description: "Your vehicle in the hands of those who understand.",
+        title: "Carros & Motos",
+        description: "Seu veículo nas mãos de quem entende.",
         image: "/imgs/serviceCard/Cars-&-Motorcycles.png",
     },
     {
-        title: "Fittings & Clothing",
-        description: "Details that enhance your style.",
+        title: "Ajustes & Roupas",
+        description: "Detalhes que valorizam seu estilo.",
         image: "/imgs/serviceCard/Fittings-&-Clothing.png",
     },
 ];

@@ -5,20 +5,20 @@ import { FeatureCardsData } from "@/components/FeatureCard/FeatureCardsData";
 import { serviceCardData } from "@/components/ServiceCard/serviceCardData";
 import Button from "@/components/Button/Button";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className={styles.home_page}>
+    <div className={styles.homePage}>
 
-      <section className={styles.home_page_banner}>
-        <div className={styles.banner_content}>
-          <h1>Find and support services in your community</h1>
-          <p>Search for services near you quickly and free of charge</p>
+      <section className={styles.homePageBanner}>
+        <div className={styles.bannerContent}>
+          <h1>Encontre e apoie serviços em sua comunidade</h1>
+          <p>Pesquise serviços perto de você de forma rápida e gratuita</p>
         </div>
       </section>
 
 
-      <section className={styles.services_cards}>
-        <h2>What kind of service are you looking for?</h2>
+      <section className={styles.servicesCards}>
+        <h2>Que tipo de serviço você está procurando??</h2>
         <div className={styles.cards}>
           {serviceCardData.map((data, index) => (
             <HomeCard key={index} image={data.image} title={data.title} description={data.description} />
@@ -26,8 +26,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={styles.feature_cards}>
-        <h2>Why use Community Connect</h2>
+      <section className={styles.featureCards}>
+        <h2>Por que usar o Community Connect</h2>
         <div className={styles.cards}>
           {FeatureCardsData.map((data, index) => (
             <FeatureCard key={index} iconLight={data.iconLight} iconDark={data.iconDark} text={data.text} />
@@ -36,10 +36,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={styles.get_started}>
-          <h2>Ready to find or offer services in your community?</h2>
-          <p>Sign up now and be part of the network that connects local people and talent.</p>
-          <Button type="primary" text="Get Started" href="/auth/register"/>
+      <section className={styles.getStarted}>
+          <h2>Pronto para encontrar ou oferecer serviços em sua comunidade?</h2>
+          <p>Cadastre-se agora e faça parte da rede que conecta pessoas e talentos locais.</p>
+          <Button type="primary" text="Cadastre-se" href="/auth/register"/>
       </section>
     </div>
   );

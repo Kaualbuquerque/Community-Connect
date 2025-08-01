@@ -7,9 +7,9 @@ interface InputProps {
     value?: string;
     name?: string;
     required?: boolean;
-    max_lenght?: number;
-    min_lenght?: number;
-    options?: { value: string; label: string }[];
+    max_length?: number;
+    min_length?: number;
+    options?: { value: string; label: string, disabled: boolean }[];
     onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
@@ -20,14 +20,15 @@ export default function Input({
     value,
     placeholder,
     required,
-    max_lenght,
-    min_lenght,
+    max_length,
+    min_length,
     options,
     onChange,
 }: InputProps) {
+
     if (type === "radio") {
         return (
-            <label className={styles.radio_box}>
+            <label className={styles.radioBox}>
                 <input
                     type="radio"
                     name={name}
@@ -35,7 +36,7 @@ export default function Input({
                     required={required}
                     onChange={onChange}
                 />
-                <span>{label}</span>
+                {label && <label htmlFor={name}>{label}</label>}
             </label>
         );
     }
@@ -43,12 +44,12 @@ export default function Input({
     if (type === "textarea") {
         return (
             <label className={styles.input}>
-                <span>{label}</span>
+                {label && <label htmlFor={name}>{label}</label>}
                 <textarea
                     name={name}
                     id={name}
                     placeholder={placeholder}
-                    maxLength={max_lenght}
+                    maxLength={max_length}
                     required={required}
                     value={value}
                     onChange={onChange}
@@ -60,7 +61,7 @@ export default function Input({
     if (type === "select") {
         return (
             <label className={styles.input}>
-                <span>{label}</span>
+                {label && <label htmlFor={name}>{label}</label>}
                 <select
                     name={name}
                     id={name}
@@ -72,7 +73,7 @@ export default function Input({
                         {placeholder}
                     </option>
                     {options?.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
+                        <option key={opt.value} value={opt.value} disabled={opt.disabled}>
                             {opt.label}
                         </option>
                     ))}
@@ -90,8 +91,8 @@ export default function Input({
                 name={name}
                 id={name}
                 required={required}
-                maxLength={max_lenght}
-                minLength={min_lenght}
+                maxLength={max_length}
+                minLength={min_length}
                 value={value}
                 onChange={onChange}
             />

@@ -1,4 +1,4 @@
-.feature_card {
+.featureCard {
     width: 170px;
     height: 230px;
     display: grid;
@@ -12,11 +12,11 @@
 
 }
 
-.feature_card p {
+.featureCard p {
     font-size: 1.1rem;
     font-weight: 700;
 }
 
-.feature_card:hover {
+.featureCard:hover {
     transform: translateY(-10);
 }

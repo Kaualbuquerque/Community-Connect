@@ -15,6 +15,11 @@
     align-items: center;
     font-size: .6rem;
     gap: .5rem;
+
+    a, a:visited, a:active{
+        color: var(--text-color);
+        text-decoration: none;
+    }
 }
 
 .buttons {

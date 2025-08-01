@@ -49,17 +49,17 @@ export default function ServiceBanner({ role, service, onEdit }: ServiceBannerPr
     const heartIcon = isFavorite ? icons.fill : icons.outline
 
     return (
-        <div className={styles.service_banner}>
+        <div className={styles.serviceBanner}>
             <h4>{service.name}</h4>
             <h5>{service.provider}</h5>
-            <p className={styles.description}>Description:</p>
+            <p className={styles.description}>Descrição:</p>
             <p>{service.description}</p>
             <h6>{service.location}</h6>
             <span>{service.date}</span>
 
             <div>
                 {role === "provider" ? (
-                    <Button text="Edit Service" type="secondary" handleFunction={onEdit} />
+                    <Button text="Editar serviço" type="secondary" handleFunction={onEdit} />
                 ) : (
                     <>
                         <div onClick={toggleFavorite} style={{ cursor: "pointer" }}>
@@ -71,7 +71,7 @@ export default function ServiceBanner({ role, service, onEdit }: ServiceBannerPr
                                 className={`${styles.heart} ${isPopping ? styles.pop : ""}`}
                             />
                         </div>
-                        <Button text="Send a message" type="primary" />
+                        <Button text="Enviar mensagem" type="primary" />
                     </>
                 )}
             </div>

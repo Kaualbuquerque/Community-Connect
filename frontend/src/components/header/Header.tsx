@@ -10,6 +10,7 @@ import Image from "next/image"
 import ThemeButton from "../themeButton/ThemeButton"
 import { useTheme } from "@/context/ThemeContext"
 import { usePathname } from "next/navigation"
+import Link from "next/link"
 
 export default function Header() {
     const { theme } = useTheme()
@@ -25,7 +26,7 @@ export default function Header() {
                 ) : (
                     <Image src={logo} alt="Community Connect logo" />
                 )}
-                <h1>Community Connect</h1>
+                <h1><Link href={"/"}>Community Connect</Link></h1>
             </div>
 
             <div className={styles.buttons}>

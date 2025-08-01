@@ -1,4 +1,4 @@
-.dashboard_page {
+.dashboardPage {
     padding: 5rem 15rem 10rem 20rem;
     display: flex;
     flex-direction: column;
@@ -11,12 +11,11 @@
 }
 
 .history,
-.favorites,
-.personal_notes {
+.personalNotes {
     width: 100%;
 }
 
-.service_history {
+.serviceHistory {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, 1fr);
@@ -27,15 +26,8 @@
     }
 }
 
-.favorite_services {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: 1fr;
-    gap: 1rem;
-}
 
-.personal_notes {
+.personalNotes {
     width: 100%;
   
     button {
