@@ -15,12 +15,17 @@ export class AuthService {
   ) { }
 
   async register(dto: RegisterDto) {
+    // Gera hash da senha
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(dto.password, salt);
+
+    // Cria usuário passando todos os campos incluídos no RegisterDto
     const user = await this.usersService.create({
       ...dto,
       password: hash,
     });
+
+    // Remove a senha antes de retornar
     const { password, ...rest } = user;
     return rest;
   }
@@ -28,14 +33,14 @@ export class AuthService {
   async validateUser(email: string, pass: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user || !user.password) return null; // evita erro se password for undefined
-  
+
     const isMatch = await bcrypt.compare(pass, user.password);
     if (!isMatch) return null;
-  
+
     const { password, ...result } = user;
     return result;
   }
-  
+
 
 
   async login(loginDto: LoginDto) {

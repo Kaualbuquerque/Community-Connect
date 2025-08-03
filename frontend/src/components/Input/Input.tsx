@@ -9,6 +9,7 @@ interface InputProps {
     required?: boolean;
     max_length?: number;
     min_length?: number;
+    checked?: boolean; // <-- Adicionado
     options?: { value: string; label: string, disabled: boolean }[];
     onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
@@ -22,6 +23,7 @@ export default function Input({
     required,
     max_length,
     min_length,
+    checked,
     options,
     onChange,
 }: InputProps) {
@@ -35,8 +37,9 @@ export default function Input({
                     value={value}
                     required={required}
                     onChange={onChange}
+                    checked={checked} // <-- Adicionado aqui
                 />
-                {label && <label htmlFor={name}>{label}</label>}
+                {label && <span>{label}</span>}
             </label>
         );
     }

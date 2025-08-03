@@ -21,14 +21,24 @@ export class User {
     @Column()
     password: string;
 
-    @Column()
-    location: string;
-
-    @Column({ length: 11 })
+    @Column({ length: 20})
     phone: string;
 
     @Column()
     role: 'consumer' | 'provider';
+
+    // **Novos campos de endereço**
+    @Column({ length: 9 })
+    cep: string;
+
+    @Column({ length: 2 })
+    state: string;
+
+    @Column({ length: 100 })
+    city: string;
+
+    @Column({ length: 20 })
+    number: string;
 
     // relations //
 

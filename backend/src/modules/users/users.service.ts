@@ -31,9 +31,20 @@ export class UserService {
     async findByEmail(email: string): Promise<User | null> {
         const user = await this.userRepository.findOne({
             where: { email: email.toLowerCase() },
-            select: ['id', 'name', 'email', 'password', 'role', 'location', 'phone'],
+            select: [
+                'id',
+                'name',
+                'email',
+                'password',
+                'role',
+                'phone',
+                'cep',
+                'state',
+                'city',
+                'number',
+            ],
         });
-        return user ?? null; // Retorna null se não encontrar
+        return user ?? null;
     }
 
 
