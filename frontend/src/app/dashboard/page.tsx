@@ -14,48 +14,9 @@ interface Note {
   date: string;
 }
 
-const tempServices = [
-  {
-    id: 1,
-    name: "Limpeza da casa",
-    provider: "Maria Souza",
-    description: "Serviços profissionais de limpeza residencial.",
-    location: "São Paulo, SP",
-    date: "Today, 10:00 AM",
-    category: "limpeza",
-    images: [],
-  },
-  {
-    id: 2,
-    name: "Limpeza da casa",
-    provider: "Maria Souza",
-    description: "Serviços profissionais de limpeza residencial.",
-    location: "São Paulo, SP",
-    date: "Today, 10:00 AM",
-    category: "limpeza",
-    images: [],
-  },
-  {
-    id: 3,
-    name: "Limpeza da casa",
-    provider: "Maria Souza",
-    description: "Serviços profissionais de limpeza residencial.",
-    location: "São Paulo, SP",
-    date: "Today, 10:00 AM",
-    category: "limpeza",
-    images: [],
-  }
-]
-
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
-
-  // aqui dividimos em grupos de 3
-  const chunkedServices: typeof tempServices[] = [];
-  for (let i = 0; i < tempServices.length; i += 3) {
-    chunkedServices.push(tempServices.slice(i, i + 3));
-  }
 
   const handleConfirmNote = (text: string, category: string) => {
     const now = new Date();
@@ -82,9 +43,6 @@ export default function DashboardPage() {
       <section className={styles.history}>
         <h3>Histórico de serviço</h3>
         <div className={styles.serviceHistory}>
-          {tempServices.map((service) => (
-            <ServiceBanner key={service.id} role="consumer" service={service} />
-          ))}
         </div>
       </section>
 

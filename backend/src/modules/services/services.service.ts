@@ -3,27 +3,38 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Service } from "./service.entity";
 import { Repository } from "typeorm";
 import { CreateServiceDto } from "./dto/create-service.dto";
-import { UpdateServiceDto } from "./dto/update0service.dto";
+import { UpdateServiceDto } from "./dto/update-service.dto";
+import { User } from "../users/user.entity";
 
 @Injectable()
 export class ServiceService {
-
     constructor(
         @InjectRepository(Service)
         private serviceRepository: Repository<Service>
     ) { }
 
-    async create(dto: CreateServiceDto): Promise<Service> {
-        const service = this.serviceRepository.create(dto);
+    async create(dto: CreateServiceDto, user: User): Promise<Service> {
+        const service = this.serviceRepository.create({
+            ...dto,
+            provider: user,          // associa o provider
+            location: `${user.city} - ${user.state}`,     // ou o campo que tenha endereço
+        });
+
         return this.serviceRepository.save(service);
     }
 
-    async findAll(): Promise<Service[]> {
-        return this.serviceRepository.find();
+    async findAll(userId: number): Promise<Service[]> {
+        return this.serviceRepository.find({
+            where: { provider: { id: userId } }, // filtra pelo id do provider
+            relations: ['provider'],
+        });
     }
 
     async findOne(id: number): Promise<Service> {
-        const service = await this.serviceRepository.findOneBy({ id });
+        const service = await this.serviceRepository.findOne({
+            where: { id },
+            relations: ['provider'],
+        });
         if (!service) throw new NotFoundException(`Service with id ${id} not found`);
         return service;
     }
@@ -33,8 +44,8 @@ export class ServiceService {
         return this.findOne(id);
     }
 
-    async remove(id: number): Promise<void>{
+    async remove(id: number): Promise<void> {
         const result = await this.serviceRepository.delete(id);
-        if(result.affected === 0) throw new NotFoundException(`Service #${id} not found`);
+        if (result.affected === 0) throw new NotFoundException(`Service #${id} not found`);
     }
 }

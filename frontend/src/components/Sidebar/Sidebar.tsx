@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import styles from "./Sidebar.module.scss"
 
 import dashboard_icon_light from "@/icons/sidebar/home-light.png"
@@ -18,8 +21,18 @@ import Link from "next/link"
 
 export default function Sidebar() {
     const { theme } = useTheme()
+    const [role, setRole] = useState<string | null>(null)
 
-    // Escolher os ícones com base no tema
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedUser = localStorage.getItem("user")
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser)
+                setRole(parsedUser.role)
+            }
+        }
+    }, [])
+
     const icons = {
         dashboard: theme === "light" ? dashboard_icon_dark : dashboard_icon_light,
         search: theme === "light" ? search_icon_dark : search_icon_light,
@@ -40,22 +53,24 @@ export default function Sidebar() {
                     </li>
                     <li>
                         <Link href="/dashboard/search-service">
-                            <Image src={icons.search.src} alt="Search Services" width={24} height={24} />
+                            <Image src={icons.search.src} alt="Buscar Serviços" width={24} height={24} />
                             <span>Buscar serviços</span>
                         </Link>
                     </li>
                     <li>
                         <Link href="/dashboard/favorites">
-                            <Image src={icons.favorites.src} alt="Favorites" width={24} height={24} />
+                            <Image src={icons.favorites.src} alt="Favoritos" width={24} height={24} />
                             <span>Favoritos</span>
                         </Link>
                     </li>
-                    <li>
-                        <Link href="/dashboard/your-services">
-                            <Image src={icons.services.src} alt="Your Services" width={24} height={24} />
-                            <span>Seus serviços</span>
-                        </Link>
-                    </li>
+                    {role === "provider" && (
+                        <li>
+                            <Link href="/dashboard/your-services">
+                                <Image src={icons.services.src} alt="Seus Serviços" width={24} height={24} />
+                                <span>Seus serviços</span>
+                            </Link>
+                        </li>
+                    )}
                     <li>
                         <Link href="/dashboard/chats">
                             <Image src={icons.chats.src} alt="Chats" width={24} height={24} />

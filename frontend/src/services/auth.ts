@@ -1,22 +1,13 @@
 // src/services/registerUser.ts
+import { LoginData, RegisterData } from '@/utils/types';
 import { api } from './api'; // Assumindo que 'api' é uma instância configurada do Axios
 import axios from 'axios';
 
-interface RegisterData {
-    name: string;
-    email: string;
-    password: string;
-    phone: string;
-    role: 'consumer' | 'provider';
-    cep: string;
-    state: string;
-    city: string;
-    number: string;
-}
+
 
 export async function registerUser(data: RegisterData) {
     console.log("📤 Enviando dados para o backend:");
-    console.table(data); // Mostra dados em formato de tabela
+    console.table(data);
 
     try {
         const response = await api.post('/auth/register', data);
@@ -35,7 +26,15 @@ export async function registerUser(data: RegisterData) {
             console.error("❌ Erro inesperado:", error);
         }
 
-        // Rejeita o erro para que o componente que chamou trate (ex: exibir mensagem ao usuário)
         throw error;
+    }
+}
+
+export async function loginUser(data: LoginData) {
+    try {
+        const response = await api.post('/auth/login', data);
+        return response.data;
+    } catch (error: any) {
+        throw error?.response?.data?.message || "Erro ao fazer login";
     }
 }

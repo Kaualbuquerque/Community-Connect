@@ -13,10 +13,6 @@ export class CreateServiceDto {
     @IsPositive()
     price: number;
 
-    @IsOptional()
-    @IsString()
-    location?: string;
-
     @IsNotEmpty()
     @IsString()
     category: string;

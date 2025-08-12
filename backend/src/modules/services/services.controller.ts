@@ -1,20 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from "@nestjs/common";
 import { ServiceService } from "./services.service";
 import { CreateServiceDto } from "./dto/create-service.dto";
-import { UpdateServiceDto } from "./dto/update0service.dto";
+import { UpdateServiceDto } from "./dto/update-service.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("services")
 export class ServicesController {
     constructor(private readonly serviceService: ServiceService) { }
 
     @Post()
-    create(@Body() dto: CreateServiceDto) {
-        return this.serviceService.create(dto);
+    @UseGuards(AuthGuard('jwt'))
+    create(@Body() dto: CreateServiceDto, @Request() req) {
+        return this.serviceService.create(dto, req.user);
     }
 
     @Get()
-    findAll() {
-        return this.serviceService.findAll();
+    @UseGuards(AuthGuard('jwt'))
+    findAllByUser(@Request() req) {
+        return this.serviceService.findAll(req.user.id);
     }
 
     @Get(":id")

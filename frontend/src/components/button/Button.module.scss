@@ -33,6 +33,15 @@
     }
 }
 
-.other{
+.alert {
+    background-color: var(--alert);
+    color: #fff;
+
+    &:hover {
+        background-color: var(--alert-hover);
+    }
+}
+
+.other {
     background-color: #E8EDF2;
 }

@@ -32,12 +32,11 @@ export default function Header() {
             <div className={styles.buttons}>
                 {isHome && (
                     <div>
-                        <Button text="Log In" type="primary" href="/auth/login" />
-                        <Button text="Sign Up" type="secondary" href="/auth/register" />
+                        <Button text="Login" type="primary" href="/auth/login" />
+                        <Button text="Cadastrar" type="secondary" href="/auth/register" />
                     </div>
                 )}
 
-                {/* Sempre visível, independente da rota */}
                 <ThemeButton />
             </div>
         </section>

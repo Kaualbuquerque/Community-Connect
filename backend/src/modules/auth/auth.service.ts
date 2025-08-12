@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtPayload } from './types/jwt-payload.interface';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -15,24 +16,27 @@ export class AuthService {
   ) { }
 
   async register(dto: RegisterDto) {
-    // Gera hash da senha
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(dto.password, salt);
 
-    // Cria usuário passando todos os campos incluídos no RegisterDto
     const user = await this.usersService.create({
       ...dto,
       password: hash,
     });
 
-    // Remove a senha antes de retornar
     const { password, ...rest } = user;
     return rest;
   }
 
   async validateUser(email: string, pass: string) {
     const user = await this.usersService.findByEmail(email);
-    if (!user || !user.password) return null; // evita erro se password for undefined
+
+    if (!user) {
+      return null;
+    }
+    if (!user.password) {
+      return null;
+    }
 
     const isMatch = await bcrypt.compare(pass, user.password);
     if (!isMatch) return null;
@@ -42,18 +46,13 @@ export class AuthService {
   }
 
 
-
-  async login(loginDto: LoginDto) {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+  async login(user: User) {
     const payload: JwtPayload = { sub: user.id, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
+      user,
     };
   }
-
 
   async validateJwtPayload(payload: JwtPayload) {
     const user = await this.usersService.findOne(payload.sub);
