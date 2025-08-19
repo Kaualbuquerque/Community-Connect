@@ -4,7 +4,6 @@ import { UserService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
 import { JwtPayload } from './types/jwt-payload.interface';
 import { User } from '../users/user.entity';
 
@@ -28,23 +27,24 @@ export class AuthService {
     return rest;
   }
 
-  async validateUser(email: string, pass: string) {
+  async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findByEmail(email);
 
-    if (!user) {
-      return null;
-    }
-    if (!user.password) {
+    if (!user) return null;
+
+    const hashed = user.password;
+    if (!hashed) {
+      console.log('Password não está sendo retornada pelo findByEmail');
       return null;
     }
 
-    const isMatch = await bcrypt.compare(pass, user.password);
-    if (!isMatch) return null;
+    const match = await bcrypt.compare(pass, hashed);
+
+    if (!match) return null;
 
     const { password, ...result } = user;
     return result;
   }
-
 
   async login(user: User) {
     const payload: JwtPayload = { sub: user.id, role: user.role };

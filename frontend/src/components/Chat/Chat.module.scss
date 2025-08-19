@@ -1,19 +1,18 @@
 .chat {
     background-color: var(--button-color-secondary);
     border-radius: 10px;
+    width: 100%;
 
     p {
         width: 80%;
-        white-space: nowrap; // Impede que o texto quebre para a próxima linha
-        overflow: hidden; // Esconde o texto que ultrapassar o tamanho
-        text-overflow: ellipsis; // Adiciona "..." no final
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    span {
-        color: var(--card-description-color);
-    }
-
-    a, a:active, a:visited {
+    a,
+    a:active,
+    a:visited {
         color: var(--text-color);
         text-decoration: none;
         width: 100%;
@@ -22,5 +21,9 @@
         align-items: center;
         justify-content: center;
         gap: 2rem;
+    }
+
+    time {
+        color: var(--card-description-color);
     }
 }

@@ -1,35 +1,4 @@
-export interface ServiceBannerProps {
-    role: "provider" | "consumer";
-    service: Service;
-    onEdit?: () => void;
-    onDelete?: () => void;
-}
-
-export interface ServiceModalProps {
-    isOpen: boolean;
-    onClose: (refresh?: boolean) => void;
-    serviceData?: Service;  // pode ser undefined para criação
-    onSubmit: (data: ServicePayload) => Promise<void>; // função passada pelo pai
-}
-
-export interface ButtonProps {
-    text: string,
-    type: string,
-    href?: string;
-    handleFunction?: () => void;
-    icon?: any;
-    disabled?: boolean;
-}
-
-export interface ServicePayload {
-    name: string;
-    description: string;
-    price: string;
-    category: string;
-    images: string[];
-}
-
-
+// Form data
 export interface RegisterData {
     name: string;
     email: string;
@@ -47,17 +16,9 @@ export interface LoginData {
     password: string;
 }
 
-export interface ServiceDTO {
-    name: string;
-    description: string;
-    price: number;
-    location?: string;
-    category: string;
-    images?: string[]; // Aqui você vai lidar com URLs ou base64, dependendo da sua estratégia de upload
-}
-
+// Services
 export interface Service {
-    id: string
+    id: number
     name: string
     provider: RegisterData
     description: string
@@ -68,6 +29,15 @@ export interface Service {
     price: string;
 }
 
+// DTOs
+export interface ServiceDTO {
+    name: string;
+    description: string;
+    price: number;
+    location?: string;
+    category: string;
+    images?: string[];
+}
 
 export interface CreateServiceDTO {
     name: string;
@@ -78,5 +48,10 @@ export interface CreateServiceDTO {
 }
 
 export interface UpdateServiceDTO extends CreateServiceDTO {
-    id: string;  // ou number, conforme seu backend
+    id: string;
+}
+
+export interface CreateNoteDTO {
+    content: string;
+    date: string;
 }

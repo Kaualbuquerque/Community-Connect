@@ -11,30 +11,54 @@ export class FavoriteService {
         private favoriteRepository: Repository<Favorite>
     ) { }
 
-    async create(dto: CreateFavoriteDto): Promise<Favorite> {
-        const favorite = this.favoriteRepository.create({
-            consumer: { id: dto.consumerId },
-            service: { id: dto.serviceId }
+    async addFavorite(consumerId: number, serviceId: number): Promise<Favorite> {
+        const existing = await this.favoriteRepository.findOne({
+            where: {
+                consumer: { id: consumerId },
+                service: { id: serviceId },
+            },
+            relations: ["consumer", "service", "service.provider"],
         });
+    
+        if (existing) {
+            return existing; // já favoritado, retorna
+        }
+    
+        const favorite = this.favoriteRepository.create({
+            consumer: { id: consumerId },
+            service: { id: serviceId },
+        });
+    
         return this.favoriteRepository.save(favorite);
     }
 
-    async findAll(): Promise<Favorite[]> {
-        return this.favoriteRepository.find();
+    async findByUser(userId: number): Promise<Favorite[]> {
+        return this.favoriteRepository.find({
+            where: { consumer: { id: userId } },
+            relations: ["service"],
+        });
     }
 
-    async findOne(id: number): Promise<Favorite> {
+    async getFavorite(id: number): Promise<Favorite> {
         const favorite = await this.favoriteRepository.findOne({
             where: { id },
-            relations: ["consumer", "provider"]
+            relations: ["consumer", "service", "service.provider"],
         });
         if (!favorite) throw new NotFoundException(`Favorite #${id} not found`);
         return favorite;
     }
 
-    async remove(id: number): Promise<void> {
-        const result = await this.favoriteRepository.delete(id);
-        if (result.affected === 0) throw new NotFoundException(`Favorite #${id} not found`);
+    async removeFavorite(consumerId: number, serviceId: number): Promise<void> {
+        const favorite = await this.favoriteRepository.findOne({
+            where: {
+                consumer: { id: consumerId },
+                service: { id: serviceId },
+            },
+        });
+
+        if (!favorite) throw new NotFoundException("Favorite not found");
+
+        await this.favoriteRepository.remove(favorite);
     }
 
 }

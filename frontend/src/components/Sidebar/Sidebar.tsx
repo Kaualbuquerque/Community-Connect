@@ -1,37 +1,38 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import styles from "./Sidebar.module.scss"
+import { useEffect, useState } from "react";
+import styles from "./Sidebar.module.scss";
 
-import dashboard_icon_light from "@/icons/sidebar/home-light.png"
-import search_icon_light from "@/icons/sidebar/find-light.png"
-import favorites_icon_light from "@/icons/sidebar/heart-light.png"
-import services_icon_light from "@/icons/sidebar/service-light.png"
-import chats_icon_light from "@/icons/sidebar/chats-light.png"
+import Image from "next/image";
+import Link from "next/link";
+import { useTheme } from "@/context/ThemeContext";
 
-import dashboard_icon_dark from "@/icons/sidebar/home-dark.png"
-import search_icon_dark from "@/icons/sidebar/find-dark.png"
-import favorites_icon_dark from "@/icons/sidebar/heart-dark.png"
-import services_icon_dark from "@/icons/sidebar/service-dark.png"
-import chats_icon_dark from "@/icons/sidebar/chats-dark.png"
+import dashboard_icon_light from "@/icons/sidebar/home-light.png";
+import search_icon_light from "@/icons/sidebar/find-light.png";
+import favorites_icon_light from "@/icons/sidebar/heart-light.png";
+import services_icon_light from "@/icons/sidebar/service-light.png";
+import chats_icon_light from "@/icons/sidebar/chats-light.png";
 
-import { useTheme } from "@/context/ThemeContext"
-import Image from "next/image"
-import Link from "next/link"
+import dashboard_icon_dark from "@/icons/sidebar/home-dark.png";
+import search_icon_dark from "@/icons/sidebar/find-dark.png";
+import favorites_icon_dark from "@/icons/sidebar/heart-dark.png";
+import services_icon_dark from "@/icons/sidebar/service-dark.png";
+import chats_icon_dark from "@/icons/sidebar/chats-dark.png";
+import Button from "../Button/Button";
 
 export default function Sidebar() {
-    const { theme } = useTheme()
-    const [role, setRole] = useState<string | null>(null)
+    const { theme } = useTheme();
+    const [role, setRole] = useState<string | null>(null);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            const storedUser = localStorage.getItem("user")
+            const storedUser = localStorage.getItem("user");
             if (storedUser) {
-                const parsedUser = JSON.parse(storedUser)
-                setRole(parsedUser.role)
+                const parsedUser = JSON.parse(storedUser);
+                setRole(parsedUser.role);
             }
         }
-    }, [])
+    }, []);
 
     const icons = {
         dashboard: theme === "light" ? dashboard_icon_dark : dashboard_icon_light,
@@ -39,50 +40,36 @@ export default function Sidebar() {
         favorites: theme === "light" ? favorites_icon_dark : favorites_icon_light,
         services: theme === "light" ? services_icon_dark : services_icon_light,
         chats: theme === "light" ? chats_icon_dark : chats_icon_light,
-    }
+    };
+
+    const menuItems = [
+        { href: "/dashboard", label: "Painel", icon: icons.dashboard },
+        { href: "/dashboard/search-service", label: "Buscar serviços", icon: icons.search },
+        { href: "/dashboard/favorites", label: "Favoritos", icon: icons.favorites },
+        ...(role === "provider"
+            ? [{ href: "/dashboard/your-services", label: "Seus serviços", icon: icons.services }]
+            : []),
+        { href: "/dashboard/chats", label: "Chats", icon: icons.chats },
+    ];
 
     return (
-        <section className={styles.sidebar}>
-            <div className={styles.menu}>
+        <aside className={styles.sidebar} aria-label="Menu lateral">
+            <nav className={styles.menu}>
                 <ul>
-                    <li>
-                        <Link href="/dashboard">
-                            <Image src={icons.dashboard.src} alt="Dashboard" width={24} height={24} />
-                            <span>Painel</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/dashboard/search-service">
-                            <Image src={icons.search.src} alt="Buscar Serviços" width={24} height={24} />
-                            <span>Buscar serviços</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/dashboard/favorites">
-                            <Image src={icons.favorites.src} alt="Favoritos" width={24} height={24} />
-                            <span>Favoritos</span>
-                        </Link>
-                    </li>
-                    {role === "provider" && (
-                        <li>
-                            <Link href="/dashboard/your-services">
-                                <Image src={icons.services.src} alt="Seus Serviços" width={24} height={24} />
-                                <span>Seus serviços</span>
+                    {menuItems.map((item) => (
+                        <li key={item.href}>
+                            <Link href={item.href}>
+                                <Image src={item.icon.src} alt={item.label} width={24} height={24} />
+                                <span>{item.label}</span>
                             </Link>
                         </li>
-                    )}
-                    <li>
-                        <Link href="/dashboard/chats">
-                            <Image src={icons.chats.src} alt="Chats" width={24} height={24} />
-                            <span>Chats</span>
-                        </Link>
-                    </li>
+                    ))}
                 </ul>
-            </div>
+            </nav>
 
             <div className={styles.logout}>
-                <p>Sair</p>
+                <Button text="Sair" type="alert"/>
             </div>
-        </section>
-    )
+        </aside>
+    );
 }

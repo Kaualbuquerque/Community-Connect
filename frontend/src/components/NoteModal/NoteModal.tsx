@@ -1,70 +1,70 @@
-"use client"
+"use client";
 
 import { useState } from "react";
+
 import Button from "../Button/Button";
 import Input from "../Input/Input";
+
 import styles from "./NoteModal.module.scss";
+import { NoteModalProps, Notes } from "@/utils/props";
+import { createNote } from "@/services/note";
+import { CreateNoteDTO } from "@/utils/types";
 
-interface NoteModalProps {
-  onClose: () => void;
-  onConfirm: (text: string, category: string) => void;
-}
+export default function NoteModal({ onClose }: NoteModalProps) {
+  const date = Date;
 
-export default function NoteModal({ onClose, onConfirm }: NoteModalProps) {
-  // Estado para os inputs:
-  const [text, setText] = useState("");
-  const [category, setCategory] = useState("");
+  const [form, setForm] = useState<CreateNoteDTO>({
+    content: "",
+    date: date.toString(),
+  });
 
-  const options = [
-    { value: "Category", label: "Select a category", disabled: true },
-    { value: "Repairs", label: "Repairs and Maintenance", disabled: false },
-    { value: "Cleaning", label: "Cleaning Services", disabled: false },
-    { value: "IT", label: "IT and Tech Support", disabled: false },
-    { value: "Tutoring", label: "Tutoring and Education", disabled: false },
-    { value: "Beauty", label: "Beauty and Aesthetics", disabled: false },
-    { value: "Events", label: "Events and Parties", disabled: false },
-    { value: "Deliveries", label: "Deliveries and Moving", disabled: false },
-    { value: "Construction", label: "Construction and Renovation", disabled: false },
-    { value: "Consulting", label: "Professional Consulting", disabled: false },
-    { value: "Other", label: "Other", disabled: false },
-  ];
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-  function handleSave() {
-    if (!text.trim() || !category || category === "Category") return; // checagem básica
-    onConfirm(text, category);
-  }
+  const handleCreateNote = async () => {
+    if (!form.content.trim()) return;
+
+    try {
+      const payload: CreateNoteDTO = {
+        content: form.content,
+        date: form.date,
+      }
+
+      await createNote(payload);
+      alert("Nota criada com sucesso!.")
+      onClose(true);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao criar nota.")
+    }
+  };
+
 
   return (
-    <section className={styles.overlay}>
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div className={styles.modal}>
-        <h3>Add a new note</h3>
+        <h3 id="modal-title">Add a new note</h3>
 
         <div className={styles.inputs}>
           <Input
-            required
             type="textarea"
+            name="content"
             label="Note"
             placeholder="What do you want to remember?"
-            max_length={400}
-            value={text}
-            onChange={e => setText(e.target.value)}
-          />
-          <Input
             required
-            type="select"
-            label="Category"
-            placeholder="Select a Category"
-            options={options}
-            value={category}
-            onChange={e => setCategory(e.target.value)}
+            maxLength={400}
+            value={form.content}
+            onChange={handleInputChange}
           />
         </div>
 
         <div className={styles.buttons}>
           <Button text="Cancel" type="secondary" handleFunction={onClose} />
-          <Button text="Save" type="primary" handleFunction={handleSave} />
+          <Button text="Save" type="primary" handleFunction={handleCreateNote} />
         </div>
       </div>
-    </section>
+    </div>
   );
 }

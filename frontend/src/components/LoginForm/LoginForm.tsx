@@ -1,71 +1,63 @@
 "use client";
 
-import { useTheme } from "@/context/ThemeContext";
-import styles from "./LoginForm.module.scss";
-import Image from "next/image";
-import Input from "../Input/Input";
-import Button from "../Button/Button";
-import logo from "@/icons/logo/community_connect_logo_light.png";
-import logo_dark from "@/icons/logo/community_connect_logo_dark.png";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+
+import { useTheme } from "@/context/ThemeContext";
 import { loginUser } from "@/services/auth";
 
-interface FormState {
-    email: string;
-    password: string;
-}
+import Input from "../Input/Input";
+import Button from "../Button/Button";
+
+import styles from "./LoginForm.module.scss";
+
+import logoLight from "@/icons/logo/community_connect_logo_light.png";
+import logoDark from "@/icons/logo/community_connect_logo_dark.png";
+import { LoginFormState } from "@/utils/props";
+
 
 export default function LoginForm() {
     const { theme } = useTheme();
     const router = useRouter();
 
-    const [errorMsg, setErrorMsg] = useState("");
-    const [form, setForm] = useState<FormState>({
+    const [form, setForm] = useState<LoginFormState>({
         email: "",
         password: "",
     });
+    const [errorMsg, setErrorMsg] = useState("");
 
-    const handleInputChange: React.ChangeEventHandler<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    > = (e) => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
-        setForm((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        setForm((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         try {
-            console.log("Dados do form no submit:", form);
             const response = await loginUser(form);
 
-
             const { access_token, user } = response;
-
             localStorage.setItem("token", access_token);
             localStorage.setItem("user", JSON.stringify(user));
 
             router.push("/dashboard");
         } catch (error: any) {
-            setErrorMsg(error || "Email ou senha inválidos.");
+            setErrorMsg(error?.message || "Email ou senha inválidos.");
         }
     };
 
+    const logo = theme === "light" ? logoDark : logoLight;
+    const logoAlt = theme === "light" ? "Community Connect logo - modo claro" : "Community Connect logo - modo escuro";
 
     return (
-        <form className={styles.loginForm} onSubmit={handleSubmit}>
-            <div className={styles.logo}>
-                {theme === "light" ? (
-                    <Image src={logo_dark} alt="Logo modo claro" />
-                ) : (
-                    <Image src={logo} alt="communit connect logo" />
-                )}
-                <h3>Communit Connect</h3>
-            </div>
+        <form className={styles.loginForm} onSubmit={handleSubmit} noValidate>
+            <header className={styles.logo}>
+                <Image src={logo} alt={logoAlt} />
+                <h3>Community Connect</h3>
+            </header>
 
             <h2>Login</h2>
 
@@ -74,7 +66,7 @@ export default function LoginForm() {
                 type="email"
                 name="email"
                 placeholder="Seu@email.com"
-                required={true}
+                required
                 value={form.email}
                 onChange={handleInputChange}
             />
@@ -84,9 +76,9 @@ export default function LoginForm() {
                 type="password"
                 name="password"
                 placeholder="Sua senha"
-                required={true}
-                min_length={6}
-                max_length={12}
+                required
+                minLength={6}
+                maxLength={12}
                 value={form.password}
                 onChange={handleInputChange}
             />

@@ -1,14 +1,18 @@
-import Chat from "@/components/Chat/Chat"
-import styles from "./page.module.scss"
+"use client";
+
+import Chat from "@/components/Chat/Chat";
+import styles from "./page.module.scss";
 
 export default function ChatsPage() {
     return (
-        <section className={styles.chatsPage}>
-            <h2>Here are your conversations</h2>
+        <main className={styles.chatsPage} aria-label="Página de conversas">
+            <header>
+                <h1>Suas conversas</h1>
+            </header>
 
-            <div className={styles.chats}>
-                <Chat id={1} />
-            </div>
-        </section>
-    )
+            <section className={styles.chats} aria-label="Lista de conversas">
+                <Chat id={1} provider="kauã" text="asda" date="domingo - 9:00"/>
+            </section>
+        </main>
+    );
 }

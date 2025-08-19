@@ -16,14 +16,26 @@ export class ServiceService {
     async create(dto: CreateServiceDto, user: User): Promise<Service> {
         const service = this.serviceRepository.create({
             ...dto,
-            provider: user,          // associa o provider
-            location: `${user.city} - ${user.state}`,     // ou o campo que tenha endereço
+            provider: user,
+            location: `${user.city} - ${user.state}`,
         });
 
         return this.serviceRepository.save(service);
     }
 
-    async findAll(userId: number): Promise<Service[]> {
+    async findAll(): Promise<Service[]> {
+        try {
+            return await this.serviceRepository.find({
+                relations: ['provider'],
+            });
+        } catch (error) {
+            console.error('Erro ao buscar serviços:', error);
+            return [];
+        }
+
+    }
+
+    async findAllByUsers(userId: number): Promise<Service[]> {
         return this.serviceRepository.find({
             where: { provider: { id: userId } }, // filtra pelo id do provider
             relations: ['provider'],

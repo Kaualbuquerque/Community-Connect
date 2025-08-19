@@ -1,7 +1,8 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Index, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../users/user.entity";
 import { Service } from "../services/service.entity";
 
+@Index(["consumer", "service"], { unique: true })
 @Entity("favorites")
 export class Favorite {
     @PrimaryGeneratedColumn()
@@ -10,6 +11,6 @@ export class Favorite {
     @ManyToOne(() => User, user => user.favorites, { onDelete: 'CASCADE', eager: true })
     consumer: User;
 
-    @ManyToOne( () => Service, service => service.favorites, {onDelete: 'CASCADE', eager: true})
-    service: Service; 
+    @ManyToOne(() => Service, service => service.favorites, { onDelete: 'CASCADE', eager: true })
+    service: Service;
 }

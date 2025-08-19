@@ -14,7 +14,7 @@ export const createService = async (data: CreateServiceDTO) => {
 
 export const getServices = async () => {
   const token = localStorage.getItem("token");
-  const response = await api.get("/services", {
+  const response = await api.get("/services/my-services", {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -22,8 +22,12 @@ export const getServices = async () => {
   return response.data;
 }
 
+export const getAllServices = async () => {
+  const response = await api.get("/services");
+  return response.data;
+};
 
-export const updateService = async (id: string, data: CreateServiceDTO) => {
+export const updateService = async (id: number, data: CreateServiceDTO) => {
   const token = localStorage.getItem("token");
 
   const response = await api.put(`/services/${id}`, data, {
@@ -35,11 +39,8 @@ export const updateService = async (id: string, data: CreateServiceDTO) => {
   return response.data;
 };
 
-export const deleteService = async (id: string) => {
+export const deleteService = async (id: number) => {
   const token = localStorage.getItem("token");
-  if (!token) {
-    throw new Error("Usuário não autenticado.");
-  }
 
   try {
     const response = await api.delete(`/services/${id}`, {

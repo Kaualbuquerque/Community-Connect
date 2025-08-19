@@ -38,7 +38,7 @@ import { HistoryModule } from './modules/history/history.module';
           password,
           database,
           entities: [__dirname + '/**/*.entity.{ts,js}'],
-          synchronize: true, // ATENÇÃO: usar somente em desenvolvimento para criar as tabelas automaticamente
+          synchronize: false, // ATENÇÃO: usar somente em desenvolvimento para criar as tabelas automaticamente
         };
       },
     }),

@@ -1,17 +1,33 @@
 import Link from "next/link";
-import styles from "./Button.module.scss"
 import Image from "next/image";
-import { ButtonProps } from "@/utils/types";
 
+import styles from "./Button.module.scss";
+import { ButtonProps } from "@/utils/props";
 
-
-export default function Button({ text, type, href, handleFunction, icon, disabled }: ButtonProps) {
+export default function Button({
+    text,
+    type,
+    href,
+    handleFunction,
+    icon,
+    disabled,
+}: ButtonProps) {
     const button = (
-        <button className={`${styles.button} ${styles[type]}`} onClick={handleFunction} disabled={disabled}>
+        <button
+            className={`${styles.button} ${styles[type]}`}
+            onClick={handleFunction}
+            disabled={disabled}
+        >
             {text}
             {icon && <Image src={icon} alt="" />}
         </button>
     );
 
-    return href ? <Link href={href} className={styles.link}>{button}</Link> : button;
+    return href ? (
+        <Link href={href} className={styles.link}>
+            {button}
+        </Link>
+    ) : (
+        button
+    );
 }

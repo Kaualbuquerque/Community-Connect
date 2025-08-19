@@ -10,8 +10,8 @@ export class Note {
     createdAt: Date;
 
     @Column({ type: "text"})
-    text: string;
+    content: string;
 
-    @ManyToOne(() => User, user => user.notes, { onDelete: 'CASCADE', eager: true })
+    @ManyToOne(() => User, (user) => user.notes, { onDelete: 'CASCADE', eager: true })
     user: User;
 }

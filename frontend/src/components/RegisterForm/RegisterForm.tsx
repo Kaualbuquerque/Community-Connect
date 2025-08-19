@@ -13,25 +13,14 @@ import logo from "@/icons/logo/community_connect_logo_light.png";
 import logo_dark from "@/icons/logo/community_connect_logo_dark.png";
 import { registerUser } from "@/services/auth";
 import { useRouter } from "next/navigation";
+import { RegisterFormState } from "@/utils/props";
 
-interface FormState {
-    userProfile: "consumer" | "provider" | "";
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    phone: string;
-    cep: string;
-    state: string;
-    city: string;
-    number: string;
-}
 
 export default function RegisterForm() {
     const { theme } = useTheme();
     const router = useRouter();
 
-    const [form, setForm] = useState<FormState>({
+    const [form, setForm] = useState<RegisterFormState>({
         userProfile: "",
         name: "",
         email: "",
@@ -126,7 +115,7 @@ export default function RegisterForm() {
                 number: "",
             });
 
-            router.push('/auth/login'); // redireciona para a página de login após sucesso
+            router.push('/auth/login'); 
 
         } catch (err: any) {
             setError(err.response?.data?.message || "Erro ao registrar usuário.");
@@ -166,7 +155,6 @@ export default function RegisterForm() {
                         value="provider"
                         checked={form.userProfile === "provider"}
                         onChange={handleInputChange}
-                        required
                     />
                 </div>
             </div>
@@ -196,8 +184,8 @@ export default function RegisterForm() {
                 value={form.password}
                 onChange={handleInputChange}
                 required
-                min_length={6}
-                max_length={12}
+                minLength={6}
+                maxLength={12}
             />
             <Input
                 label="Confirmar senha:"
@@ -207,19 +195,19 @@ export default function RegisterForm() {
                 value={form.confirmPassword}
                 onChange={handleInputChange}
                 required
-                min_length={6}
-                max_length={12}
+                minLength={6}
+                maxLength={12}
             />
             <Input
                 label="Telefone:"
-                type="phone"
+                type="text"
                 name="phone"
                 placeholder="(xx) xxxxx-xxxx"
                 value={form.phone}
                 onChange={handlePhoneChange}
                 required
-                min_length={15}
-                max_length={15}
+                minLength={15}
+                maxLength={15}
             />
             <div className={styles.location}>
                 <Input
@@ -230,8 +218,8 @@ export default function RegisterForm() {
                     value={form.cep}
                     onChange={handleCepChange}
                     required
-                    min_length={9}
-                    max_length={9}
+                    minLength={9}
+                    maxLength={9}
                 />
                 <Input
                     label="Estado:"
@@ -241,7 +229,7 @@ export default function RegisterForm() {
                     value={form.state}
                     onChange={handleInputChange}
                     required
-                    max_length={2}
+                    maxLength={2}
                 />
                 <Input
                     label="Cidade:"

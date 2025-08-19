@@ -21,7 +21,7 @@ export class User {
     @Column()
     password: string;
 
-    @Column({ length: 20})
+    @Column({ length: 20 })
     phone: string;
 
     @Column()
@@ -42,19 +42,19 @@ export class User {
 
     // relations //
 
-    @OneToMany(() => Service, service => service.provider)
+    @OneToMany(() => Service, (service) => service.provider) // feito?
     services: Service[];
 
-    @OneToMany(() => Favorite, favorite => favorite.consumer)
+    @OneToMany(() => Favorite, (favorite) => favorite.consumer) // fazendo
     favorites: Favorite[];
 
-    @OneToMany(() => Note, note => note.user)
+    @OneToMany(() => Note, (note) => note.user) // feito
     notes: Note[];
 
-    @OneToMany(() => History, history => history.consumer)
+    @OneToMany(() => History, (history) => history.consumer)
     history: History[];
 
-    @OneToMany(() => Message, msg => msg.sender)
+    @OneToMany(() => Message, (msg) => msg.sender)
     messages: Message[];
 
     @OneToMany(() => ConversationParticipant, cp => cp.user)

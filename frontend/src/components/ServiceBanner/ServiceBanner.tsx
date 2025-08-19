@@ -1,47 +1,67 @@
-"use client"
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+
+import { useTheme } from "@/context/ThemeContext";
+import Button from "../Button/Button";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+
+import styles from "./ServiceBanner.module.scss";
+import { ServiceBannerProps } from "@/utils/props";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import Image from "next/image"
-import styles from "./ServiceBanner.module.scss"
-import { useState } from "react"
-import { useTheme } from "@/context/ThemeContext"
-
-import heart_fill_light from "@/icons/favorite/heart-fill-light.png"
-import heart_fill_dark from "@/icons/favorite/heart-fill-dark.png"
-import heart_light from "@/icons/sidebar/heart-light.png"
-import heart_dark from "@/icons/sidebar/heart-dark.png"
-import Button from "../Button/Button"
-import { ServiceBannerProps } from "@/utils/types"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation, Pagination } from "swiper/modules"
-
-
-
+import heartFillLight from "@/icons/favorite/heart-fill-light.png";
+import heartFillDark from "@/icons/favorite/heart-fill-dark.png";
+import heartLight from "@/icons/sidebar/heart-light.png";
+import heartDark from "@/icons/sidebar/heart-dark.png";
+import { addFavorite, removeFavorite } from "@/services/favorite";
 
 export default function ServiceBanner({ role, service, onEdit, onDelete }: ServiceBannerProps) {
-    const { theme } = useTheme()
-    const [isFavorite, setIsFavorite] = useState(false)
-    const [isPopping, setIsPopping] = useState(false)
+    const { theme } = useTheme();
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isPopping, setIsPopping] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const toggleFavorite = () => {
-        setIsFavorite((prev) => !prev)
-        setIsPopping(true)
-        setTimeout(() => setIsPopping(false), 300)
-    }
+    const toggleFavorite = async () => {
+        if (loading) return; // evita múltiplos cliques
+        setLoading(true);
+
+        try {
+            if (isFavorite) {
+                // se já era favorito, remove
+                await removeFavorite(service.id);
+                setIsFavorite(false);
+            } else {
+                // se não era favorito, adiciona
+                await addFavorite(service.id);
+                setIsFavorite(true);
+            }
+
+            setIsPopping(true);
+            setTimeout(() => setIsPopping(false), 300);
+        } catch (error) {
+            console.error("Erro ao atualizar favoritos:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const icons = {
-        fill: theme === "light" ? heart_fill_dark : heart_fill_light,
-        outline: theme === "light" ? heart_dark : heart_light,
-    }
+        fill: theme === "light" ? heartFillDark : heartFillLight,
+        outline: theme === "light" ? heartDark : heartLight,
+    };
 
-    const heartIcon = isFavorite ? icons.fill : icons.outline
+    const heartIcon = isFavorite ? icons.fill : icons.outline;
 
     return (
         <article className={styles.serviceBanner}>
-            <header>
+            <header className={styles.header}>
                 <h1>{service.name}</h1>
                 <h5>{service.provider.name}</h5>
             </header>
@@ -63,53 +83,55 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
 
             <section className={styles.actions}>
                 {role === "provider" ? (
-                    <div>
+                    <div className={styles.providerActions}>
                         <Button text="Editar serviço" type="secondary" handleFunction={onEdit} />
                         <Button text="Deletar serviço" type="alert" handleFunction={onDelete} />
                     </div>
                 ) : (
-                    <>
-                        <button
-                            type="button"
-                            className={styles.favoriteButton}
+                    <div className={styles.consumerActions}>
+                        <Image
+                            src={heartIcon.src}
+                            alt={isFavorite ? "Favorito" : "Não favoritado"}
+                            width={32}
+                            height={32}
+                            className={`${styles.heart} ${isPopping ? styles.pop : ""}`}
+                            role="button"
+                            tabIndex={0}
                             onClick={toggleFavorite}
-                            aria-label="Adicionar aos favoritos"
-                        >
-                            <Image
-                                src={heartIcon.src}
-                                alt="Ícone de favorito"
-                                width={32}
-                                height={32}
-                                className={`${styles.heart} ${isPopping ? styles.pop : ""}`}
-                            />
-                        </button>
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") toggleFavorite();
+                            }}
+                            aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                        />
+
                         <Button text="Enviar mensagem" type="primary" />
-                    </>
+                    </div>
                 )}
             </section>
 
-            <figure className={styles.imageWrapper}>
-                <Swiper
-                    modules={[Navigation, Pagination]}
-                    navigation
-                    pagination={{ clickable: true }}
-                    spaceBetween={10}
-                    slidesPerView={1}
-                    style={{ width: "100%", height: "auto" }}
-                >
-                    {service.images?.map((img, index) => (
-                        <SwiperSlide key={index}>
-                            <Image
-                                src={img}
-                                alt={`Imagem ${index + 1} do serviço ${service.name}`}
-                                width={500}
-                                height={300}
-                            />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </figure>
+            {service.images?.length > 0 && (
+                <figure className={styles.imageWrapper}>
+                    <Swiper
+                        modules={[Navigation, Pagination]}
+                        navigation
+                        pagination={{ clickable: true }}
+                        spaceBetween={10}
+                        slidesPerView={1}
+                        style={{ width: "100%", height: "auto" }}
+                    >
+                        {service.images.map((img, index) => (
+                            <SwiperSlide key={index}>
+                                <Image
+                                    src={img}
+                                    alt={`Imagem ${index + 1} do serviço ${service.name}`}
+                                    width={500}
+                                    height={300}
+                                />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </figure>
+            )}
         </article>
     );
-
 }

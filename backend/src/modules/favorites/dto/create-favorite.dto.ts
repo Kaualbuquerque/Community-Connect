@@ -1,11 +1,6 @@
-import { IsNotEmpty, IsNumber} from "class-validator";
+import { IsNotEmpty, IsNumber } from "class-validator";
 
-export default class CreateFavoriteDto{
-
-    @IsNotEmpty()
-    @IsNumber()
-    consumerId: number;
-
+export default class CreateFavoriteDto {
     @IsNotEmpty()
     @IsNumber()
     serviceId: number;

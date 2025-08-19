@@ -8,7 +8,9 @@
         font-weight: 600;
     }
 
-    input, textarea, select {
+    input,
+    textarea,
+    select {
         background-color: var(--button-color-secondary);
         font-family: var(--font-family);
         height: 50px;
@@ -19,7 +21,9 @@
         resize: none;
     }
 
-    input::placeholder, textarea::placeholder, select::placeholder {
+    input::placeholder,
+    textarea::placeholder,
+    select::placeholder {
         color: var(--card-description-color);
     }
 }
@@ -37,23 +41,26 @@
     font-weight: 600;
     background-color: transparent;
     transition: all 0.2s ease-in-out;
+    position: relative;
 
     input[type="radio"] {
-        display: none;
-    }
-
-    span {
+        position: absolute;
+        opacity: 0;
         pointer-events: none;
     }
 
-    &:has(input[type="radio"]:checked) {
+    /* quando o input está marcado, estilize o label */
+    input[type="radio"]:checked+label {
         color: var(--text-color);
-        border-color: var(--form-profile-button-border);
+        border: 2px solid var(--form-profile-button-border);
+        border-radius: 8px;
+        padding: 1rem 2rem;
     }
 }
 
-.input{
-    textarea{
+
+.input {
+    textarea {
         padding: .5rem;
     }
 }
