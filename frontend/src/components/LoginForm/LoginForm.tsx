@@ -14,7 +14,7 @@ import styles from "./LoginForm.module.scss";
 
 import logoLight from "@/icons/logo/community_connect_logo_light.png";
 import logoDark from "@/icons/logo/community_connect_logo_dark.png";
-import { LoginFormState } from "@/utils/props";
+import { LoginFormState } from "@/utils/interfaces";
 
 
 export default function LoginForm() {

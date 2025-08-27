@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./Message.module.scss"
-import { MessageProps } from "@/utils/props";
+import { MessageProps } from "@/utils/interfaces";
 
 export default function Message({ text, type }: MessageProps) {
 

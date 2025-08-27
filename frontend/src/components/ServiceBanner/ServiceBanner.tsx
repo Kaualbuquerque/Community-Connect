@@ -10,7 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 import styles from "./ServiceBanner.module.scss";
-import { ServiceBannerProps } from "@/utils/props";
+import { ServiceBannerProps } from "@/utils/interfaces";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -24,21 +24,19 @@ import { addFavorite, removeFavorite } from "@/services/favorite";
 
 export default function ServiceBanner({ role, service, onEdit, onDelete }: ServiceBannerProps) {
     const { theme } = useTheme();
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(service.isFavorite ?? false); // 👈 começa conforme backend
     const [isPopping, setIsPopping] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const toggleFavorite = async () => {
-        if (loading) return; // evita múltiplos cliques
+        if (loading) return;
         setLoading(true);
 
         try {
             if (isFavorite) {
-                // se já era favorito, remove
                 await removeFavorite(service.id);
                 setIsFavorite(false);
             } else {
-                // se não era favorito, adiciona
                 await addFavorite(service.id);
                 setIsFavorite(true);
             }
@@ -58,6 +56,7 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
     };
 
     const heartIcon = isFavorite ? icons.fill : icons.outline;
+
 
     return (
         <article className={styles.serviceBanner}>
@@ -119,10 +118,10 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                         slidesPerView={1}
                         style={{ width: "100%", height: "auto" }}
                     >
-                        {service.images.map((img, index) => (
+                        {service.images?.map((img, index) => (
                             <SwiperSlide key={index}>
-                                <Image
-                                    src={img}
+                                <img
+                                    src={img} // já vem em base64
                                     alt={`Imagem ${index + 1} do serviço ${service.name}`}
                                     width={500}
                                     height={300}

@@ -31,9 +31,10 @@
 .favorites {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1rem 3rem;
-
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 1rem;
+    
     button {
         width: 35%;
     }

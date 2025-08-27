@@ -30,8 +30,8 @@ export class Service {
     @Column()
     category: string;
 
-    @Column({ type: "text", array: true, nullable: true })
-    images: Text[];
+    @Column("bytea", { array: true, nullable: true })
+    images: Buffer[];
 
     @ManyToOne(() => User, user => user.services, { onDelete: 'CASCADE', eager: true })
     provider: User;

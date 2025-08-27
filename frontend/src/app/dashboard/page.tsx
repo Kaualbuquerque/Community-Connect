@@ -5,7 +5,7 @@ import Button from "@/components/Button/Button";
 import NoteModal from "@/components/NoteModal/NoteModal";
 import styles from "./page.module.scss";
 import { deleteNote, getNotes } from "@/services/note";
-import { Notes } from "@/utils/props";
+import { Notes } from "@/utils/interfaces";
 import Note from "@/components/Note/Note";
 
 export default function DashboardPage() {

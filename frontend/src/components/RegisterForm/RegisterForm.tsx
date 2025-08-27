@@ -13,7 +13,7 @@ import logo from "@/icons/logo/community_connect_logo_light.png";
 import logo_dark from "@/icons/logo/community_connect_logo_dark.png";
 import { registerUser } from "@/services/auth";
 import { useRouter } from "next/navigation";
-import { RegisterFormState } from "@/utils/props";
+import { RegisterFormState } from "@/utils/interfaces";
 
 
 export default function RegisterForm() {

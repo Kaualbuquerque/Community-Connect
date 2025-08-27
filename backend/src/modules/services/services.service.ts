@@ -5,39 +5,45 @@ import { Repository } from "typeorm";
 import { CreateServiceDto } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
 import { User } from "../users/user.entity";
+import { Favorite } from "../favorites/favorite.entity";
+
+
+function imageConverter(img: any, mime = 'image/jpeg') {
+    // Se já for string data URL, retorna direto
+    if (typeof img === 'string' && img.startsWith('data:')) return img;
+
+    // Caso seja objeto { type: 'Buffer', data: [...] }
+    if (img?.data) return `data:${mime};base64,${Buffer.from(img.data).toString('base64')}`;
+
+    throw new Error("Formato de imagem inesperado: " + JSON.stringify(img));
+}
 
 @Injectable()
 export class ServiceService {
     constructor(
         @InjectRepository(Service)
-        private serviceRepository: Repository<Service>
+        private serviceRepository: Repository<Service>,
+        @InjectRepository(Favorite)
+        private favoriteRepository: Repository<Favorite>
     ) { }
 
-    async create(dto: CreateServiceDto, user: User): Promise<Service> {
+
+    async create(dto: CreateServiceDto, user: User, files?: Express.Multer.File[]): Promise<Service> {
+        const images: Buffer[] = files ? files.map(file => file.buffer) : [];
+
         const service = this.serviceRepository.create({
             ...dto,
             provider: user,
             location: `${user.city} - ${user.state}`,
+            images,
         });
 
         return this.serviceRepository.save(service);
     }
 
-    async findAll(): Promise<Service[]> {
-        try {
-            return await this.serviceRepository.find({
-                relations: ['provider'],
-            });
-        } catch (error) {
-            console.error('Erro ao buscar serviços:', error);
-            return [];
-        }
-
-    }
-
     async findAllByUsers(userId: number): Promise<Service[]> {
         return this.serviceRepository.find({
-            where: { provider: { id: userId } }, // filtra pelo id do provider
+            where: { provider: { id: userId } },
             relations: ['provider'],
         });
     }
@@ -51,6 +57,37 @@ export class ServiceService {
         return service;
     }
 
+    async findAllWithFavorite(userId?: number) {
+        const services = await this.serviceRepository.find({
+            relations: ["provider"],
+        });
+
+        // Converte imagens buffer → base64
+        const servicesWithImages = services.map(service => ({
+            ...service,
+            images: service.images?.map(img => imageConverter(img)) ?? [],
+        }));
+
+        if (!userId) {
+            return servicesWithImages.map(service => ({
+                ...service,
+                isFavorite: false
+            }));
+        }
+
+        const favorites = await this.favoriteRepository.find({
+            where: { consumer: { id: userId } },
+            relations: ["service"],
+        });
+
+        const favoriteIds = favorites.map(fav => fav.service.id);
+
+        return servicesWithImages.map(service => ({
+            ...service,
+            isFavorite: favoriteIds.includes(service.id),
+        }));
+    }
+
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
         await this.serviceRepository.update(id, dto);
         return this.findOne(id);
@@ -60,4 +97,5 @@ export class ServiceService {
         const result = await this.serviceRepository.delete(id);
         if (result.affected === 0) throw new NotFoundException(`Service #${id} not found`);
     }
+
 }

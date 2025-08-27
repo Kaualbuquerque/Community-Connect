@@ -6,7 +6,7 @@ import styles from "./page.module.scss";
 import ServiceModal from "@/components/ServiceModal/ServiceModal";
 import Button from "@/components/Button/Button";
 import { createService, deleteService, getServices, updateService } from "@/services/service";
-import { Service } from "@/utils/types";
+import { Service } from "@/utils/interfaces";
 
 export default function YourServicesPage() {
     const [services, setServices] = useState<Service[]>([]);

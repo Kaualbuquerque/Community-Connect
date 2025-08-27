@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import { useTheme } from "@/context/ThemeContext";
-import { FeatureCardProps } from "@/utils/props";
+import { FeatureCardProps } from "@/utils/interfaces";
 
 import styles from "./FeatureCard.module.scss";
 

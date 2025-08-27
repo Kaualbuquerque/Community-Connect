@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Favorite } from "./favorite.entity";
 import { Repository } from "typeorm";
 import CreateFavoriteDto from "./dto/create-favorite.dto";
+import { Service } from "../services/service.entity";
 
 @Injectable()
 export class FavoriteService {
@@ -19,34 +20,27 @@ export class FavoriteService {
             },
             relations: ["consumer", "service", "service.provider"],
         });
-    
+
         if (existing) {
             return existing; // já favoritado, retorna
         }
-    
+
         const favorite = this.favoriteRepository.create({
             consumer: { id: consumerId },
             service: { id: serviceId },
         });
-    
+
         return this.favoriteRepository.save(favorite);
     }
 
-    async findByUser(userId: number): Promise<Favorite[]> {
-        return this.favoriteRepository.find({
-            where: { consumer: { id: userId } },
-            relations: ["service"],
+    async findByUser(userId: number): Promise<Service[]> {
+        const favorites = await this.favoriteRepository.find({
+            where: { consumer: { id: userId } }, relations: ["service", "service.provider"],
         });
+
+        return favorites.map(fav => ({ ...fav.service, isFavorite: true, }));
     }
 
-    async getFavorite(id: number): Promise<Favorite> {
-        const favorite = await this.favoriteRepository.findOne({
-            where: { id },
-            relations: ["consumer", "service", "service.provider"],
-        });
-        if (!favorite) throw new NotFoundException(`Favorite #${id} not found`);
-        return favorite;
-    }
 
     async removeFavorite(consumerId: number, serviceId: number): Promise<void> {
         const favorite = await this.favoriteRepository.findOne({

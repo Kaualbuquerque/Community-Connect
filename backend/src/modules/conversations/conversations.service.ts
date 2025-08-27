@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Conversation } from "./conversation.entity";
 import { ConversationParticipant } from "./conversation-participant.entity";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { CreateConversationDto } from "./dto/create-conversation.dto";
 
 @Injectable()
@@ -10,22 +10,31 @@ export class ConversationService {
     constructor(
         @InjectRepository(Conversation)
         private conversationRepository: Repository<Conversation>,
-        @InjectRepository(ConversationParticipant)
-        private participantRepository: Repository<ConversationParticipant>,
+
+        private readonly dataSource: DataSource
     ) { }
 
-    async create(dto: CreateConversationDto): Promise<Conversation> {
-        const conversation = this.conversationRepository.create();
-        await this.conversationRepository.save(conversation);
+    async create(dto: CreateConversationDto, userId: number): Promise<Conversation> {
+        return await this.dataSource.transaction(async manager => {
+            const conversation = manager.create(Conversation);
+            await manager.save(conversation);
 
-        const participant = dto.participantIds.map(userId => this.participantRepository.create({
-            conversation: { id: conversation.id },
-            user: { id: userId }
-        }));
+            const participants = [
+                manager.create(ConversationParticipant, { conversation, user: { id: userId } }),
+                manager.create(ConversationParticipant, { conversation, user: { id: dto.participantId } }),
+            ];
+            await manager.save(participants);
 
-        await this.participantRepository.save(participant);
+            // Garantindo não-null
+            const result = await manager.findOne(Conversation, {
+                where: { id: conversation.id },
+                relations: ['participants', 'messages'],
+            });
 
-        return this.findOne(conversation.id);
+            if (!result) throw new Error(`Conversation with id ${conversation.id} not found`);
+
+            return result;
+        });
     }
 
     findAll(): Promise<Conversation[]> {
@@ -35,12 +44,16 @@ export class ConversationService {
     }
 
     async findOne(id: number): Promise<Conversation> {
-        const conv = await this.conversationRepository.findOne({
+        const conversation = await this.conversationRepository.findOne({
             where: { id },
-            relations: ['participants', 'participants.user', 'messages'],
+            relations: ['participants', 'messages'],
         });
-        if (!conv) throw new NotFoundException(`Conversation #${id} not found`);
-        return conv;
+
+        if (!conversation) {
+            throw new NotFoundException(`Conversation with id ${id} not found`);
+        }
+
+        return conversation;
     }
 
     async remove(id: number): Promise<void> {

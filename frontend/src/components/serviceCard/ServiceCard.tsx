@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import styles from './ServiceCard.module.scss';
-import { HomeCardProps } from '@/utils/props';
+import { HomeCardProps } from '@/utils/interfaces';
 
 export default function HomeCard({ image, title, description }: HomeCardProps) {
     return (

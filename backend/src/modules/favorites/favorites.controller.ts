@@ -22,6 +22,6 @@ export class FavoriteController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async getFavorites(@Request() req) {
-        return this.favoriteService.getFavorite(req.user.id);
+        return this.favoriteService.findByUser(req.user.id);
     }
 }

@@ -6,8 +6,7 @@ import styles from "./ServiceModal.module.scss";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
 import { options } from "@/utils/options";
-import { CreateServiceDTO, RegisterData, Service } from "@/utils/types";
-import { ServiceModalProps } from "@/utils/props";
+import { CreateServiceDTO, RegisterData, Service, ServiceModalProps } from "@/utils/interfaces";
 
 export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }: ServiceModalProps) {
     const emptyProvider: RegisterData = {
@@ -23,7 +22,7 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
     };
 
     const [form, setForm] = useState<Service>({
-        id: "",
+        id: 0,
         name: "",
         description: "",
         provider: emptyProvider,
@@ -40,7 +39,7 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
 
     useEffect(() => {
         setForm({
-            id: "",
+            id: 0,
             name: "",
             description: "",
             provider: emptyProvider,

@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Service } from "../services/service.entity";
 import { Favorite } from "../favorites/favorite.entity";
 import { Note } from "../notes/note.entity";
@@ -19,15 +19,14 @@ export class User {
     email: string;
 
     @Column()
-    password: string;
+    password: string; // sempre hashar antes de salvar
 
     @Column({ length: 20 })
     phone: string;
 
-    @Column()
+    @Column({ type: 'enum', enum: ['consumer', 'provider'], default: 'consumer' })
     role: 'consumer' | 'provider';
 
-    // **Novos campos de endereço**
     @Column({ length: 9 })
     cep: string;
 
@@ -40,21 +39,23 @@ export class User {
     @Column({ length: 20 })
     number: string;
 
-    // relations //
+    @CreateDateColumn()
+    createdAt: Date;
 
-    @OneToMany(() => Service, (service) => service.provider) // feito?
+    // Relations
+    @OneToMany(() => Service, service => service.provider)
     services: Service[];
 
-    @OneToMany(() => Favorite, (favorite) => favorite.consumer) // fazendo
+    @OneToMany(() => Favorite, favorite => favorite.consumer)
     favorites: Favorite[];
 
-    @OneToMany(() => Note, (note) => note.user) // feito
+    @OneToMany(() => Note, note => note.user)
     notes: Note[];
 
-    @OneToMany(() => History, (history) => history.consumer)
+    @OneToMany(() => History, history => history.consumer)
     history: History[];
 
-    @OneToMany(() => Message, (msg) => msg.sender)
+    @OneToMany(() => Message, msg => msg.sender)
     messages: Message[];
 
     @OneToMany(() => ConversationParticipant, cp => cp.user)

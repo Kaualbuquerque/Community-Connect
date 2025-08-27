@@ -17,8 +17,12 @@ export class CreateServiceDto {
     @IsString()
     category: string;
 
+    @IsNotEmpty()
+    @IsString()
+    location: string;
+
     @IsArray()
     @IsOptional()
     @IsString({ each: true })
-    images?: string[];
+    images: Buffer[];
 }

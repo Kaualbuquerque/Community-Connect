@@ -1,4 +1,4 @@
-import { NoteProps } from "@/utils/props";
+import { NoteProps } from "@/utils/interfaces";
 
 import styles from "./Note.module.scss";
 import Button from "../Button/Button";

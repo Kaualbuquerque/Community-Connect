@@ -31,9 +31,9 @@
 .services {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     grid-template-rows: auto;
-    gap: 1rem 3rem;
+    gap: 1rem;
 
     button {
         width: 35%;

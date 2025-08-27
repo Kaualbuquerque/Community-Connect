@@ -1,5 +1,4 @@
-
-import { CreateServiceDTO } from "@/utils/types";
+import { CreateServiceDTO } from "@/utils/interfaces";
 import { api } from "./api";
 
 export const createService = async (data: CreateServiceDTO) => {
@@ -23,7 +22,12 @@ export const getServices = async () => {
 }
 
 export const getAllServices = async () => {
-  const response = await api.get("/services");
+  const token = localStorage.getItem("token");
+  const response = await api.get("/services", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return response.data;
 };
 

@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Conversation } from "./conversation.entity";
 import { User } from "../users/user.entity";
 
@@ -8,11 +8,20 @@ export class ConversationParticipant {
   conversationId: number;
 
   @PrimaryColumn()
+  @Index()
   userId: number;
 
   @ManyToOne(() => Conversation, conv => conv.participants)
+  @JoinColumn({ name: "conversationId" })
   conversation: Conversation;
 
   @ManyToOne(() => User, user => user.conversations)
+  @JoinColumn({ name: "userId" })
   user: User;
+
+  @Column({ nullable: true })
+  lastReadMessageId?: number;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 }
