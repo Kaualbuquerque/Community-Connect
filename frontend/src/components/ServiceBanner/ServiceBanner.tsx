@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
 import Button from "../Button/Button";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 import styles from "./ServiceBanner.module.scss";
@@ -21,12 +21,30 @@ import heartFillDark from "@/icons/favorite/heart-fill-dark.png";
 import heartLight from "@/icons/sidebar/heart-light.png";
 import heartDark from "@/icons/sidebar/heart-dark.png";
 import { addFavorite, removeFavorite } from "@/services/favorite";
+import { useRouter } from "next/navigation";
+import { createConversation } from "@/services/conversation";
 
 export default function ServiceBanner({ role, service, onEdit, onDelete }: ServiceBannerProps) {
     const { theme } = useTheme();
     const [isFavorite, setIsFavorite] = useState(service.isFavorite ?? false); // 👈 começa conforme backend
     const [isPopping, setIsPopping] = useState(false);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    const handleContact = async () => {
+        console.log("Cliquei em enviar mensagem");
+        try {
+            const conversation = await createConversation({
+                participantId: service.provider.id,
+            });
+
+            router.push(`/dashboard/chats/${conversation.id}`);
+        } catch (err) {
+            console.error("Erro ao iniciar conversa:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const toggleFavorite = async () => {
         if (loading) return;
@@ -103,7 +121,11 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                             aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                         />
 
-                        <Button text="Enviar mensagem" type="primary" />
+                        <Button
+                            text={loading ? "Carregando..." : "Enviar mensagem"}
+                            type="primary"
+                            handleFunction={handleContact}
+                        />
                     </div>
                 )}
             </section>
@@ -118,16 +140,6 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                         slidesPerView={1}
                         style={{ width: "100%", height: "auto" }}
                     >
-                        {service.images?.map((img, index) => (
-                            <SwiperSlide key={index}>
-                                <img
-                                    src={img} // já vem em base64
-                                    alt={`Imagem ${index + 1} do serviço ${service.name}`}
-                                    width={500}
-                                    height={300}
-                                />
-                            </SwiperSlide>
-                        ))}
                     </Swiper>
                 </figure>
             )}

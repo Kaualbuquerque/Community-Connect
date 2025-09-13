@@ -28,7 +28,7 @@ export class ConversationService {
             // Garantindo não-null
             const result = await manager.findOne(Conversation, {
                 where: { id: conversation.id },
-                relations: ['participants', 'messages'],
+                relations: ['participants'],
             });
 
             if (!result) throw new Error(`Conversation with id ${conversation.id} not found`);
@@ -39,22 +39,20 @@ export class ConversationService {
 
     findAll(): Promise<Conversation[]> {
         return this.conversationRepository.find({
-            relations: ['participants', 'participants.user', 'messages'],
+            relations: ['participants', 'participants.user'],
         });
     }
 
-    async findOne(id: number): Promise<Conversation> {
-        const conversation = await this.conversationRepository.findOne({
-            where: { id },
-            relations: ['participants', 'messages'],
-        });
-
-        if (!conversation) {
-            throw new NotFoundException(`Conversation with id ${id} not found`);
-        }
-
-        return conversation;
+    async findOne(userId: number) {
+        return this.conversationRepository
+            .createQueryBuilder("conversation")
+            .leftJoinAndSelect("conversation.participants", "participant")
+            .leftJoinAndSelect("participant.user", "user") 
+            .leftJoinAndSelect("conversation.lastMessage", "lastMessage")
+            .where("participant.userId = :userId", { userId })
+            .getMany();
     }
+
 
     async remove(id: number): Promise<void> {
         const res = await this.conversationRepository.delete(id);

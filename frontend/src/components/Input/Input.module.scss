@@ -34,28 +34,30 @@
     justify-content: center;
     padding: 1rem 2rem;
     margin-right: 1rem;
-    border: 2px solid var(--button-color-secondary);
     border-radius: 8px;
     cursor: pointer;
     user-select: none;
     font-weight: 600;
-    background-color: transparent;
     transition: all 0.2s ease-in-out;
     position: relative;
+}
 
-    input[type="radio"] {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
+.radioBox input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
 
-    /* quando o input está marcado, estilize o label */
-    input[type="radio"]:checked+label {
-        color: var(--text-color);
-        border: 2px solid var(--form-profile-button-border);
-        border-radius: 8px;
-        padding: 1rem 2rem;
-    }
+.radioBox label {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border: 2px solid var(--button-color-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.radioBox input[type="radio"]:checked+label {
+    color: var(--text-color);
+    border-color: var(--form-profile-button-border);
 }
 
 

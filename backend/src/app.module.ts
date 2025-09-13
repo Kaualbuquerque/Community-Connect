@@ -11,6 +11,7 @@ import { FavoritesModule } from './modules/favorites/favorites.module';
 import { ConversationsModule } from './modules/conversations/conversations.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { HistoryModule } from './modules/history/history.module';
+import { ChatModule } from './modules/chats/chat.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { HistoryModule } from './modules/history/history.module';
     ConversationsModule,
     MessagesModule,
     HistoryModule,
+    ChatModule
   ],
 })
 export class AppModule {}

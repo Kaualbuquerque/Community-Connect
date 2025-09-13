@@ -18,6 +18,10 @@ export default function Filter({ onApplyFilter }: FilterProps) {
         onApplyFilter({ category, minPrice, maxPrice });
     };
 
+    const handleCancel = () => {
+        onApplyFilter({ category: "", minPrice: 0, maxPrice: 9999999 })
+    }
+
     return (
         <section className={styles.filter} aria-labelledby="filter-title">
             <h2 id="filter-title">Filtrar por:</h2>
@@ -49,8 +53,10 @@ export default function Filter({ onApplyFilter }: FilterProps) {
                     />
                 </div>
             </fieldset>
-
-            <Button text="Filtrar" type="primary" handleFunction={handleSubmit} />
+            <div className={styles.buttons}>
+                <Button text="Limpar" type="secondary" handleFunction={handleCancel} />
+                <Button text="Filtrar" type="primary" handleFunction={handleSubmit} />
+            </div>
         </section>
     );
 }

@@ -20,7 +20,6 @@ export class MessageService {
     async create(dto: CreateMessageDto): Promise<Message> {
         const sender = await this.usersRepository.findOneBy({ id: dto.senderId });
         const conversation = await this.conversationsRepository.findOneBy({ id: dto.conversationId });
-
         if (!sender || !conversation) throw new NotFoundException('Sender or conversation not found');
 
         const message = this.messageRepository.create({
@@ -31,16 +30,17 @@ export class MessageService {
         return this.messageRepository.save(message);
     }
 
-    async findAll(): Promise<Message[]> {
-        return this.messageRepository.find({ relations: ['sender', 'conversation'] });
-    }
+    async findByConversation(conversationId: number, page: number = 1, limit: number = 20) {
+        const [messages, total] = await this.messageRepository.findAndCount({
+            where: { conversationId },
+            order: { timestamp: 'ASC' }, // mais antigos primeiro
+            skip: (page - 1) * limit,
+            take: limit,
+        });
 
-    async findOne(id: number): Promise<Message> {
-        return this.messageRepository.findOne({ where: { id }, relations: ['sender', 'conversation'] })
-            .then(message => {
-                if (!message) throw new NotFoundException(`Message with id ${id} not found`);
-                return message;
-            });
+        return {
+            total, page, limit, messages,
+        };
     }
 
     async remove(id: number): Promise<void> {

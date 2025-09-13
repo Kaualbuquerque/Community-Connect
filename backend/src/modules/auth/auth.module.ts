@@ -12,6 +12,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { OptionalJwtAuthGuard } from './guards/optional-jwt-auth.guard';
+import { WsJwtGuard } from './guards/ws-jwt.guard';
 
 @Module({
   imports: [
@@ -29,8 +30,8 @@ import { OptionalJwtAuthGuard } from './guards/optional-jwt-auth.guard';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtAuthGuard, LocalAuthGuard, OptionalJwtAuthGuard],
+  providers: [AuthService, LocalStrategy, JwtStrategy, WsJwtGuard],
   controllers: [AuthController],
-  exports: [AuthService, PassportModule, JwtStrategy],
+  exports: [AuthService, PassportModule, JwtStrategy, JwtModule],
 })
 export class AuthModule { }

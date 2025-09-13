@@ -12,14 +12,14 @@ export class Message {
   @Column()
   conversationId: number;
 
-  @Column()
-  senderId: number;
-
-  @ManyToOne(() => Conversation, conv => conv.messages)
+  @ManyToOne(() => Conversation, conv => conv.messages, { onDelete: 'CASCADE' })
   @JoinColumn({ name: "conversationId" })
   conversation: Conversation;
 
-  @ManyToOne(() => User, user => user.messages)
+  @Column()
+  senderId: number;
+
+  @ManyToOne(() => User, user => user.messages, { onDelete: 'CASCADE' })
   @JoinColumn({ name: "senderId" })
   sender: User;
 
@@ -28,9 +28,6 @@ export class Message {
 
   @Column('text')
   content: string;
-
-  @Column({ type: 'enum', enum: ['sent', 'delivered', 'read'], default: 'sent' })
-  status: 'sent' | 'delivered' | 'read';
 
   @Column({ default: false })
   isDeleted: boolean;

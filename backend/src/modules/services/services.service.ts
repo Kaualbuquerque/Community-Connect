@@ -7,17 +7,6 @@ import { UpdateServiceDto } from "./dto/update-service.dto";
 import { User } from "../users/user.entity";
 import { Favorite } from "../favorites/favorite.entity";
 
-
-function imageConverter(img: any, mime = 'image/jpeg') {
-    // Se já for string data URL, retorna direto
-    if (typeof img === 'string' && img.startsWith('data:')) return img;
-
-    // Caso seja objeto { type: 'Buffer', data: [...] }
-    if (img?.data) return `data:${mime};base64,${Buffer.from(img.data).toString('base64')}`;
-
-    throw new Error("Formato de imagem inesperado: " + JSON.stringify(img));
-}
-
 @Injectable()
 export class ServiceService {
     constructor(
@@ -65,7 +54,7 @@ export class ServiceService {
         // Converte imagens buffer → base64
         const servicesWithImages = services.map(service => ({
             ...service,
-            images: service.images?.map(img => imageConverter(img)) ?? [],
+            images: service.images?.map(img => img) ?? [],
         }));
 
         if (!userId) {

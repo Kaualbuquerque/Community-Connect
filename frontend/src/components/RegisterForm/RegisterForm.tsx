@@ -21,7 +21,7 @@ export default function RegisterForm() {
     const router = useRouter();
 
     const [form, setForm] = useState<RegisterFormState>({
-        userProfile: "",
+        userProfile: "consumer",
         name: "",
         email: "",
         password: "",
@@ -71,7 +71,7 @@ export default function RegisterForm() {
             ...prev,
             [name]: value,
         }));
-    };
+    };  
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -103,7 +103,7 @@ export default function RegisterForm() {
             await registerUser(payload);
 
             setForm({
-                userProfile: "",
+                userProfile: "consumer",
                 name: "",
                 email: "",
                 password: "",
@@ -115,7 +115,7 @@ export default function RegisterForm() {
                 number: "",
             });
 
-            router.push('/auth/login'); 
+            router.push('/auth/login');
 
         } catch (err: any) {
             setError(err.response?.data?.message || "Erro ao registrar usuário.");
@@ -140,15 +140,16 @@ export default function RegisterForm() {
                 <p>Escolha seu perfil:</p>
                 <div>
                     <Input
+                        id="consumer"
                         label="Consumidor"
                         type="radio"
                         name="userProfile"
                         value="consumer"
                         checked={form.userProfile === "consumer"}
                         onChange={handleInputChange}
-                        required
                     />
                     <Input
+                        id="provider"
                         label="Provedor"
                         type="radio"
                         name="userProfile"

@@ -4,6 +4,7 @@ import { ChangeEvent } from "react";
 
 // Form data
 export interface RegisterData {
+    id: number;
     name: string;
     email: string;
     password: string;
@@ -106,9 +107,8 @@ export interface ButtonProps {
 
 // Chat
 export interface ChatProps {
-    id: string | number,
+    id: number,
     provider: string,
-    text: string,
     date: string,
 }
 
@@ -206,7 +206,6 @@ export interface Messages {
     senderId: number;
     timestamp: string; // ISO string
     content: string;
-    status: "sent" | "delivered" | "read"; // pode expandir se quiser
     isDeleted: boolean;
     editedAt: string | null;
 }

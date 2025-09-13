@@ -1,28 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, UseGuards } from "@nestjs/common";
 import { MessageService } from "./messages.service";
 import { CreateMessageDto } from "./dto/create-message.dt";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 
 @Controller("messages")
 export class MessageController {
     constructor(private readonly messagesService: MessageService) { }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     create(@Body() dto: CreateMessageDto) {
         return this.messagesService.create(dto);
     }
 
-    @Get()
-    findAll(){
-        return this.messagesService.findAll();
+
+    @Get(':conversationId')
+    async getMessages(@Param('conversationId', ParseIntPipe) conversationId: number, @Query('page') page = 1, @Query('limit') limit = 20) {
+        return this.messagesService.findByConversation(conversationId, Number(page), Number(limit));
     }
 
-    @Get(":id")
-    findOne(@Param("is") id: number){
-        return this.messagesService.findOne(id);
-    }
 
     @Delete(":id")
-    remove(@Param("id") id: number){
+    @UseGuards(JwtAuthGuard)
+    remove(@Param("id") id: number) {
         return this.messagesService.remove(id);
     }
 }

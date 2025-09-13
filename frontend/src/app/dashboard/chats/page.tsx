@@ -8,6 +8,7 @@ import { getConversations } from "@/services/conversation";
 
 export default function ChatsPage() {
 
+    const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,22 +28,36 @@ export default function ChatsPage() {
     };
 
 
-    const fetchConversations = useCallback(async () => {
-        try {
-            setLoading(true);
-            const data = await getConversations();
-            setConversations(data);
-            console.log(data);
-        } catch (error) {
-            console.error("Erro ao carregar as conversas:", error);
-        } finally {
-            setLoading(false);
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                setLoggedUserId(user.id);
+            } catch (error) {
+                console.error("Erro ao ler usuário do localStorage:", error);
+            }
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
-        fetchConversations()
-    }, [fetchConversations])
+        const fetchConversations = async () => {
+            if (!loggedUserId) return;
+
+            try {
+                setLoading(true);
+                const data = await getConversations(loggedUserId);
+                setConversations(data);
+                console.log(data);
+            } catch (error) {
+                console.error("Erro ao carregar as conversas:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchConversations();
+    }, [loggedUserId]);
 
     return (
         <main className={styles.chatsPage} aria-label="Página de conversas">
@@ -56,7 +71,6 @@ export default function ChatsPage() {
                         key={conversation.id}
                         id={conversation.id}
                         provider={formatName(conversation.participants[0].user.name)}
-                        text={conversation.messages.at(-1)?.content || ""}
                         date={formatDate(conversation.updatedAt)}
                     />
                 ))}

@@ -21,17 +21,17 @@ export default function Input({
             case "radio":
                 return (
                     <div className={styles.radioBox}>
-                        <input
-                            type="radio"
-                            id={id}
-                            name={name}
-                            value={value}
-                            required={required}
-                            onChange={onChange}
-                            checked={checked}
-                        />
-                        {label && <label htmlFor={id}>{label}</label>}
-                    </div>
+  <input
+    type="radio"
+    id={id}
+    name={name}
+    value={value}
+    checked={checked}
+    onChange={onChange}
+    required={required}
+  />
+  {label && <label htmlFor={id}>{label}</label>}
+</div>
                 );
 
             case "textarea":
