@@ -7,12 +7,12 @@ export class History {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "date" })
-    usedAt: string;
+    @Column({ type: "timestamp" })
+    usedAt: Date;
 
     @ManyToOne(() => User, user => user.history, { onDelete: 'CASCADE', eager: true })
     consumer: User;
 
-    @ManyToOne(() => Service, service => service.history, { onDelete: 'CASCADE', eager: true })
+    @ManyToOne(() => Service, service => service.history, { onDelete: 'CASCADE'})
     service: Service;
 }

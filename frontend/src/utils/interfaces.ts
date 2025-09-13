@@ -1,3 +1,4 @@
+import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
 import { ChangeEvent } from "react";
 
 // =============================== Interface ===============================
@@ -46,7 +47,6 @@ export interface Service {
     provider: RegisterData
     description: string
     location: string
-    date: string
     category: string
     images: string[]
     price: string;
@@ -65,6 +65,12 @@ export interface ServiceModalProps {
     onClose: (refresh?: boolean) => void;
     serviceData?: Service;  // pode ser undefined para criação
     onSubmit: (data: CreateServiceDTO) => Promise<void>; // função passada pelo pai
+}
+
+export interface HistoryService {
+    id: number;
+    service: Service;
+    usedAt: string;
 }
 
 // DTOs
@@ -94,6 +100,11 @@ export interface CreateNoteDTO {
     date: string;
 }
 
+export interface HistoryDTO {
+    consumerId: number;
+    serviceId: number;
+    usedAt?: string;
+}
 
 // Button
 export interface ButtonProps {

@@ -5,31 +5,40 @@ import Button from "@/components/Button/Button";
 import NoteModal from "@/components/NoteModal/NoteModal";
 import styles from "./page.module.scss";
 import { deleteNote, getNotes } from "@/services/note";
-import { Notes } from "@/utils/interfaces";
+import { HistoryService, Notes} from "@/utils/interfaces";
 import Note from "@/components/Note/Note";
+import { getHistory } from "@/services/service";
+import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
 
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);
   const [notes, setNotes] = useState<Notes[]>([]);
+  const [services, setServices] = useState<HistoryService[]>([]);
+  const [loggedUserId, setLoggedUserId] = useState<number>();
   const [loading, setLoading] = useState(true);
 
   const fetchNotes = useCallback(async () => {
+    if (!loggedUserId) return; // evita alerta falso
+
     try {
       setLoading(true);
-      const data = await getNotes();
+      const notes = await getNotes();
+      const services = await getHistory(loggedUserId);
 
-      const formatted = data.map((note: any) => ({
+      const formatted = notes.map((note: any) => ({
         ...note,
         date: note.createdAt,
       }));
 
       setNotes(formatted);
+      setServices(services);
+      console.log(services)
     } catch (error) {
-      console.error("Erro ao carregar notas:", error);
+      console.error("Erro ao carregar:", error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loggedUserId]);
 
   const handleDeleteNote = async (id: string) => {
     try {
@@ -48,8 +57,20 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchNotes();
-  }, [fetchNotes]);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setLoggedUserId(user.id);
+      } catch (error) {
+        console.error("Erro ao ler usuário do localStorage:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loggedUserId) fetchNotes();
+  }, [loggedUserId, fetchNotes]);
 
   return (
     <main className={styles.dashboardPage} aria-label="Painel do usuário">
@@ -62,7 +83,13 @@ export default function DashboardPage() {
       <section className={styles.history} aria-labelledby="history-title">
         <h2 id="history-title">Histórico de serviço</h2>
         <div className={styles.serviceHistory}>
-          {/* Aqui você pode mapear ServiceBanner ou outro componente */}
+          {services.map((historyRecord) =>
+            <ServiceBanner
+              role="consumer"
+              service={historyRecord.service}
+              key={historyRecord.id}
+            />
+          )}
         </div>
       </section>
 

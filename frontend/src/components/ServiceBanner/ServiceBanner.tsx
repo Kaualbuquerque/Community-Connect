@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { useTheme } from "@/context/ThemeContext";
@@ -23,24 +23,42 @@ import heartDark from "@/icons/sidebar/heart-dark.png";
 import { addFavorite, removeFavorite } from "@/services/favorite";
 import { useRouter } from "next/navigation";
 import { createConversation } from "@/services/conversation";
+import { saveHistory } from "@/services/service";
 
 export default function ServiceBanner({ role, service, onEdit, onDelete }: ServiceBannerProps) {
     const { theme } = useTheme();
     const [isFavorite, setIsFavorite] = useState(service.isFavorite ?? false); // 👈 começa conforme backend
     const [isPopping, setIsPopping] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loggedUserId, setLoggedUserId] = useState<number>();
     const router = useRouter();
 
     const handleContact = async () => {
-        console.log("Cliquei em enviar mensagem");
+        if (!loggedUserId) {
+            alert("Usuário não logado");
+            return;
+        }
+
+        if (loading) return;
+        setLoading(true);
+
         try {
+            // 1️⃣ Criar ou obter a conversa existente
             const conversation = await createConversation({
                 participantId: service.provider.id,
             });
 
+            // 2️⃣ Salvar no histórico
+            await saveHistory({
+                consumerId: loggedUserId,
+                serviceId: service.id,
+            });
+
+            // 3️⃣ Redirecionar para o chat
             router.push(`/dashboard/chats/${conversation.id}`);
         } catch (err) {
-            console.error("Erro ao iniciar conversa:", err);
+            console.error("Erro ao iniciar conversa ou salvar histórico:", err);
+            alert("Ocorreu um erro ao iniciar a conversa ou salvar o histórico.");
         } finally {
             setLoading(false);
         }
@@ -75,6 +93,17 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
 
     const heartIcon = isFavorite ? icons.fill : icons.outline;
 
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                setLoggedUserId(user.id);
+            } catch (error) {
+                console.error("Erro ao ler usuário do localStorage:", error);
+            }
+        }
+    }, []);
 
     return (
         <article className={styles.serviceBanner}>

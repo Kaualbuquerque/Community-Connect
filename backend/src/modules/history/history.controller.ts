@@ -11,14 +11,9 @@ export class HistoryController {
         return this.historyService.create(dto);
     }
 
-    @Get()
-    findAll() {
-        return this.historyService.findAll();
-    }
-
     @Get(":id")
-    findOne(@Param("id") id: number) {
-        return this.historyService.findOne(id);
+    findAll(@Param("id") consumerId: number) {
+        return this.historyService.findByConsumer(consumerId);
     }
 
     @Delete(":id")

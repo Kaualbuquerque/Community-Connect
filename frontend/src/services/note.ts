@@ -1,4 +1,4 @@
-import { CreateNoteDTO } from "@/utils/types";
+import { CreateNoteDTO } from "@/utils/interfaces";
 import { api } from "./api";
 
 export const createNote = async (data: CreateNoteDTO) => {
@@ -26,9 +26,9 @@ export const getNotes = async () => {
     return response.data;
 }
 
-export const deleteNote = async (id: string) => {
+export const deleteNote = async (noteId: string) => {
     const token = localStorage.getItem("token");
-    const response = await api.delete(`/notes/${id}`, {
+    const response = await api.delete(`/notes/${noteId}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },

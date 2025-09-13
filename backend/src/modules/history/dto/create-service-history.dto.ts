@@ -4,7 +4,7 @@ export class CreateHistoryDto {
 
     @IsNotEmpty()
     @IsDateString()
-    usedAt: string;
+    usedAt?: string;
 
     @IsNotEmpty()
     @IsNumber()

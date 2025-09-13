@@ -12,22 +12,38 @@ export class HistoryService {
     ) { }
 
     async create(dto: CreateHistoryDto): Promise<History> {
+        const { consumerId, serviceId, usedAt } = dto;
+
+        // Exemplo de limite cíclico (opcional)
+        const MAX_HISTORY = 5;
+        const count = await this.historyRepository.count({
+            where: { consumer: { id: consumerId } },
+        });
+
+        if (count >= MAX_HISTORY) {
+            const oldest = await this.historyRepository.findOne({
+                where: { consumer: { id: consumerId } },
+                order: { usedAt: "ASC" },
+            });
+            if (oldest) await this.historyRepository.delete(oldest.id);
+        }
+
+        // Cria o registro, preenchendo a data atual caso não seja enviada
         const record = this.historyRepository.create({
-            usedAt: dto.usedAt,
-            consumer: { id: dto.consumerId },
-            service: { id: dto.serviceId }
-        })
+            usedAt: usedAt ? new Date(usedAt) : new Date(),
+            consumer: { id: consumerId },
+            service: { id: serviceId },
+        });
+
         return this.historyRepository.save(record);
     }
 
-    findAll(): Promise<History[]> {
-        return this.historyRepository.find();
-    }
-
-    async findOne(id: number): Promise<History> {
-        const record = await this.historyRepository.findOneBy({ id })
-        if (!record) throw new NotFoundException(`History record #${id} not found`)
-        return record;
+    async findByConsumer(consumerId: number): Promise<History[]> {
+        return this.historyRepository.find({
+            where: { consumer: { id: consumerId } },
+            relations: ['service', 'consumer'],  // 🔹 adicionar as relações
+            order: { usedAt: "DESC" }
+        });
     }
 
     async remove(id: number): Promise<void> {

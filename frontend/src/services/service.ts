@@ -1,4 +1,4 @@
-import { CreateServiceDTO } from "@/utils/interfaces";
+import { CreateServiceDTO, HistoryDTO } from "@/utils/interfaces";
 import { api } from "./api";
 
 export const createService = async (data: CreateServiceDTO) => {
@@ -31,10 +31,10 @@ export const getAllServices = async () => {
   return response.data;
 };
 
-export const updateService = async (id: number, data: CreateServiceDTO) => {
+export const updateService = async (serviceId: number, data: CreateServiceDTO) => {
   const token = localStorage.getItem("token");
 
-  const response = await api.put(`/services/${id}`, data, {
+  const response = await api.put(`/services/${serviceId}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -43,11 +43,11 @@ export const updateService = async (id: number, data: CreateServiceDTO) => {
   return response.data;
 };
 
-export const deleteService = async (id: number) => {
+export const deleteService = async (serviceId: number) => {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await api.delete(`/services/${id}`, {
+    const response = await api.delete(`/services/${serviceId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -59,3 +59,27 @@ export const deleteService = async (id: number) => {
     throw error;
   }
 };
+
+
+export const getHistory = async (consumerId: number) => {
+  const token = localStorage.getItem("token");
+  const response = await api.get(`/history/${consumerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
+
+export const saveHistory = async (data: HistoryDTO) => {
+  const token = localStorage.getItem("token");
+
+  const response = await api.post("/history", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
