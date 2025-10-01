@@ -1,9 +1,9 @@
 import Image from 'next/image';
 
 import styles from './ServiceCard.module.scss';
-import { HomeCardProps } from '@/utils/interfaces';
+import { ServiceCardProps } from '@/utils/interfaces';
 
-export default function HomeCard({ image, title, description }: HomeCardProps) {
+export default function HomeCard({ image, title, description }: ServiceCardProps) {
     return (
         <article className={styles.homeCard}>
             <div className={styles.imageWrapper}>

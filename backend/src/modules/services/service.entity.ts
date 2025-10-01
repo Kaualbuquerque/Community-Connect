@@ -24,8 +24,11 @@ export class Service {
     })
     price: number;
 
-    @Column({ length: 100, nullable: true })
-    location: string;
+    @Column({ length: 2})
+    state: string;
+    
+    @Column({ length: 50})
+    city: string;
 
     @Column()
     category: string;

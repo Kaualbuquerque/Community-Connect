@@ -5,7 +5,7 @@ import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
 import styles from "./page.module.scss";
 import ServiceModal from "@/components/ServiceModal/ServiceModal";
 import Button from "@/components/Button/Button";
-import { createService, deleteService, getServices, updateService } from "@/services/service";
+import { createService, deleteService, getMyServices, updateService } from "@/services/service";
 import { Service } from "@/utils/interfaces";
 
 export default function YourServicesPage() {
@@ -17,7 +17,7 @@ export default function YourServicesPage() {
     const fetchServices = useCallback(async () => {
         try {
             setLoading(true);
-            const data = await getServices();
+            const data = await getMyServices();
             setServices(data);
         } catch (error) {
             console.error("Erro ao carregar serviços:", error);
@@ -104,8 +104,8 @@ export default function YourServicesPage() {
                                 name: selectedService.name,
                                 provider: selectedService.provider,
                                 description: selectedService.description,
-                                location: selectedService.location,
-                                date: selectedService.date,
+                                city: selectedService.city,
+                                state: selectedService.state,
                                 category: selectedService.category,
                                 images: selectedService.images,
                                 price: selectedService.price.toString(),
@@ -113,6 +113,7 @@ export default function YourServicesPage() {
                             : {
                                 id: 0,
                                 provider: {
+                                    id: 0,
                                     name: "",
                                     email: "",
                                     password: "",
@@ -125,8 +126,8 @@ export default function YourServicesPage() {
                                 },
                                 name: "",
                                 description: "",
-                                location: "",
-                                date: "",
+                                city: "",
+                                state: "",
                                 category: "",
                                 images: [],
                                 price: "",

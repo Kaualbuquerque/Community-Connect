@@ -10,6 +10,7 @@ import { CreateServiceDTO, RegisterData, Service, ServiceModalProps } from "@/ut
 
 export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }: ServiceModalProps) {
     const emptyProvider: RegisterData = {
+        id: "",
         name: "",
         email: "",
         password: "",
@@ -26,8 +27,8 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
         name: "",
         description: "",
         provider: emptyProvider,
-        location: "",
-        date: "",
+        state: "",
+        city: "",
         category: "",
         images: [],
         price: "",
@@ -43,8 +44,8 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
             name: "",
             description: "",
             provider: emptyProvider,
-            location: "",
-            date: "",
+            state: "",
+            city: "",
             category: "",
             images: [],
             price: "",
@@ -92,6 +93,8 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
                 description: form.description,
                 price: form.price.toString(),
                 category: form.category,
+                state: form.state,
+                city: form.city,
                 images: imagesBase64.length > 0 ? imagesBase64 : form.images || [],
             };
 

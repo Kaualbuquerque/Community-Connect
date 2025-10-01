@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Header, Param, Post, Put, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Header, Param, Post, Put, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ServiceService } from "./services.service";
 import { CreateServiceDto } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
@@ -20,17 +20,50 @@ export class ServicesController {
 
     @Get()
     @UseGuards(OptionalJwtAuthGuard)
-    async getAllServices(@Req() req) {
+    async getAllServices(
+        @Req() req,
+        @Query('state') state?: string,
+        @Query('city') city?: string,
+        @Query('category') category?: string,
+        @Query('minPrice') minPrice?: string, // vem como string na query
+        @Query('maxPrice') maxPrice?: string,
+        @Query('search') search?: string, // novo param
+    ) {
         const userId = req.user?.id;
-        return this.serviceService.findAllWithFavorite(userId);
+
+        // garante que min/max sejam numbers ou undefined
+        const min = minPrice !== undefined && minPrice !== '' ? Number(minPrice) : undefined;
+        const max = maxPrice !== undefined && maxPrice !== '' ? Number(maxPrice) : undefined;
+
+        return this.serviceService.findAllWithFavorite(userId, {
+            state,
+            city,
+            category,
+            minPrice: min,
+            maxPrice: max,
+            search,
+        });
     }
+
 
     @Get('my-services')
     @UseGuards(JwtAuthGuard)
     findAllByUser(@Request() req) {
-        return this.serviceService.findAllByUsers(req.user.id);
+        const userId = req.user.id;
+        return this.serviceService.findAllByUser(userId);
     }
 
+    @Get("states")
+    @UseGuards(JwtAuthGuard)
+    async getStates() {
+        return this.serviceService.getStates();
+    }
+
+    @Get("cities")
+    @UseGuards(JwtAuthGuard)
+    async getCities(@Query('state') state: string) {
+        return this.serviceService.getCitiesByState(state);
+    }
 
     @Put(":id")
     @UseGuards(JwtAuthGuard)

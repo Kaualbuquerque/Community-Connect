@@ -27,7 +27,7 @@ import { saveHistory } from "@/services/service";
 
 export default function ServiceBanner({ role, service, onEdit, onDelete }: ServiceBannerProps) {
     const { theme } = useTheme();
-    const [isFavorite, setIsFavorite] = useState(service.isFavorite ?? false); // 👈 começa conforme backend
+    const [isFavorite, setIsFavorite] = useState(service.isFavorite ?? false);
     const [isPopping, setIsPopping] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loggedUserId, setLoggedUserId] = useState<number>();
@@ -43,18 +43,18 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
         setLoading(true);
 
         try {
-            // 1️⃣ Criar ou obter a conversa existente
+            // Criar ou obter a conversa existente
             const conversation = await createConversation({
-                participantId: service.provider.id,
+                participantId: parseInt(service.provider.id),
             });
 
-            // 2️⃣ Salvar no histórico
+            // Salvar no histórico
             await saveHistory({
                 consumerId: loggedUserId,
                 serviceId: service.id,
             });
 
-            // 3️⃣ Redirecionar para o chat
+            // Redirecionar para o chat
             router.push(`/dashboard/chats/${conversation.id}`);
         } catch (err) {
             console.error("Erro ao iniciar conversa ou salvar histórico:", err);
@@ -118,7 +118,7 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
             </section>
 
             <section className={styles.details}>
-                <h5>{service.location}</h5>
+                <h5>{`${service.city} - ${service.state}`}</h5>
                 <h2>
                     {parseFloat(service.price).toLocaleString("pt-BR", {
                         style: "currency",

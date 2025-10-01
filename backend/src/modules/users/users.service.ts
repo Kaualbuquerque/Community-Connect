@@ -28,6 +28,14 @@ export class UserService {
         return user;
     }
 
+    async findByEmail(email: string): Promise<User | null> {
+        const user = await this.userRepository.findOne({
+            where: { email: email.toLowerCase() },
+            select: ['id', 'password', 'email', 'role',],
+        });
+        return user ?? null;
+    }
+
     async findById(id: number) {
         return this.userRepository.findOne({
             where: { id },
@@ -44,16 +52,6 @@ export class UserService {
             ],
         });
     }
-
-
-    async findByEmail(email: string): Promise<User | null> {
-        const user = await this.userRepository.findOne({
-            where: { email: email.toLowerCase() },
-            select: ['id', 'password', 'email', 'role',],
-        });
-        return user ?? null;
-    }
-
 
     async update(id: number, dto: UpdateUserDto): Promise<User> {
         await this.userRepository.update(id, dto);

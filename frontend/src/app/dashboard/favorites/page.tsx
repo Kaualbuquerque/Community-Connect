@@ -9,57 +9,54 @@ import styles from "./page.module.scss";
 import filter_light from "@/icons/favorite/filter_light.png";
 import filter_dark from "@/icons/favorite/filter_dark.png";
 import Filter from "@/components/Filter/Filter";
-import { Service, ServiceFilters } from "@/utils/interfaces";
+import { FiltersState, Service } from "@/utils/interfaces";
 import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
 import { getFavorites } from "@/services/favorite";
+import { getAllServices } from "@/services/service";
 
 export default function FavoritesPage() {
     const { theme } = useTheme();
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [search, setSearch] = useState("");
+    const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [services, setServices] = useState<Service[]>([]);
-    const [filters, setFilters] = useState<ServiceFilters>({});
+    const [filters, setFilters] = useState<FiltersState>({});
     const [loading, setLoading] = useState(true);
 
     const filterIcon = theme === "light" ? filter_dark : filter_light;
+
     const toggleFilter = () => setIsFilterVisible((prev) => !prev);
 
     const fetchServices = useCallback(async () => {
         try {
             setLoading(true);
-            const data = await getFavorites();
+
+            // Passa filtros e busca para a API
+            const data = await getFavorites({
+                search,
+                category: filters.category,
+                minPrice: filters.minPrice,
+                maxPrice: filters.maxPrice,
+                state: filters.state,
+                city: filters.city,
+            });
+
             setServices(data);
         } catch (error) {
             console.error("Erro ao carregar serviços:", error);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [search, filters]);
 
-
-    // aplica busca + filtros
-    const filteredServices = useMemo(() => {
-        return services.filter((service) => {
-            const price = Number(service.price); // conversão segura
-
-            const matchesSearch = service.name.toLowerCase().includes(search.toLowerCase());
-            const matchesCategory = filters.category ? service.category === filters.category : true;
-
-            const matchesMinPrice = filters.minPrice ? price >= filters.minPrice : true;
-            const matchesMaxPrice = filters.maxPrice ? price <= filters.maxPrice : true;
-
-            return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice;
-        });
-    }, [services, search, filters]);
-
+    // refetch sempre que search ou filters mudar
     useEffect(() => {
         fetchServices();
     }, [fetchServices]);
 
     return (
-        <main className={styles.favoritesPage} aria-label="Página de favoritos">
+        <main className={styles.favoritesPage} aria-label="Buscar serviços">
             <header>
-                <h1>Confira seus favoritos abaixo</h1>
+                <h1>O que você precisa hoje?</h1>
             </header>
 
             <section className={styles.inputs}>
@@ -77,17 +74,21 @@ export default function FavoritesPage() {
                 />
             </section>
 
-            {isFilterVisible && <Filter onApplyFilter={setFilters} />}
+            {isFilterVisible &&
+                <Filter
+                    onApplyFilter={setFilters}
+                    onClose={() => setIsFilterVisible(false)}
+                />}
 
             <section className={styles.favorites} aria-label="Lista de serviços">
                 {loading && <p>Carregando serviços...</p>}
 
-                {!loading && filteredServices.length === 0 && (
+                {!loading && services.length === 0 && (
                     <p>Nenhum serviço encontrado com os filtros selecionados.</p>
                 )}
 
                 {!loading &&
-                    filteredServices.map((service) => (
+                    services.map((service) => (
                         <ServiceBanner key={service.id} role="consumer" service={service} />
                     ))}
             </section>

@@ -11,25 +11,43 @@ export const createService = async (data: CreateServiceDTO) => {
   return response.data;
 };
 
-export const getServices = async () => {
+export const getAllServices = async (filters?: {
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  state?: string;
+  city?: string;
+  search?: string;
+}) => {
   const token = localStorage.getItem("token");
-  const response = await api.get("/services/my-services", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-  return response.data;
-}
 
-export const getAllServices = async () => {
-  const token = localStorage.getItem("token");
-  const response = await api.get("/services", {
+  const params = new URLSearchParams();
+  if (filters?.category) params.append("category", filters.category);
+  if (filters?.minPrice !== undefined) params.append("minPrice", String(filters.minPrice));
+  if (filters?.maxPrice !== undefined) params.append("maxPrice", String(filters.maxPrice));
+  if (filters?.state) params.append("state", filters.state);
+  if (filters?.city) params.append("city", filters.city);
+  if (filters?.search) params.append("search", filters.search);
+
+  const response = await api.get(`/services?${params.toString()}`, {
     headers: {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
+
   return response.data;
 };
+
+export const getMyServices = async () => {
+  const token = localStorage.getItem("token");
+
+  const response = await api.get("/services/my-services", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return response.data;
+};
+
 
 export const updateService = async (serviceId: number, data: CreateServiceDTO) => {
   const token = localStorage.getItem("token");
@@ -83,3 +101,23 @@ export const saveHistory = async (data: HistoryDTO) => {
 
   return response.data;
 }
+
+export const fetchStates = async (): Promise<string[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get("/services/states", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const fetchCities = async (state: string): Promise<string[]> => {
+  const token = localStorage.getItem("token");
+  const response = await api.get(`/services/cities?state=${state}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

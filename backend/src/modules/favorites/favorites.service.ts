@@ -2,8 +2,15 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Favorite } from "./favorite.entity";
 import { Repository } from "typeorm";
-import CreateFavoriteDto from "./dto/create-favorite.dto";
-import { Service } from "../services/service.entity";
+
+interface FavoriteFilters {
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    state?: string;
+    city?: string;
+    search?: string; // 🔹 novo campo
+}
 
 @Injectable()
 export class FavoriteService {
@@ -33,12 +40,31 @@ export class FavoriteService {
         return this.favoriteRepository.save(favorite);
     }
 
-    async findByUser(userId: number): Promise<Service[]> {
-        const favorites = await this.favoriteRepository.find({
-            where: { consumer: { id: userId } }, relations: ["service", "service.provider"],
-        });
+    async findByUser(userId: number, filters?: FavoriteFilters) {
+        const query = this.favoriteRepository.createQueryBuilder('favorite')
+            .leftJoinAndSelect('favorite.service', 'service')
+            .leftJoinAndSelect('service.provider', 'provider')
+            .where('favorite.consumerId = :userId', { userId });
 
-        return favorites.map(fav => ({ ...fav.service, isFavorite: true, }));
+        if (filters?.category) query.andWhere('service.category = :category', { category: filters.category });
+        if (filters?.minPrice !== undefined) query.andWhere('service.price >= :minPrice', { minPrice: filters.minPrice });
+        if (filters?.maxPrice !== undefined) query.andWhere('service.price <= :maxPrice', { maxPrice: filters.maxPrice });
+        if (filters?.state) query.andWhere('service.state = :state', { state: filters.state });
+        if (filters?.city) query.andWhere('service.city = :city', { city: filters.city });
+        if (filters?.search) {
+            query.andWhere(
+                '(LOWER(service.name) LIKE :search OR LOWER(service.description) LIKE :search)',
+                { search: `%${filters.search.toLowerCase()}%` },
+            );
+        }
+
+        const favorites = await query.getMany();
+
+        // 🔹 Normaliza para devolver apenas os serviços
+        return favorites.map(fav => ({
+            ...fav.service,
+            isFavorite: true,
+        }));
     }
 
 

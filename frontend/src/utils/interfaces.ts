@@ -5,7 +5,7 @@ import { ChangeEvent } from "react";
 
 // Form data
 export interface RegisterData {
-    id: number;
+    id: string;
     name: string;
     email: string;
     password: string;
@@ -28,6 +28,7 @@ export interface LoginFormState {
 }
 
 export interface RegisterFormState {
+    id: string,
     userProfile: "consumer" | "provider";
     name: string;
     email: string;
@@ -46,7 +47,8 @@ export interface Service {
     name: string
     provider: RegisterData
     description: string
-    location: string
+    state: string
+    city: string
     category: string
     images: string[]
     price: string;
@@ -88,6 +90,8 @@ export interface CreateServiceDTO {
     description: string;
     price: string;
     category: string;
+    city: string;
+    state: string;
     images?: string[];
 }
 
@@ -135,14 +139,13 @@ export interface FeatureCardProps {
     text: string;
 }
 
-export interface HomeCardProps {
+export interface ServiceCardProps {
     image: string;
     title: string;
     description: string;
 }
 
 // Input
-export type InputType = "text" | "number" | "password" | "email" | "radio" | "textarea" | "select";
 
 export interface InputOption {
     value: string;
@@ -162,6 +165,7 @@ export interface InputProps {
     minLength?: number;
     checked?: boolean;
     options?: InputOption[];
+    disabled?: boolean;
     onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
@@ -185,13 +189,18 @@ export interface NoteModalProps {
 
 // Filter
 export interface FilterProps {
-    onApplyFilter: (filters: { category?: string; minPrice?: number; maxPrice?: number }) => void;
+    onApplyFilter: (filters: FiltersState) => void;
+    onClose?: () => void;
 }
 
-export interface ServiceFilters {
+
+export interface FiltersState {
     category?: string;
     minPrice?: number;
     maxPrice?: number;
+    state?: string;
+    city?: string;
+    search?: string;
 }
 
 // Conversations
@@ -220,3 +229,14 @@ export interface Messages {
     isDeleted: boolean;
     editedAt: string | null;
 }
+
+//Theme
+export interface ThemeContextType {
+    theme: Theme;
+    toggleTheme: () => void;
+}
+
+// Types
+export type Theme = 'light' | 'dark';
+
+export type InputType = "text" | "number" | "password" | "email" | "radio" | "textarea" | "select";

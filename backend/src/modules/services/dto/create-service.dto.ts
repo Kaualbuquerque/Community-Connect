@@ -19,7 +19,15 @@ export class CreateServiceDto {
 
     @IsNotEmpty()
     @IsString()
-    location: string;
+    state: string;
+
+    @IsNotEmpty()
+    @IsString()
+    city: string;
+
+    @IsOptional()
+    @IsString()
+    search?: string;
 
     @IsArray()
     @IsOptional()

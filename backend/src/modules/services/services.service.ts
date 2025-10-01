@@ -23,14 +23,15 @@ export class ServiceService {
         const service = this.serviceRepository.create({
             ...dto,
             provider: user,
-            location: `${user.city} - ${user.state}`,
+            city: user.city,
+            state: user.state,
             images,
         });
 
         return this.serviceRepository.save(service);
     }
 
-    async findAllByUsers(userId: number): Promise<Service[]> {
+    async findAllByUser(userId: number): Promise<Service[]> {
         return this.serviceRepository.find({
             where: { provider: { id: userId } },
             relations: ['provider'],
@@ -46,10 +47,48 @@ export class ServiceService {
         return service;
     }
 
-    async findAllWithFavorite(userId?: number) {
-        const services = await this.serviceRepository.find({
-            relations: ["provider"],
-        });
+    async findAllWithFavorite(
+        userId?: number,
+        filters?: {
+            state?: string;
+            city?: string;
+            category?: string;
+            minPrice?: number;
+            maxPrice?: number;
+            search?: string;
+        },
+    ) {
+        const query = this.serviceRepository.createQueryBuilder('service')
+            .leftJoinAndSelect('service.provider', 'provider');
+
+        if (filters?.state) {
+            query.andWhere('service.state = :state', { state: filters.state });
+        }
+
+        if (filters?.city) {
+            query.andWhere('service.city = :city', { city: filters.city });
+        }
+
+        if (filters?.category) {
+            query.andWhere('service.category = :category', { category: filters.category });
+        }
+
+        if (filters?.minPrice !== undefined) {
+            query.andWhere('service.price >= :minPrice', { minPrice: filters.minPrice });
+        }
+
+        if (filters?.maxPrice !== undefined) {
+            query.andWhere('service.price <= :maxPrice', { maxPrice: filters.maxPrice });
+        }
+
+        if (filters?.search) {
+            query.andWhere(
+                '(LOWER(service.name) LIKE LOWER(:search) OR LOWER(service.description) LIKE LOWER(:search))',
+                { search: `%${filters.search}%` },
+            );
+        }
+
+        const services = await query.getMany();
 
         // Converte imagens buffer → base64
         const servicesWithImages = services.map(service => ({
@@ -60,13 +99,13 @@ export class ServiceService {
         if (!userId) {
             return servicesWithImages.map(service => ({
                 ...service,
-                isFavorite: false
+                isFavorite: false,
             }));
         }
 
         const favorites = await this.favoriteRepository.find({
             where: { consumer: { id: userId } },
-            relations: ["service"],
+            relations: ['service'],
         });
 
         const favoriteIds = favorites.map(fav => fav.service.id);
@@ -76,6 +115,8 @@ export class ServiceService {
             isFavorite: favoriteIds.includes(service.id),
         }));
     }
+
+
 
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
         await this.serviceRepository.update(id, dto);
@@ -87,4 +128,22 @@ export class ServiceService {
         if (result.affected === 0) throw new NotFoundException(`Service #${id} not found`);
     }
 
+    async getStates(): Promise<string[]> {
+        const result = await this.serviceRepository
+            .createQueryBuilder('service')
+            .select('DISTINCT service.state', 'state')
+            .getRawMany();
+
+        return result.map(s => s.state);
+    }
+
+    async getCitiesByState(state: string): Promise<string[]> {
+        const result = await this.serviceRepository
+            .createQueryBuilder('service')
+            .select('DISTINCT service.city', 'city')
+            .where('service.state = :state', { state })
+            .getRawMany();
+
+        return result.map(c => c.city);
+    }
 }
