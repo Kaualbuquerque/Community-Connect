@@ -1,4 +1,5 @@
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { ServiceImage } from "src/modules/services_images/serviceImage.entity";
 
 export class CreateServiceDto {
     @IsNotEmpty()
@@ -32,5 +33,5 @@ export class CreateServiceDto {
     @IsArray()
     @IsOptional()
     @IsString({ each: true })
-    images: Buffer[];
+    images: ServiceImage[];
 }

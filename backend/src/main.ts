@@ -1,31 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Habilita CORS para localhost:3000 (frontend)
+  // Habilita CORS
   app.enableCors({
     origin: 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
 
-  // Middleware para garantir resposta correta a OPTIONS (preflight)
+  // Header para permitir cross-origin resource access (resolve ERR_BLOCKED_BY_ORB)
   app.use((req, res, next) => {
-    if (req.method === 'OPTIONS') {
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-      res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
-      return res.sendStatus(204);
-    }
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
     next();
   });
 
-  // Aumenta limite do body JSON (10MB)
+  // Limite do body JSON
   app.use(bodyParser.json({ limit: '10mb' }));
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+
+  // Servir uploads
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : 4000;
   await app.listen(port);

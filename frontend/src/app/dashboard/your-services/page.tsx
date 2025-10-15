@@ -60,6 +60,7 @@ export default function YourServicesPage() {
         fetchServices();
     }, [fetchServices]);
 
+  console.log(services)
     return (
         <main className={styles.yourServicesPage} aria-label="Seus serviços">
             <header>
@@ -113,7 +114,7 @@ export default function YourServicesPage() {
                             : {
                                 id: 0,
                                 provider: {
-                                    id: 0,
+                                    id: "",
                                     name: "",
                                     email: "",
                                     password: "",

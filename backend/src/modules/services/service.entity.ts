@@ -2,6 +2,7 @@ import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } f
 import { User } from "../users/user.entity";
 import { Favorite } from "../favorites/favorite.entity";
 import { History } from "../history/history.entity";
+import { ServiceImage } from "../services_images/serviceImage.entity";
 
 @Entity("services")
 @Check(`"price" >= 1`)
@@ -24,17 +25,17 @@ export class Service {
     })
     price: number;
 
-    @Column({ length: 2})
+    @Column({ length: 2 })
     state: string;
-    
-    @Column({ length: 50})
+
+    @Column({ length: 50 })
     city: string;
 
     @Column()
     category: string;
 
-    @Column("bytea", { array: true, nullable: true })
-    images: Buffer[];
+    @OneToMany(() => ServiceImage, (image) => image.service, { cascade: true })
+    images: ServiceImage[];
 
     @ManyToOne(() => User, user => user.services, { onDelete: 'CASCADE', eager: true })
     provider: User;

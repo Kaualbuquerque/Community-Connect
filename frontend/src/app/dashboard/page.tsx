@@ -32,7 +32,7 @@ export default function DashboardPage() {
 
       setNotes(formatted);
       setServices(services);
-      console.log(services)
+      
     } catch (error) {
       console.error("Erro ao carregar:", error);
     } finally {
@@ -51,9 +51,8 @@ export default function DashboardPage() {
     }
   };
 
-  const handleCloseModal = (shouldReload?: boolean) => {
+  const handleCloseModal = () => {
     setShowModal(false);
-    if (shouldReload) fetchNotes();
   };
 
   useEffect(() => {
@@ -71,12 +70,11 @@ export default function DashboardPage() {
   useEffect(() => {
     if (loggedUserId) fetchNotes();
   }, [loggedUserId, fetchNotes]);
-
   return (
     <main className={styles.dashboardPage} aria-label="Painel do usuário">
 
       <header>
-        <h1>Bem-vindo, Usuário</h1>
+        <h1>Bem-vindo</h1>
       </header>
 
       {/* Histórico de serviços */}

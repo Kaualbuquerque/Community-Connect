@@ -56,7 +56,7 @@ export default function FavoritesPage() {
     return (
         <main className={styles.favoritesPage} aria-label="Buscar serviços">
             <header>
-                <h1>O que você precisa hoje?</h1>
+                <h1>Confira seus favoritos abaixo</h1>
             </header>
 
             <section className={styles.inputs}>

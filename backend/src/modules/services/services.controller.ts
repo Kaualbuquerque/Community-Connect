@@ -13,10 +13,10 @@ export class ServicesController {
 
     @Post()
     @UseGuards(JwtAuthGuard)
-    @UseInterceptors(FilesInterceptor('images', 5))
-    async createService(@UploadedFiles() files: Express.Multer.File[], @Body() body: CreateServiceDto, @Request() req) {
-        return this.serviceService.create(body, req.user, files);
+    async createService(@Body() body: CreateServiceDto, @Request() req) {
+        return this.serviceService.create(body, req.user);
     }
+
 
     @Get()
     @UseGuards(OptionalJwtAuthGuard)

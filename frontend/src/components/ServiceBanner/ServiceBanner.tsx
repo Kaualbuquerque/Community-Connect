@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
 import Button from "../Button/Button";
 
-import { Swiper } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 import styles from "./ServiceBanner.module.scss";
@@ -159,7 +159,8 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                 )}
             </section>
 
-            {service.images?.length > 0 && (
+            {service.images?.length > 0 ? (
+                console.log(service.images),
                 <figure className={styles.imageWrapper}>
                     <Swiper
                         modules={[Navigation, Pagination]}
@@ -169,8 +170,26 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                         slidesPerView={1}
                         style={{ width: "100%", height: "auto" }}
                     >
+                        {service.images.map((image: string, index: number) => (
+                            <SwiperSlide key={index}>
+                                <img
+                                    src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+                                    alt={`Imagem ${index + 1} do serviço ${service.name}`}
+                                    style={{
+                                        width: "100%",
+                                        height: "300px",
+                                        objectFit: "cover",
+                                        borderRadius: "12px",
+                                    }}
+                                />
+                            </SwiperSlide>
+                        ))}
                     </Swiper>
                 </figure>
+            ) : (
+                <div>
+                    <p>Este serviço ainda não possui imagens.</p>
+                </div>
             )}
         </article>
     );

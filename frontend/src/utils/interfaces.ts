@@ -66,7 +66,8 @@ export interface ServiceModalProps {
     isOpen: boolean;
     onClose: (refresh?: boolean) => void;
     serviceData?: Service;  // pode ser undefined para criação
-    onSubmit: (data: CreateServiceDTO) => Promise<void>; // função passada pelo pai
+    onSubmit: (data: CreateServiceDTO, serviceId?: number) => Promise<Service>;
+    // retorna o serviço criado ou atualizado
 }
 
 export interface HistoryService {

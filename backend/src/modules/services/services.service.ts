@@ -6,6 +6,8 @@ import { CreateServiceDto } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
 import { User } from "../users/user.entity";
 import { Favorite } from "../favorites/favorite.entity";
+import { ServiceImage } from "../services_images/serviceImage.entity";
+import { ServiceWithImageUrls } from "./dto/service-with-image-urls.dto";
 
 @Injectable()
 export class ServiceService {
@@ -13,29 +15,54 @@ export class ServiceService {
         @InjectRepository(Service)
         private serviceRepository: Repository<Service>,
         @InjectRepository(Favorite)
-        private favoriteRepository: Repository<Favorite>
+        private favoriteRepository: Repository<Favorite>,
+        @InjectRepository(ServiceImage)
+        private serviceImageRepository: Repository<ServiceImage>
     ) { }
 
 
     async create(dto: CreateServiceDto, user: User, files?: Express.Multer.File[]): Promise<Service> {
-        const images: Buffer[] = files ? files.map(file => file.buffer) : [];
-
+        // 1️⃣ Cria o serviço sem as imagens
         const service = this.serviceRepository.create({
             ...dto,
             provider: user,
-            city: user.city,
-            state: user.state,
-            images,
         });
 
-        return this.serviceRepository.save(service);
+        await this.serviceRepository.save(service);
+
+        // 2️⃣ Se houver imagens, cria e salva as entidades relacionadas
+        if (files?.length) {
+            const urls = files.map(file => `/uploads/${file.filename}`);
+
+            const images = urls.map((url, idx) =>
+                this.serviceImageRepository.create({
+                    url,
+                    position: idx + 1,
+                    service, // associa diretamente o objeto salvo
+                }),
+            );
+
+            await this.serviceImageRepository.save(images);
+
+            // 3️⃣ Atualiza o serviço com suas imagens (opcional)
+            service.images = images;
+        }
+
+        return service;
     }
 
-    async findAllByUser(userId: number): Promise<Service[]> {
-        return this.serviceRepository.find({
+    async findAllByUser(userId: number): Promise<ServiceWithImageUrls[]> {
+        // Busca serviços do provedor e já carrega provider + images
+        const services = await this.serviceRepository.find({
             where: { provider: { id: userId } },
-            relations: ['provider'],
+            relations: ['provider', 'images'], // ← adiciona imagens
         });
+
+        // Mapeia apenas as URLs das imagens
+        return services.map(service => ({
+            ...service,
+            images: service.images?.map(img => img.url) ?? [],
+        }));
     }
 
     async findOne(id: number): Promise<Service> {
@@ -59,7 +86,8 @@ export class ServiceService {
         },
     ) {
         const query = this.serviceRepository.createQueryBuilder('service')
-            .leftJoinAndSelect('service.provider', 'provider');
+            .leftJoinAndSelect('service.provider', 'provider')
+            .leftJoinAndSelect('service.images', 'images'); // ← adiciona as imagens
 
         if (filters?.state) {
             query.andWhere('service.state = :state', { state: filters.state });
@@ -90,10 +118,10 @@ export class ServiceService {
 
         const services = await query.getMany();
 
-        // Converte imagens buffer → base64
+        // Agora o 'images' já vem carregado como array de URLs
         const servicesWithImages = services.map(service => ({
             ...service,
-            images: service.images?.map(img => img) ?? [],
+            images: service.images?.map(img => img.url) ?? [],
         }));
 
         if (!userId) {
@@ -118,10 +146,19 @@ export class ServiceService {
 
 
 
+
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
-        await this.serviceRepository.update(id, dto);
+        // copia dto mas remove 'images'
+        const { images, ...serviceData } = dto;
+
+        // atualiza apenas os campos do Service que não são relacionamentos
+        await this.serviceRepository.update(id, serviceData);
+
+        // retorna o service atualizado
         return this.findOne(id);
     }
+
+
 
     async remove(id: number): Promise<void> {
         const result = await this.serviceRepository.delete(id);

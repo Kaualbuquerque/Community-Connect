@@ -12,6 +12,7 @@ import { ConversationsModule } from './modules/conversations/conversations.modul
 import { MessagesModule } from './modules/messages/messages.module';
 import { HistoryModule } from './modules/history/history.module';
 import { ChatModule } from './modules/chats/chat.module';
+import { ServiceImageModule } from './modules/services_images/serviceImage.module';
 
 @Module({
   imports: [
@@ -52,7 +53,8 @@ import { ChatModule } from './modules/chats/chat.module';
     ConversationsModule,
     MessagesModule,
     HistoryModule,
-    ChatModule
+    ChatModule,
+    ServiceImageModule,
   ],
 })
 export class AppModule {}

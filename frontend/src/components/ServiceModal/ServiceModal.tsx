@@ -7,8 +7,10 @@ import Button from "../Button/Button";
 import Input from "../Input/Input";
 import { options } from "@/utils/options";
 import { CreateServiceDTO, RegisterData, Service, ServiceModalProps } from "@/utils/interfaces";
+import { uploadImages } from "@/services/serviceImages";
 
 export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }: ServiceModalProps) {
+    // Dados vazios padrão para o provedor
     const emptyProvider: RegisterData = {
         id: "",
         name: "",
@@ -22,6 +24,7 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
         number: "",
     };
 
+    // Estado do formulário
     const [form, setForm] = useState<Service>({
         id: 0,
         name: "",
@@ -32,12 +35,14 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
         category: "",
         images: [],
         price: "",
-        ...serviceData,
+        ...serviceData, // preenche com dados existentes se for edição
     });
 
+    // Estado das imagens selecionadas no frontend
     const [images, setImages] = useState<File[]>([]);
     const [loading, setLoading] = useState(false);
 
+    // Atualiza estado quando serviceData muda (ex.: ao abrir modal para edição)
     useEffect(() => {
         setForm({
             id: 0,
@@ -56,19 +61,34 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
 
     if (!isOpen) return null;
 
+    // Atualiza campos do formulário
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
-        if (name === "price") {
-            if (value.length > 8) return;
-        }
+        // Limita campo de preço
+        if (name === "price" && value.length > 8) return;
 
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files || []);
-        setImages((prev) => [...prev, ...files].slice(0, 5));
+    // Manipula seleção de arquivos (limite 5)
+    const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return;
+
+        const selectedFiles = Array.from(e.target.files);
+        const totalFiles = images.length + selectedFiles.length;
+
+        if (totalFiles > 5) {
+            alert("Você pode enviar no máximo 5 imagens.");
+            return;
+        }
+
+        setImages(prev => [...prev, ...selectedFiles]);
+    };
+
+    // Remove imagem selecionada do estado
+    const handleRemoveImage = (index: number) => {
+        setImages(prev => prev.filter((_, idx) => idx !== index));
     };
 
     const handleCreateService = async () => {
@@ -77,17 +97,6 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
         try {
             setLoading(true);
 
-            const imagesBase64 = await Promise.all(
-                images.map((file) =>
-                    new Promise<string>((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result as string);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    })
-                )
-            );
-
             const payload: CreateServiceDTO = {
                 name: form.name,
                 description: form.description,
@@ -95,12 +104,27 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
                 category: form.category,
                 state: form.state,
                 city: form.city,
-                images: imagesBase64.length > 0 ? imagesBase64 : form.images || [],
+                images: [], // enviadas separadamente
             };
 
-            await onSubmit(payload);
+            let serviceId: number;
+
+            if (serviceData?.id) {
+                await onSubmit(payload, serviceData.id); // atualiza serviço
+                serviceId = serviceData.id;
+            } else {
+                const createdService = await onSubmit(payload); // cria novo serviço
+                serviceId = createdService.id;
+            }
+
+            // Envia imagens novas (se houver)
+            if (images.length > 0) {
+                await uploadImages(serviceId, images);
+            }
+
             alert(serviceData?.id ? "Serviço atualizado com sucesso!" : "Serviço criado com sucesso!");
             onClose(true);
+
         } catch (err) {
             console.error(err);
             alert(serviceData?.id ? "Erro ao atualizar serviço." : "Erro ao criar serviço.");
@@ -108,6 +132,7 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
             setLoading(false);
         }
     };
+
 
     return (
         <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="service-modal-title">
@@ -158,6 +183,7 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
                     options={options}
                 />
 
+                {/* Seção de upload de imagens */}
                 <div className={styles.imageUpload}>
                     <label htmlFor="image-upload">Upload até 5 imagens:</label>
                     <input
@@ -165,15 +191,27 @@ export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }:
                         type="file"
                         accept="image/*"
                         multiple
-                        onChange={handleImageUpload}
+                        onChange={handleFilesChange}
+                        disabled={images.length >= 5} // desabilita se já tiver 5 imagens
                     />
+
                     <div className={styles.preview}>
                         {images.map((img, idx) => (
-                            <img key={idx} src={URL.createObjectURL(img)} alt={`Preview ${idx + 1}`} />
+                            <div key={idx} className={styles.previewItem}>
+                                <img src={URL.createObjectURL(img)} alt={`Preview ${idx + 1}`} />
+                                <button
+                                    type="button"
+                                    className={styles.removeButton}
+                                    onClick={() => handleRemoveImage(idx)}
+                                >
+                                    &times;
+                                </button>
+                            </div>
                         ))}
                     </div>
                 </div>
 
+                {/* Botões de ação */}
                 <div className={styles.buttons}>
                     <Button
                         text={loading ? "Enviando..." : "Confirmar"}
