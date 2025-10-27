@@ -16,8 +16,9 @@ export class ConversationsController {
 
     @Get()
     @UseGuards(JwtAuthGuard)
-    findAll() {
-        return this.convService.findAll();
+    async findAll(@Req() req) {
+        const userId = req.user.id;
+        return this.convService.findOne(userId); // retorna apenas conversas visíveis
     }
 
     @Get(':id')
@@ -28,7 +29,8 @@ export class ConversationsController {
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
-    remove(@Param('id') id: number) {
-        return this.convService.remove(id);
+    async remove(@Param('id') id: number, @Req() req) {
+        const userId = req.user.id;
+        return this.convService.remove(id, userId);
     }
 }

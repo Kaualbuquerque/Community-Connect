@@ -5,10 +5,11 @@ import Button from "@/components/Button/Button";
 import NoteModal from "@/components/NoteModal/NoteModal";
 import styles from "./page.module.scss";
 import { deleteNote, getNotes } from "@/services/note";
-import { HistoryService, Notes} from "@/utils/interfaces";
+import { HistoryService, Notes } from "@/utils/interfaces";
 import Note from "@/components/Note/Note";
 import { getHistory } from "@/services/service";
 import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
+import { useAutoLogout } from "@/utils/useAutoLogout";
 
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);
@@ -17,8 +18,10 @@ export default function DashboardPage() {
   const [loggedUserId, setLoggedUserId] = useState<number>();
   const [loading, setLoading] = useState(true);
 
+  useAutoLogout();
+
   const fetchNotes = useCallback(async () => {
-    if (!loggedUserId) return; // evita alerta falso
+    if (!loggedUserId) return;
 
     try {
       setLoading(true);
@@ -32,7 +35,7 @@ export default function DashboardPage() {
 
       setNotes(formatted);
       setServices(services);
-      
+
     } catch (error) {
       console.error("Erro ao carregar:", error);
     } finally {
@@ -57,19 +60,29 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
+
+    if (!storedUser) {
+      return;
+    }
+
+    try {
+      const user = JSON.parse(storedUser);
+      if (user?.id) {
         setLoggedUserId(user.id);
-      } catch (error) {
-        console.error("Erro ao ler usuário do localStorage:", error);
+      } else {
+        throw new Error("Usuário inválido");
       }
+    } catch (error) {
+      console.error("Erro ao carregar usuário:", error);
     }
   }, []);
 
   useEffect(() => {
-    if (loggedUserId) fetchNotes();
+    if (loggedUserId) {
+      fetchNotes();
+    }
   }, [loggedUserId, fetchNotes]);
+
   return (
     <main className={styles.dashboardPage} aria-label="Painel do usuário">
 
@@ -98,7 +111,7 @@ export default function DashboardPage() {
 
 
         <div className={styles.notes}>
-          {loading && <p>Carregando serviços...</p>}
+          {loading && <p>Carregando notas...</p>}
 
           {!loading && notes.length === 0 && (
             <p>Você ainda não criou nenhuma nota</p>

@@ -123,10 +123,12 @@ export interface ButtonProps {
 
 // Chat
 export interface ChatProps {
-    id: number,
-    provider: string,
-    date: string,
+    id: number;
+    provider: string;
+    date: string;
+    onDelete?: () => void; 
 }
+
 
 export interface MessageProps {
     text: string;

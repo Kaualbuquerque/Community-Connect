@@ -3,15 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Se estiver usando App Router, trocar para "next/navigation"
-
 import styles from "./Chat.module.scss";
 import { ChatProps } from "@/utils/interfaces";
 import trash from "@/icons/others/trash.png";
 import { deleteConversation } from "@/services/conversation";
 
-export default function Chat({ id, provider, date }: ChatProps) {
-  const router = useRouter();
+
+export default function Chat({ id, provider, date, onDelete }: ChatProps) {
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -21,8 +19,10 @@ export default function Chat({ id, provider, date }: ChatProps) {
       setLoading(true);
       await deleteConversation(id);
 
-      // Redireciona para a página principal de conversas
-      router.push("/dashboard/chats");
+      // 🔹 Atualiza lista no componente pai sem recarregar a página
+      if (onDelete) {
+        onDelete();
+      }
     } catch (err) {
       console.error("Erro ao deletar conversa:", err);
       alert("Não foi possível deletar a conversa.");

@@ -5,6 +5,8 @@ import Header from "@/components/Header/Header";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import { useEffect } from "react";
+import { useAutoLogout } from "@/utils/useAutoLogout";
 
 export default function RootLayout({
   children,
