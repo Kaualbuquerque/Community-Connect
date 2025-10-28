@@ -22,10 +22,10 @@ import { WsJwtGuard } from './guards/ws-jwt.guard';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
+      useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: config.get<string>('JWT_EXPIRATION') || '1h',
+          expiresIn: config.get<string>('JWT_EXPIRATION'),
         },
       }),
     }),

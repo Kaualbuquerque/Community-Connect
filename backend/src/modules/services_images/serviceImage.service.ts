@@ -6,7 +6,7 @@ import { Service } from "../services/service.entity";
 import { UpdateServiceDto } from "../services/dto/update-service.dto";
 import { User } from "../users/user.entity";
 import { Readable } from "stream";
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import type { UploadApiResponse } from 'cloudinary';
 
 @Injectable()
 export class ServiceImageService {
@@ -128,16 +128,16 @@ export class ServiceImageService {
         // Busca a imagem no banco
         const image = await this.imageRepository.findOne({ where: { id } });
         if (!image) {
-          throw new NotFoundException('Image not found');
+            throw new NotFoundException('Image not found');
         }
-      
+
         // Deleta do Cloudinary, se tiver public_id
         if (image.public_id) {
-          await this.cloudinary.uploader.destroy(image.public_id);
+            await this.cloudinary.uploader.destroy(image.public_id);
         }
-      
+
         // Deleta do banco
         await this.imageRepository.delete(id);
-      }
-      
+    }
+
 }
