@@ -9,9 +9,6 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { OptionalJwtAuthGuard } from './guards/optional-jwt-auth.guard';
 import { WsJwtGuard } from './guards/ws-jwt.guard';
 
 @Module({
@@ -22,12 +19,21 @@ import { WsJwtGuard } from './guards/ws-jwt.guard';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: config.get<string>('JWT_EXPIRATION'),
-        },
-      }),
+      useFactory: (config: ConfigService) => {
+        const secret = config.get<string>('JWT_SECRET');
+        const expiresIn = config.get<string>('JWT_EXPIRATION') || '1h';
+
+        if (!secret) {
+          throw new Error('JWT_SECRET não está definido');
+        }
+
+        return {
+          secret,
+          signOptions: {
+            expiresIn, // agora é garantido que nunca é undefined
+          },
+        };
+      },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, WsJwtGuard],
