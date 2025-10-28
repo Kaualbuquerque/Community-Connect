@@ -173,7 +173,7 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                         {service.images.map((image: string, index: number) => (
                             <SwiperSlide key={index}>
                                 <img
-                                    src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+                                    src={`${image}`}
                                     alt={`Imagem ${index + 1} do serviço ${service.name}`}
                                     style={{
                                         width: "100%",
