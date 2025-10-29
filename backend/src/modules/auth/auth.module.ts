@@ -13,7 +13,7 @@ import { WsJwtGuard } from './guards/ws-jwt.guard';
 
 @Module({
   imports: [
-    ConfigModule, // importa o ConfigModule para este módulo
+    ConfigModule,
     UsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
@@ -21,16 +21,19 @@ import { WsJwtGuard } from './guards/ws-jwt.guard';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const secret = config.get<string>('JWT_SECRET');
-        const expiresIn = config.get<string>('JWT_EXPIRATION') || '1h';
+        const expiresIn = parseInt(config.get<string>('JWT_EXPIRATION') ?? '3600', 10);
 
         if (!secret) {
           throw new Error('JWT_SECRET não está definido');
+        }
+        if (isNaN(expiresIn)) {
+          throw new Error('JWT_EXPIRATION deve ser um número válido (em segundos)');
         }
 
         return {
           secret,
           signOptions: {
-            expiresIn, // agora é garantido que nunca é undefined
+            expiresIn, // agora é um número, aceito pelo JwtModuleOptions
           },
         };
       },
