@@ -10,7 +10,6 @@ import styles from "./Filter.module.scss";
 import { FilterProps, FiltersState } from "@/utils/interfaces";
 import { fetchCities, fetchStates } from "@/services/service";
 
-
 export default function Filter({ onApplyFilter, onClose }: FilterProps) {
     const [filters, setFilters] = useState<FiltersState>({
         category: undefined,
@@ -25,18 +24,38 @@ export default function Filter({ onApplyFilter, onClose }: FilterProps) {
 
     // Carrega estados ao montar o componente
     useEffect(() => {
-        fetchStates().then(setStates);
+        const loadStates = async () => {
+            try {
+                const result = await fetchStates();
+                setStates(result);
+            } catch (err) {
+                console.error("Error fetching states:", err);
+            }
+        };
+        loadStates();
     }, []);
 
     // Carrega cidades quando o estado muda
     useEffect(() => {
-        if (filters.state) {
-            fetchCities(filters.state).then(setCities);
-            setFilters((prev) => ({ ...prev, city: undefined })); // limpa cidade ao mudar estado
-        } else {
-            setCities([]);
-            setFilters((prev) => ({ ...prev, city: undefined }));
-        }
+        const loadCities = async () => {
+            if (!filters.state) {
+                setCities([]);
+                setFilters(prev => ({ ...prev, city: undefined }));
+                return;
+            }
+
+            try {
+                const result = await fetchCities(filters.state);
+                setCities(result);
+                setFilters(prev => ({ ...prev, city: undefined })); // limpa cidade depois de carregar novas opções
+            } catch (err) {
+                console.error("Error fetching cities:", err);
+                setCities([]);
+                setFilters(prev => ({ ...prev, city: undefined }));
+            }
+        };
+
+        loadCities();
     }, [filters.state]);
 
     const handleSubmit = () => {
@@ -60,7 +79,7 @@ export default function Filter({ onApplyFilter, onClose }: FilterProps) {
             state: undefined,
             city: undefined,
         });
-        onClose?.(); // fecha o filtro
+        onClose?.();
     };
 
     return (
@@ -71,7 +90,7 @@ export default function Filter({ onApplyFilter, onClose }: FilterProps) {
                 type="select"
                 label="Categorias"
                 placeholder="Selecione uma categoria"
-                options={options} // Defina suas opções de categoria
+                options={options}
                 value={filters.category}
                 onChange={(e) =>
                     setFilters((prev) => ({ ...prev, category: e.target.value }))
@@ -88,7 +107,6 @@ export default function Filter({ onApplyFilter, onClose }: FilterProps) {
                     setFilters((prev) => ({
                         ...prev,
                         state: e.target.value,
-                        city: "", // limpa cidade ao trocar o estado
                     }))
                 }
             />

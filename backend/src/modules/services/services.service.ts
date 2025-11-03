@@ -168,13 +168,11 @@ export class ServiceService {
     async getStates(): Promise<string[]> {
         const result = await this.serviceRepository
             .createQueryBuilder('service')
-            .select('DISTINCT TRIM(UPPER(service.state))', 'state')
+            .select('DISTINCT TRIM(service.state)', 'state')
+            .where('service.state IS NOT NULL')
             .getRawMany();
 
-        // Normaliza e filtra valores inválidos
-        return result
-            .map((s: any) => s.state?.trim())
-            .filter((s: string) => s && s.length === 2); // garante sigla de 2 letras
+        return result.map((s: any) => s.state.trim().toUpperCase());
     }
 
     async getCitiesByState(state: string): Promise<string[]> {
@@ -183,13 +181,10 @@ export class ServiceService {
         const result = await this.serviceRepository
             .createQueryBuilder('service')
             .select('DISTINCT TRIM(service.city)', 'city')
-            .where('UPPER(service.state) = :state', { state: state.toUpperCase() })
+            .where('UPPER(TRIM(service.state)) = :state', { state: state.toUpperCase() })
+            .andWhere('service.city IS NOT NULL')
             .getRawMany();
 
-        // Normaliza e remove valores nulos ou vazios
-        return result
-            .map((c: any) => c.city?.trim())
-            .filter((c: string) => !!c);
+        return result.map((c: any) => c.city.trim());
     }
-
 }
