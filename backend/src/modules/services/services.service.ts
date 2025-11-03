@@ -22,7 +22,7 @@ export class ServiceService {
 
 
     async create(dto: CreateServiceDto, user: User, files?: Express.Multer.File[]): Promise<Service> {
-        // 1️⃣ Cria o serviço sem as imagens
+        // Cria o serviço sem as imagens
         const service = this.serviceRepository.create({
             ...dto,
             provider: user,
@@ -30,7 +30,7 @@ export class ServiceService {
 
         await this.serviceRepository.save(service);
 
-        // 2️⃣ Se houver imagens, cria e salva as entidades relacionadas
+        // Se houver imagens, cria e salva as entidades relacionadas
         if (files?.length) {
             const urls = files.map(file => `/uploads/${file.filename}`);
 
@@ -44,7 +44,7 @@ export class ServiceService {
 
             await this.serviceImageRepository.save(images);
 
-            // 3️⃣ Atualiza o serviço com suas imagens (opcional)
+            // Atualiza o serviço com suas imagens (opcional)
             service.images = images;
         }
 
@@ -168,19 +168,28 @@ export class ServiceService {
     async getStates(): Promise<string[]> {
         const result = await this.serviceRepository
             .createQueryBuilder('service')
-            .select('DISTINCT service.state', 'state')
+            .select('DISTINCT TRIM(UPPER(service.state))', 'state')
             .getRawMany();
 
-        return result.map(s => s.state);
+        // Normaliza e filtra valores inválidos
+        return result
+            .map((s: any) => s.state?.trim())
+            .filter((s: string) => s && s.length === 2); // garante sigla de 2 letras
     }
 
     async getCitiesByState(state: string): Promise<string[]> {
+        if (!state) return [];
+
         const result = await this.serviceRepository
             .createQueryBuilder('service')
-            .select('DISTINCT service.city', 'city')
-            .where('service.state = :state', { state })
+            .select('DISTINCT TRIM(service.city)', 'city')
+            .where('UPPER(service.state) = :state', { state: state.toUpperCase() })
             .getRawMany();
 
-        return result.map(c => c.city);
+        // Normaliza e remove valores nulos ou vazios
+        return result
+            .map((c: any) => c.city?.trim())
+            .filter((c: string) => !!c);
     }
+
 }
