@@ -30,7 +30,6 @@ export default function FavoritesPage() {
         try {
             setLoading(true);
 
-            // Passa filtros e busca para a API
             const data = await getFavorites({
                 search,
                 category: filters.category,
@@ -48,7 +47,6 @@ export default function FavoritesPage() {
         }
     }, [search, filters]);
 
-    // refetch sempre que search ou filters mudar
     useEffect(() => {
         fetchServices();
     }, [fetchServices]);

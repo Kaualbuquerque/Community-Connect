@@ -18,8 +18,6 @@ export default function DashboardPage() {
   const [loggedUserId, setLoggedUserId] = useState<number>();
   const [loading, setLoading] = useState(true);
 
-  useAutoLogout();
-
   const fetchNotes = useCallback(async () => {
     if (!loggedUserId) return;
 

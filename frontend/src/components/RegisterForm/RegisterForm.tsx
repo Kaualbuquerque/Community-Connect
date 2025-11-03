@@ -21,7 +21,6 @@ export default function RegisterForm() {
     const router = useRouter();
 
     const [form, setForm] = useState<RegisterFormState>({
-        id: "",
         userProfile: "consumer",
         name: "",
         email: "",
@@ -89,7 +88,6 @@ export default function RegisterForm() {
         }
 
         const payload = {
-            id: form.id,
             name: form.name,
             email: form.email,
             password: form.password,
@@ -105,7 +103,6 @@ export default function RegisterForm() {
             await registerUser(payload);
 
             setForm({
-                id: "",
                 userProfile: "consumer",
                 name: "",
                 email: "",

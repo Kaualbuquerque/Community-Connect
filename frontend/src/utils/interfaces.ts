@@ -1,11 +1,22 @@
-import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
 import { ChangeEvent } from "react";
 
 // =============================== Interface ===============================
 
 // Form data
 export interface RegisterData {
-    id: string;
+    name: string;
+    email: string;
+    password: string;
+    phone: string;
+    role: 'consumer' | 'provider';
+    cep: string;
+    state: string;
+    city: string;
+    number: string;
+}
+
+export interface UserData {
+    id: string,
     name: string;
     email: string;
     password: string;
@@ -28,7 +39,6 @@ export interface LoginFormState {
 }
 
 export interface RegisterFormState {
-    id: string,
     userProfile: "consumer" | "provider";
     name: string;
     email: string;
@@ -45,7 +55,7 @@ export interface RegisterFormState {
 export interface Service {
     id: number
     name: string
-    provider: RegisterData
+    provider: UserData | RegisterData
     description: string
     state: string
     city: string

@@ -1,7 +1,12 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export default class CreateFavoriteDto {
-    @IsNotEmpty()
-    @IsNumber()
-    serviceId: number;
+  @ApiProperty({
+    example: 5,
+    description: 'ID do serviço que será adicionado aos favoritos',
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  serviceId: number;
 }

@@ -12,7 +12,6 @@ import { uploadImages } from "@/services/serviceImages";
 export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }: ServiceModalProps) {
     // Dados vazios padrão para o provedor
     const emptyProvider: RegisterData = {
-        id: "",
         name: "",
         email: "",
         password: "",
