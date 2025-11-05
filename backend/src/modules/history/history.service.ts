@@ -57,8 +57,9 @@ export class HistoryService {
     }
 
 
-    async findByConsumer(consumerId: number): Promise<History[]> {
-        const histories = await this.historyRepository.createQueryBuilder('history')
+    async findByConsumer(consumerId: number): Promise<any[]> {
+        const histories = await this.historyRepository
+            .createQueryBuilder('history')
             .leftJoinAndSelect('history.consumer', 'consumer')
             .leftJoinAndSelect('history.service', 'service')
             .leftJoinAndSelect('service.images', 'images')
@@ -71,18 +72,19 @@ export class HistoryService {
             where: { consumer: { id: consumerId } },
             relations: ['service'],
         });
+
         const favoriteIds = favorites.map(f => f.service.id);
 
         return histories.map(history => ({
             ...history,
             service: {
                 ...history.service,
-                images: history.service.images ?? [],
+                // agora apenas URLs
+                images: history.service.images?.map(img => img.url) ?? [],
                 isFavorite: favoriteIds.includes(history.service.id),
             },
         }));
     }
-
 
     async remove(id: number): Promise<void> {
         const result = await this.historyRepository.delete(id);

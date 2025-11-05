@@ -48,7 +48,6 @@ export class FavoriteService {
             .leftJoinAndSelect('service.images', 'images')
             .leftJoinAndSelect('service.provider', 'provider')
             .where('consumer.id = :consumerId', { consumerId })
-            .orderBy('favorite.createdAt', 'DESC');
 
         // Filtros opcionais
         if (filters?.category) query.andWhere('service.category = :category', { category: filters.category });
