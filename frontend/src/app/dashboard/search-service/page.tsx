@@ -28,7 +28,6 @@ export default function SearchServicePage() {
   const fetchServices = useCallback(async () => {
     try {
       setLoading(true);
-
       // Passa filtros e busca para a API
       const data = await getAllServices({
         search,

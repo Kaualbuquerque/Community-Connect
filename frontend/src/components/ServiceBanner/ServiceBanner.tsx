@@ -105,6 +105,8 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
         }
     }, []);
 
+    console.log(service)
+
     return (
         <article className={styles.serviceBanner}>
             <header className={styles.header}>
@@ -169,10 +171,10 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                         slidesPerView={1}
                         style={{ width: "100%", height: "auto" }}
                     >
-                        {service.images.map((image: string, index: number) => (
-                            <SwiperSlide key={index}>
+                        {service.images.map((image, index) => (
+                            <SwiperSlide key={image.id ?? index}>
                                 <img
-                                    src={`${image}`}
+                                    src={image.url}
                                     alt={`Imagem ${index + 1} do serviço ${service.name}`}
                                     style={{
                                         width: "100%",
@@ -190,6 +192,7 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                     <p>Este serviço ainda não possui imagens.</p>
                 </div>
             )}
+
         </article>
     );
 }

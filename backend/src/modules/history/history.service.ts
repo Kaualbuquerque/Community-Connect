@@ -75,16 +75,27 @@ export class HistoryService {
 
         const favoriteIds = favorites.map(f => f.service.id);
 
-        return histories.map(history => ({
-            ...history,
-            service: {
-                ...history.service,
-                // agora apenas URLs
-                images: history.service.images?.map(img => img.url) ?? [],
-                isFavorite: favoriteIds.includes(history.service.id),
-            },
-        }));
+        return histories.map(history => {
+            const service = history.service;
+
+            return {
+                ...history,
+                service: {
+                    id: service.id,
+                    name: service.name,
+                    description: service.description,
+                    state: service.state,
+                    city: service.city,
+                    category: service.category,
+                    price: service.price,
+                    provider: service.provider,
+                    images: service.images?.map(image => image.url) ?? [],
+                    isFavorite: favoriteIds.includes(service.id),
+                },
+            };
+        });
     }
+
 
     async remove(id: number): Promise<void> {
         const result = await this.historyRepository.delete(id);

@@ -74,9 +74,6 @@ export class FavoriteService {
         }));
     }
 
-
-
-
     async removeFavorite(consumerId: number, serviceId: number): Promise<void> {
         const favorite = await this.favoriteRepository.findOne({
             where: {

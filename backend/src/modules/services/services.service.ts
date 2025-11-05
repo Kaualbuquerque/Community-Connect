@@ -84,63 +84,73 @@ export class ServiceService {
             search?: string;
         },
     ) {
-        const query = this.serviceRepository.createQueryBuilder('service')
+        const query = this.serviceRepository
+            .createQueryBuilder('service')
             .leftJoinAndSelect('service.provider', 'provider')
-            .leftJoinAndSelect('service.images', 'images'); // ← adiciona as imagens
-
+            .leftJoinAndSelect('service.images', 'images');
+    
         if (filters?.state) {
             query.andWhere('service.state = :state', { state: filters.state });
         }
-
+    
         if (filters?.city) {
             query.andWhere('service.city = :city', { city: filters.city });
         }
-
+    
         if (filters?.category) {
             query.andWhere('service.category = :category', { category: filters.category });
         }
-
+    
         if (filters?.minPrice !== undefined) {
             query.andWhere('service.price >= :minPrice', { minPrice: filters.minPrice });
         }
-
+    
         if (filters?.maxPrice !== undefined) {
             query.andWhere('service.price <= :maxPrice', { maxPrice: filters.maxPrice });
         }
-
+    
         if (filters?.search) {
             query.andWhere(
                 '(LOWER(service.name) LIKE LOWER(:search) OR LOWER(service.description) LIKE LOWER(:search))',
                 { search: `%${filters.search}%` },
             );
         }
-
+    
         const services = await query.getMany();
-
+    
+        // converte as imagens em array de URLs
         const servicesWithImages = services.map(service => ({
-            ...service,
+            id: service.id,
+            name: service.name,
+            description: service.description,
+            state: service.state,
+            city: service.city,
+            category: service.category,
+            price: service.price,
+            provider: service.provider,
             images: service.images?.map(img => img.url) ?? [],
         }));
-
+    
         if (!userId) {
             return servicesWithImages.map(service => ({
                 ...service,
                 isFavorite: false,
             }));
         }
-
+    
         const favorites = await this.favoriteRepository.find({
             where: { consumer: { id: userId } },
             relations: ['service'],
         });
-
-        const favoriteIds = favorites.map(fav => fav.service.id);
-
+    
+        const favoriteIds = favorites.map(f => f.service.id);
+    
         return servicesWithImages.map(service => ({
             ...service,
             isFavorite: favoriteIds.includes(service.id),
         }));
     }
+    
 
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
         // copia dto mas remove 'images'

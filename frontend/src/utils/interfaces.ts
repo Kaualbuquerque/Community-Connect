@@ -52,18 +52,26 @@ export interface RegisterFormState {
 }
 
 // Services
+export interface ServiceImage {
+    id: number;
+    url: string;
+    public_id: string;
+    position: number;
+}
+
 export interface Service {
-    id: number
-    name: string
-    provider: RegisterData | UserData
-    description: string
-    state: string
-    city: string
-    category: string
-    images: string[]
+    id: number;
+    name: string;
+    provider: RegisterData | UserData;
+    description: string;
+    state: string;
+    city: string;
+    category: string;
+    images: ServiceImage[]; // ← altere aqui
     price: string;
     isFavorite?: boolean;
 }
+
 
 export interface ServiceBannerProps {
     role: "provider" | "consumer";

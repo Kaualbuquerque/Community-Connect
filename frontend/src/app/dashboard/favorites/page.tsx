@@ -38,13 +38,16 @@ export default function FavoritesPage() {
                 city: filters.city,
             });
 
-            setServices(data);
+            // data é um array de favoritos, então mapeie para pegar apenas os serviços
+            const services = data.map((favorite: any) => favorite.service);
+            setServices(services);
         } catch (error) {
             console.error("Erro ao carregar serviços:", error);
         } finally {
             setLoading(false);
         }
     }, [search, filters]);
+
 
     useEffect(() => {
         fetchServices();
