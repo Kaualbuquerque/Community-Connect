@@ -4,17 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { useTheme } from "@/context/ThemeContext";
-import { loginUser } from "@/services/auth";
+import { useTheme } from "../../context/ThemeContext";
+import { loginUser } from "../../services/auth";
 
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 
 import styles from "./LoginForm.module.scss";
 
-import logoLight from "@/icons/logo/community_connect_logo_light.png";
-import logoDark from "@/icons/logo/community_connect_logo_dark.png";
-import { LoginFormState } from "@/utils/interfaces";
+import logoLight from "../../../public/icons/logo/community_connect_logo_light.png";
+import logoDark from "../../../public/icons/logo/community_connect_logo_dark.png";
+import { LoginFormState } from "../../utils/interfaces";
 
 
 export default function LoginForm() {

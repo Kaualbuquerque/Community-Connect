@@ -5,9 +5,9 @@ import styles from "./ServiceModal.module.scss";
 
 import Button from "../Button/Button";
 import Input from "../Input/Input";
-import { options } from "@/utils/options";
-import { CreateServiceDTO, RegisterData, Service, ServiceModalProps } from "@/utils/interfaces";
-import { uploadImages } from "@/services/serviceImages";
+import { options } from "../../utils/options";
+import { CreateServiceDTO, RegisterData, Service, ServiceModalProps } from "../../utils/interfaces";
+import { uploadImages } from "../../services/serviceImages";
 
 export default function ServiceModal({ isOpen, onClose, serviceData, onSubmit }: ServiceModalProps) {
     // Dados vazios padrão para o provedor

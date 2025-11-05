@@ -160,7 +160,7 @@ export interface FeatureCardProps {
     text: string;
 }
 
-export interface ServiceCardProps {
+export interface HomeCardProps {
     image: string;
     title: string;
     description: string;

@@ -1,10 +1,10 @@
 "use client";
 
-import Chat from "@/components/Chat/Chat";
+import Chat from "../../../components/Chat/Chat";
 import styles from "./page.module.scss";
 import { useCallback, useEffect, useState } from "react";
-import { Conversation } from "@/utils/interfaces";
-import { getConversations } from "@/services/conversation";
+import { Conversation } from "../../../utils/interfaces";
+import { getConversations } from "../../../services/conversation";
 
 export default function ChatsPage() {
     const [loggedUserId, setLoggedUserId] = useState<number | null>(null);

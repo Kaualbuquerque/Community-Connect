@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
+import ServiceBanner from "../../../components/ServiceBanner/ServiceBanner";
 import styles from "./page.module.scss";
-import ServiceModal from "@/components/ServiceModal/ServiceModal";
-import Button from "@/components/Button/Button";
-import { createService, deleteService, getMyServices, updateService } from "@/services/service";
-import { Service } from "@/utils/interfaces";
+import ServiceModal from "../../../components/ServiceModal/ServiceModal";
+import Button from "../../../components/Button/Button";
+import { createService, deleteService, getMyServices, updateService } from "../../../services/service";
+import { Service } from "../../../utils/interfaces";
 
 export default function YourServicesPage() {
     const [services, setServices] = useState<Service[]>([]);

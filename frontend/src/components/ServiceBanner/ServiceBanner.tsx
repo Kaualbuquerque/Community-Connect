@@ -3,27 +3,27 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 import Button from "../Button/Button";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 import styles from "./ServiceBanner.module.scss";
-import { ServiceBannerProps } from "@/utils/interfaces";
+import { ServiceBannerProps } from "../../utils/interfaces";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import heartFillLight from "@/icons/favorite/heart-fill-light.png";
-import heartFillDark from "@/icons/favorite/heart-fill-dark.png";
-import heartLight from "@/icons/sidebar/heart-light.png";
-import heartDark from "@/icons/sidebar/heart-dark.png";
-import { addFavorite, removeFavorite } from "@/services/favorite";
+import heartFillLight from "../../../public/icons/favorite/heart-fill-light.png";
+import heartFillDark from "../../../public/icons/favorite/heart-fill-dark.png";
+import heartLight from "../../../public/icons/sidebar/heart-light.png";
+import heartDark from "../../../public/icons/sidebar/heart-dark.png";
+import { addFavorite, removeFavorite } from "../../services/favorite";
 import { useRouter } from "next/navigation";
-import { createConversation } from "@/services/conversation";
-import { saveHistory } from "@/services/service";
+import { createConversation } from "../../services/conversation";
+import { saveHistory } from "../../services/service";
 
 export default function ServiceBanner({ role, service, onEdit, onDelete }: ServiceBannerProps) {
     const { theme } = useTheme();

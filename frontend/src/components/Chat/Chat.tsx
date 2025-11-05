@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import styles from "./Chat.module.scss";
-import { ChatProps } from "@/utils/interfaces";
-import trash from "@/icons/others/trash.png";
-import { deleteConversation } from "@/services/conversation";
+import { ChatProps } from "../../utils/interfaces";
+import trash from "../../../public/icons/others/trash.png";
+import { deleteConversation } from "../../services/conversation";
 
 
 export default function Chat({ id, provider, date, onDelete }: ChatProps) {

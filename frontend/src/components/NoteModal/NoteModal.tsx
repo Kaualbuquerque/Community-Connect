@@ -6,8 +6,8 @@ import Button from "../Button/Button";
 import Input from "../Input/Input";
 
 import styles from "./NoteModal.module.scss";
-import { CreateNoteDTO, NoteModalProps, Notes } from "@/utils/interfaces";
-import { createNote } from "@/services/note";
+import { CreateNoteDTO, NoteModalProps } from "../../utils/interfaces";
+import { createNote } from "../../services/note";
 
 export default function NoteModal({ onClose }: NoteModalProps) {
   const date = Date;
