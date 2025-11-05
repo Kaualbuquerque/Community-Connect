@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { options } from "@/utils/options";
+import { options } from "../../utils/options";
 
 import Button from "../Button/Button";
 import Input from "../Input/Input";
 
 import styles from "./Filter.module.scss";
-import { FilterProps, FiltersState } from "@/utils/interfaces";
-import { fetchCities, fetchStates } from "@/services/service";
+import { FilterProps, FiltersState } from "../../utils/interfaces";
+import { fetchCities, fetchStates } from "../../services/service";
 
 export default function Filter({ onApplyFilter, onClose }: FilterProps) {
     const [filters, setFilters] = useState<FiltersState>({

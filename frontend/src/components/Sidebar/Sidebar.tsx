@@ -5,19 +5,19 @@ import styles from "./Sidebar.module.scss";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
-import dashboard_icon_light from "@/icons/sidebar/home-light.png";
-import search_icon_light from "@/icons/sidebar/find-light.png";
-import favorites_icon_light from "@/icons/sidebar/heart-light.png";
-import services_icon_light from "@/icons/sidebar/service-light.png";
-import chats_icon_light from "@/icons/sidebar/chats-light.png";
+import dashboard_icon_light from "../../../public/icons/sidebar/home-light.png";
+import search_icon_light from "../../../public/icons/sidebar/find-light.png";
+import favorites_icon_light from "../../../public/icons/sidebar/heart-light.png";
+import services_icon_light from "../../../public/icons/sidebar/service-light.png";
+import chats_icon_light from "../../../public/icons/sidebar/chats-light.png";
 
-import dashboard_icon_dark from "@/icons/sidebar/home-dark.png";
-import search_icon_dark from "@/icons/sidebar/find-dark.png";
-import favorites_icon_dark from "@/icons/sidebar/heart-dark.png";
-import services_icon_dark from "@/icons/sidebar/service-dark.png";
-import chats_icon_dark from "@/icons/sidebar/chats-dark.png";
+import dashboard_icon_dark from "../../../public/icons/sidebar/home-dark.png";
+import search_icon_dark from "../../../public/icons/sidebar/find-dark.png";
+import favorites_icon_dark from "../../../public/icons/sidebar/heart-dark.png";
+import services_icon_dark from "../../../public/icons/sidebar/service-dark.png";
+import chats_icon_dark from "../../../public/icons/sidebar/chats-dark.png";
 import Button from "../Button/Button";
 
 export default function Sidebar() {

@@ -1,4 +1,4 @@
-import { CreateNoteDTO } from "@/utils/interfaces";
+import { CreateNoteDTO } from "../utils/interfaces";
 import { api } from "./api";
 
 export const createNote = async (data: CreateNoteDTO) => {

@@ -1,10 +1,10 @@
 "use client";
 
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 import styles from "./ThemeButton.module.scss";
 import Image from "next/image";
-import sun from "@/icons/theme/sun.png";
-import moon from "@/icons/theme/moon.png";
+import sun from "../../../public/icons/theme/sun.png";
+import moon from "../../../public/icons/theme/moon.png";
 
 export default function ThemeButton() {
     const { theme, toggleTheme } = useTheme();

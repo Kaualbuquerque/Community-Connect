@@ -4,15 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 import Button from "../Button/Button";
 import ThemeButton from "../themeButton/ThemeButton";
 
 import styles from "./Header.module.scss";
 
-import logoLight from "@/icons/logo/community_connect_logo_light.png";
-import logoDark from "@/icons/logo/community_connect_logo_dark.png";
+import logoLight from "../../../public/icons/logo/community_connect_logo_light.png";
+import logoDark from "../../../public/icons/logo/community_connect_logo_dark.png";
 
 export default function Header() {
     const { theme } = useTheme();

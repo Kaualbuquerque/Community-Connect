@@ -1,4 +1,4 @@
-import { CreateServiceDTO, HistoryDTO } from "@/utils/interfaces";
+import { CreateServiceDTO, HistoryDTO } from "../utils/interfaces";
 import { api } from "./api";
 
 export const createService = async (data: CreateServiceDTO) => {

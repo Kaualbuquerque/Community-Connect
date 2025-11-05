@@ -1,5 +1,5 @@
 // src/services/registerUser.ts
-import { LoginData, RegisterData } from '@/utils/interfaces';
+import { LoginData, RegisterData } from '../utils/interfaces';
 import { api } from './api'; // Assumindo que 'api' é uma instância configurada do Axios
 import axios from 'axios';
 

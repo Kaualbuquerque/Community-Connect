@@ -3,17 +3,17 @@
 import Image from "next/image";
 import styles from "./RegisterForm.module.scss";
 import Input from "../Input/Input";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 import { useState } from "react";
-import { maskCep, maskPhone } from "@/utils/masks";
-import { fetchAddressByCep } from "@/utils/cep";
+import { maskCep, maskPhone } from "../../utils/masks";
+import { fetchAddressByCep } from "../../utils/cep";
 import Button from "../Button/Button";
 import Link from "next/link";
-import logo from "@/icons/logo/community_connect_logo_light.png";
-import logo_dark from "@/icons/logo/community_connect_logo_dark.png";
-import { registerUser } from "@/services/auth";
+import logo from "../../../public/icons/logo/community_connect_logo_light.png";
+import logo_dark from "../../../public/icons/logo/community_connect_logo_dark.png";
+import { registerUser } from "../../services/auth";
 import { useRouter } from "next/navigation";
-import { RegisterFormState } from "@/utils/interfaces";
+import { RegisterFormState } from "../../utils/interfaces";
 
 
 export default function RegisterForm() {

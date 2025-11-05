@@ -1,17 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useState, useMemo } from "react";
-import Input from "@/components/Input/Input";
-import Button from "@/components/Button/Button";
-import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
-import Filter from "@/components/Filter/Filter";
-import { useTheme } from "@/context/ThemeContext";
+import { useCallback, useEffect, useState } from "react";
+import Input from "../../../components/Input/Input";
+import Button from "../../../components/Button/Button";
+import ServiceBanner from "../../../components/ServiceBanner/ServiceBanner";
+import Filter from "../../../components/Filter/Filter";
+import { useTheme } from "../../../context/ThemeContext";
 import styles from "./page.module.scss";
 
-import filter_light from "@/icons/favorite/filter_light.png";
-import filter_dark from "@/icons/favorite/filter_dark.png";
-import { getAllServices } from "@/services/service";
-import { FiltersState, Service } from "@/utils/interfaces";
+import filter_light from "../../../../public/icons/favorite/filter_light.png";
+import filter_dark from "../../../../public/icons/favorite/filter_dark.png";
+import { getAllServices } from "../../../services/service";
+import { FiltersState, Service } from "../../../utils/interfaces";
 
 export default function SearchServicePage() {
   const { theme } = useTheme();

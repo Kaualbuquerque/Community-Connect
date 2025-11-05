@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Button from "@/components/Button/Button";
-import NoteModal from "@/components/NoteModal/NoteModal";
+import Button from "../../components/Button/Button";
+import NoteModal from "../../components/NoteModal/NoteModal";
 import styles from "./page.module.scss";
-import { deleteNote, getNotes } from "@/services/note";
-import { HistoryService, Notes } from "@/utils/interfaces";
-import Note from "@/components/Note/Note";
-import { getHistory } from "@/services/service";
-import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
+import { deleteNote, getNotes } from "../../services/note";
+import { HistoryService, Notes } from "../../utils/interfaces";
+import Note from "../../components/Note/Note";
+import { getHistory } from "../../services/service";
+import ServiceBanner from "../../components/ServiceBanner/ServiceBanner";
 
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);

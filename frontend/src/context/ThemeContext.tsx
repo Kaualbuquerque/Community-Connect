@@ -1,6 +1,6 @@
 "use client"
 
-import { Theme, ThemeContextType } from '@/utils/interfaces';
+import { Theme, ThemeContextType } from '../utils/interfaces';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 

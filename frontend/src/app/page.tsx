@@ -1,10 +1,10 @@
-import FeatureCard from "@/components/FeatureCard/FeatureCard";
-import HomeCard from "@/components/ServiceCard/ServiceCard";
-import Button from "@/components/Button/Button";
+import FeatureCard from "../components/FeatureCard/FeatureCard";
+import Button from "../components/Button/Button";
 import styles from "./page.module.scss";
 
-import { FeatureCardsData } from "@/components/FeatureCard/FeatureCardsData";
-import { serviceCardData } from "@/components/ServiceCard/serviceCardData";
+import { FeatureCardsData } from "../components/FeatureCard/FeatureCardsData";
+import { serviceCardData } from "../components/HomeCard/HomeCardData";
+import HomeCard from "../components/HomeCard/HomeCard";
 
 export default function HomePage() {
   return (

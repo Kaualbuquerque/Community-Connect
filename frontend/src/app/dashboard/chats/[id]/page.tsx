@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import Message from "@/components/Message/Message";
-import Input from "@/components/Input/Input";
+import { useEffect, useState } from "react";
+import Message from "../../../../components/Message/Message";
+import Input from "../../../../components/Input/Input";
 import styles from "./page.module.scss";
-import { Messages } from "@/utils/interfaces";
-import { getMessages } from "@/services/conversation";
+import { Messages } from "../../../../utils/interfaces";
+import { getMessages } from "../../../../services/conversation";
 import { useParams } from "next/navigation";
-import { socket } from "@/services/api";
+import { socket } from "../../../../services/api";
 
 export default function ChatConversationPage() {
   const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
