@@ -41,17 +41,22 @@ export class FavoriteController {
         @Query('city') city?: string,
         @Query('search') search?: string,
     ) {
-        const userId = req.user.id;
+        const consumerId = req.user.id;
+
+        // Converte filtros para formato adequado
         const filters = {
-            category,
+            category: category?.trim() || undefined,
             minPrice: minPrice ? Number(minPrice) : undefined,
             maxPrice: maxPrice ? Number(maxPrice) : undefined,
-            state,
-            city,
-            search,
+            state: state?.trim() || undefined,
+            city: city?.trim() || undefined,
+            search: search?.trim() || undefined,
         };
-        return this.favoriteService.findByUser(userId, filters);
+
+        // Chama o serviço usando o método correto
+        return this.favoriteService.findByUser(consumerId, filters);
     }
+
 
     @Delete(":serviceId")
     @UseGuards(JwtAuthGuard)
