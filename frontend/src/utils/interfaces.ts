@@ -55,7 +55,7 @@ export interface RegisterFormState {
 export interface Service {
     id: number
     name: string
-    provider: UserData | RegisterData
+    provider: RegisterData | UserData
     description: string
     state: string
     city: string
@@ -136,7 +136,7 @@ export interface ChatProps {
     id: number;
     provider: string;
     date: string;
-    onDelete?: () => void; 
+    onDelete?: () => void;
 }
 
 

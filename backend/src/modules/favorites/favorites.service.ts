@@ -9,7 +9,7 @@ interface FavoriteFilters {
     maxPrice?: number;
     state?: string;
     city?: string;
-    search?: string; // 🔹 novo campo
+    search?: string;
 }
 
 @Injectable()
@@ -40,32 +40,28 @@ export class FavoriteService {
         return this.favoriteRepository.save(favorite);
     }
 
-    async findByUser(userId: number, filters?: FavoriteFilters) {
-        const query = this.favoriteRepository.createQueryBuilder('favorite')
+    async findByConsumer(consumerId: number): Promise<Favorite[]> {
+        const favorites = await this.favoriteRepository
+            .createQueryBuilder('favorite')
+            .leftJoinAndSelect('favorite.consumer', 'consumer')
             .leftJoinAndSelect('favorite.service', 'service')
+            .leftJoinAndSelect('service.images', 'images')
             .leftJoinAndSelect('service.provider', 'provider')
-            .where('favorite.consumerId = :userId', { userId });
+            .where('consumer.id = :consumerId', { consumerId })
+            .orderBy('favorite.createdAt', 'DESC')
+            .getMany();
 
-        if (filters?.category) query.andWhere('service.category = :category', { category: filters.category });
-        if (filters?.minPrice !== undefined) query.andWhere('service.price >= :minPrice', { minPrice: filters.minPrice });
-        if (filters?.maxPrice !== undefined) query.andWhere('service.price <= :maxPrice', { maxPrice: filters.maxPrice });
-        if (filters?.state) query.andWhere('service.state = :state', { state: filters.state });
-        if (filters?.city) query.andWhere('service.city = :city', { city: filters.city });
-        if (filters?.search) {
-            query.andWhere(
-                '(LOWER(service.name) LIKE :search OR LOWER(service.description) LIKE :search)',
-                { search: `%${filters.search.toLowerCase()}%` },
-            );
-        }
-
-        const favorites = await query.getMany();
-
-        // 🔹 Normaliza para devolver apenas os serviços
-        return favorites.map(fav => ({
-            ...fav.service,
-            isFavorite: true,
+        // Mapeia para garantir consistência com o histórico (inclui isFavorite)
+        return favorites.map(favorite => ({
+            ...favorite,
+            service: {
+                ...favorite.service,
+                images: favorite.service.images ?? [],
+                isFavorite: true, // sempre true para favoritos
+            },
         }));
     }
+
 
 
     async removeFavorite(consumerId: number, serviceId: number): Promise<void> {

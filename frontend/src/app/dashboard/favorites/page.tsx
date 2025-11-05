@@ -12,7 +12,6 @@ import Filter from "@/components/Filter/Filter";
 import { FiltersState, Service } from "@/utils/interfaces";
 import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
 import { getFavorites } from "@/services/favorite";
-import { getAllServices } from "@/services/service";
 
 export default function FavoritesPage() {
     const { theme } = useTheme();
@@ -82,7 +81,7 @@ export default function FavoritesPage() {
                 {loading && <p>Carregando serviços...</p>}
 
                 {!loading && services.length === 0 && (
-                    <p>Nenhum serviço encontrado com os filtros selecionados.</p>
+                    <p>Você não tem nenhum serviço salvo como favorito.</p>
                 )}
 
                 {!loading &&

@@ -160,7 +160,6 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
             </section>
 
             {service.images?.length > 0 ? (
-                console.log(service.images),
                 <figure className={styles.imageWrapper}>
                     <Swiper
                         modules={[Navigation, Pagination]}

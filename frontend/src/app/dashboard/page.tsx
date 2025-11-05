@@ -9,7 +9,6 @@ import { HistoryService, Notes } from "@/utils/interfaces";
 import Note from "@/components/Note/Note";
 import { getHistory } from "@/services/service";
 import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
-import { useAutoLogout } from "@/utils/useAutoLogout";
 
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);
@@ -47,7 +46,6 @@ export default function DashboardPage() {
       setNotes((prev) => prev.filter((s) => s.id !== id));
       alert("Nota deletada com sucesso!");
     } catch (error) {
-      console.error("Erro ao deletar nota:", error);
       alert("Não foi possível deletar o nota.");
     }
   };

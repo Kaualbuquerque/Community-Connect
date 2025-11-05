@@ -20,7 +20,6 @@ export class ServiceService {
         private serviceImageRepository: Repository<ServiceImage>
     ) { }
 
-
     async create(dto: CreateServiceDto, user: User, files?: Express.Multer.File[]): Promise<Service> {
         // Cria o serviço sem as imagens
         const service = this.serviceRepository.create({
@@ -118,7 +117,6 @@ export class ServiceService {
 
         const services = await query.getMany();
 
-        // Agora o 'images' já vem carregado como array de URLs
         const servicesWithImages = services.map(service => ({
             ...service,
             images: service.images?.map(img => img.url) ?? [],
@@ -144,9 +142,6 @@ export class ServiceService {
         }));
     }
 
-
-
-
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
         // copia dto mas remove 'images'
         const { images, ...serviceData } = dto;
@@ -157,8 +152,6 @@ export class ServiceService {
         // retorna o service atualizado
         return this.findOne(id);
     }
-
-
 
     async remove(id: number): Promise<void> {
         const result = await this.serviceRepository.delete(id);
