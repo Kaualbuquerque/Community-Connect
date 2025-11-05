@@ -79,8 +79,6 @@ export default function DashboardPage() {
     }
   }, [loggedUserId, fetchNotes]);
 
-  console.log(services)
-
   return (
     <main className={styles.dashboardPage} aria-label="Painel do usuário">
 

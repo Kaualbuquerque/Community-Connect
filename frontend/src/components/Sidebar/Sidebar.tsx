@@ -19,7 +19,6 @@ import favorites_icon_dark from "@/icons/sidebar/heart-dark.png";
 import services_icon_dark from "@/icons/sidebar/service-dark.png";
 import chats_icon_dark from "@/icons/sidebar/chats-dark.png";
 import Button from "../Button/Button";
-import { useAutoLogout } from "@/utils/useAutoLogout";
 
 export default function Sidebar() {
     const { theme } = useTheme();
@@ -69,7 +68,7 @@ export default function Sidebar() {
             </nav>
 
             <div className={styles.logout}>
-                <Link href={"/"} onClick={useAutoLogout}><Button text="Sair" type="alert"/></Link>
+                <Link href={"/"}><Button text="Sair" type="alert" /></Link>
             </div>
         </aside>
     );

@@ -104,9 +104,7 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
             }
         }
     }, []);
-
-    console.log(service)
-
+    
     return (
         <article className={styles.serviceBanner}>
             <header className={styles.header}>
@@ -171,20 +169,24 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
                         slidesPerView={1}
                         style={{ width: "100%", height: "auto" }}
                     >
-                        {service.images.map((image, index) => (
-                            <SwiperSlide key={image.id ?? index}>
-                                <img
-                                    src={image.url}
-                                    alt={`Imagem ${index + 1} do serviço ${service.name}`}
-                                    style={{
-                                        width: "100%",
-                                        height: "300px",
-                                        objectFit: "cover",
-                                        borderRadius: "12px",
-                                    }}
-                                />
-                            </SwiperSlide>
-                        ))}
+                        {service.images.map((image, index) => {
+                            // garante compatibilidade com string[] e { url: string }[]
+                            const imageUrl = typeof image === "string" ? image : image.url;
+                            return (
+                                <SwiperSlide key={index}>
+                                    <img
+                                        src={imageUrl}
+                                        alt={`Imagem ${index + 1} do serviço ${service.name}`}
+                                        style={{
+                                            width: "100%",
+                                            height: "300px",
+                                            objectFit: "cover",
+                                            borderRadius: "12px",
+                                        }}
+                                    />
+                                </SwiperSlide>
+                            );
+                        })}
                     </Swiper>
                 </figure>
             ) : (

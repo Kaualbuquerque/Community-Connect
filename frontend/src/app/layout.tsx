@@ -4,9 +4,8 @@ import "@/styles/global.scss";
 import Header from "@/components/Header/Header";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { usePathname } from "next/navigation";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import { useEffect } from "react";
 import { useAutoLogout } from "@/utils/useAutoLogout";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 export default function RootLayout({
   children,
@@ -20,6 +19,8 @@ export default function RootLayout({
 
   const noSidebarRoutes = ['/', '/auth/login', '/auth/register'];
   const shouldShowSidebar = !noSidebarRoutes.includes(pathname);
+
+  useAutoLogout("/dashboard");
 
   return (
     <html lang="pt-br">
