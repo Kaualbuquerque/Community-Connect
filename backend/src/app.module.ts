@@ -37,7 +37,6 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
           ssl: {
             rejectUnauthorized: false, // necessário para Render/Postgres cloud
           },
-          extra: { family: 4 }
         };
       },
     }),
