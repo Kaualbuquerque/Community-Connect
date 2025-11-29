@@ -33,7 +33,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
           type: 'postgres',
           url: databaseUrl,
           entities: [__dirname + '/**/*.entity.{ts,js}'],
-          synchronize: true, // usar apenas em dev
+          synchronize: false, // usar apenas em dev
           ssl: {
             rejectUnauthorized: false, // necessário para Render/Postgres cloud
           },
