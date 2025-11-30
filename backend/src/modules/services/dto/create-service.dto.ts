@@ -26,12 +26,12 @@ export class CreateServiceDto {
     @ApiProperty({ example: "SP", description: "Estado do serviço (sigla de 2 letras)" })
     @IsNotEmpty()
     @IsString()
-    state: string;
+    state?: string;
 
     @ApiProperty({ example: "São Paulo", description: "Cidade do serviço" })
     @IsNotEmpty()
     @IsString()
-    city: string;
+    city?: string;
 
     @ApiPropertyOptional({ example: "eletricista", description: "Palavra-chave opcional para busca" })
     @IsOptional()

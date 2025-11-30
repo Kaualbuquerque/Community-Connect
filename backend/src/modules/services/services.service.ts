@@ -21,34 +21,31 @@ export class ServiceService {
     ) { }
 
     async create(dto: CreateServiceDto, user: User, files?: Express.Multer.File[]): Promise<Service> {
-        // Cria o serviço sem as imagens
         const service = this.serviceRepository.create({
             ...dto,
             provider: user,
+            city: user.city,
+            state: user.state,
         });
 
         await this.serviceRepository.save(service);
 
-        // Se houver imagens, cria e salva as entidades relacionadas
         if (files?.length) {
             const urls = files.map(file => `/uploads/${file.filename}`);
-
             const images = urls.map((url, idx) =>
                 this.serviceImageRepository.create({
                     url,
                     position: idx + 1,
-                    service, // associa diretamente o objeto salvo
-                }),
+                    service
+                })
             );
-
             await this.serviceImageRepository.save(images);
-
-            // Atualiza o serviço com suas imagens (opcional)
             service.images = images;
         }
 
         return service;
     }
+
 
     async findAllByUser(userId: number): Promise<ServiceWithImageUrls[]> {
         // Busca serviços do provedor e já carrega provider + images
@@ -88,36 +85,36 @@ export class ServiceService {
             .createQueryBuilder('service')
             .leftJoinAndSelect('service.provider', 'provider')
             .leftJoinAndSelect('service.images', 'images');
-    
+
         if (filters?.state) {
             query.andWhere('service.state = :state', { state: filters.state });
         }
-    
+
         if (filters?.city) {
             query.andWhere('service.city = :city', { city: filters.city });
         }
-    
+
         if (filters?.category) {
             query.andWhere('service.category = :category', { category: filters.category });
         }
-    
+
         if (filters?.minPrice !== undefined) {
             query.andWhere('service.price >= :minPrice', { minPrice: filters.minPrice });
         }
-    
+
         if (filters?.maxPrice !== undefined) {
             query.andWhere('service.price <= :maxPrice', { maxPrice: filters.maxPrice });
         }
-    
+
         if (filters?.search) {
             query.andWhere(
                 '(LOWER(service.name) LIKE LOWER(:search) OR LOWER(service.description) LIKE LOWER(:search))',
                 { search: `%${filters.search}%` },
             );
         }
-    
+
         const services = await query.getMany();
-    
+
         // converte as imagens em array de URLs
         const servicesWithImages = services.map(service => ({
             id: service.id,
@@ -130,27 +127,27 @@ export class ServiceService {
             provider: service.provider,
             images: service.images?.map(img => img.url) ?? [],
         }));
-    
+
         if (!userId) {
             return servicesWithImages.map(service => ({
                 ...service,
                 isFavorite: false,
             }));
         }
-    
+
         const favorites = await this.favoriteRepository.find({
             where: { consumer: { id: userId } },
             relations: ['service'],
         });
-    
+
         const favoriteIds = favorites.map(f => f.service.id);
-    
+
         return servicesWithImages.map(service => ({
             ...service,
             isFavorite: favoriteIds.includes(service.id),
         }));
     }
-    
+
 
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
         // copia dto mas remove 'images'
