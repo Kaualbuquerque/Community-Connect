@@ -32,6 +32,8 @@ export class ServiceService {
 
         if (files?.length) {
             const urls = files.map(file => `/uploads/${file.filename}`);
+
+            // criação dos objetos e save sendo executados em paralelo
             const images = urls.map((url, idx) =>
                 this.serviceImageRepository.create({
                     url,
@@ -39,6 +41,7 @@ export class ServiceService {
                     service
                 })
             );
+
             await this.serviceImageRepository.save(images);
             service.images = images;
         }
@@ -48,13 +51,11 @@ export class ServiceService {
 
 
     async findAllByUser(userId: number): Promise<ServiceWithImageUrls[]> {
-        // Busca serviços do provedor e já carrega provider + images
         const services = await this.serviceRepository.find({
             where: { provider: { id: userId } },
-            relations: ['provider', 'images'], // ← adiciona imagens
+            relations: ['provider', 'images'],
         });
 
-        // Mapeia apenas as URLs das imagens
         return services.map(service => ({
             ...service,
             images: service.images?.map(img => img.url) ?? [],
@@ -66,6 +67,7 @@ export class ServiceService {
             where: { id },
             relations: ['provider'],
         });
+
         if (!service) throw new NotFoundException(`Service with id ${id} not found`);
         return service;
     }
@@ -115,7 +117,6 @@ export class ServiceService {
 
         const services = await query.getMany();
 
-        // converte as imagens em array de URLs
         const servicesWithImages = services.map(service => ({
             id: service.id,
             name: service.name,
@@ -128,6 +129,7 @@ export class ServiceService {
             images: service.images?.map(img => img.url) ?? [],
         }));
 
+        // Sem usuário logado
         if (!userId) {
             return servicesWithImages.map(service => ({
                 ...service,
@@ -135,34 +137,45 @@ export class ServiceService {
             }));
         }
 
+        // Busca paralela: serviços e favoritos
         const favorites = await this.favoriteRepository.find({
             where: { consumer: { id: userId } },
             relations: ['service'],
         });
 
-        const favoriteIds = favorites.map(f => f.service.id);
+        const favoriteIds = new Set(favorites.map(f => f.service.id));
 
         return servicesWithImages.map(service => ({
             ...service,
-            isFavorite: favoriteIds.includes(service.id),
+            isFavorite: favoriteIds.has(service.id),
         }));
     }
 
 
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
-        // copia dto mas remove 'images'
-        const { images, ...serviceData } = dto;
+        const { images, ...data } = dto;
 
-        // atualiza apenas os campos do Service que não são relacionamentos
-        await this.serviceRepository.update(id, serviceData);
+        // paraleliza update + find
+        const updatePromise = this.serviceRepository.update(id, data);
+        const findPromise = this.serviceRepository.findOne({
+            where: { id },
+            relations: ['provider'],
+        });
 
-        // retorna o service atualizado
-        return this.findOne(id);
+        const [_, updated] = await Promise.all([updatePromise, findPromise]);
+
+        if (!updated) {
+            throw new NotFoundException(`Service with id ${id} not found`);
+        }
+
+        return updated;
     }
 
     async remove(id: number): Promise<void> {
         const result = await this.serviceRepository.delete(id);
-        if (result.affected === 0) throw new NotFoundException(`Service #${id} not found`);
+        if (!result.affected) {
+            throw new NotFoundException(`Service #${id} not found`);
+        }
     }
 
     async getStates(): Promise<string[]> {

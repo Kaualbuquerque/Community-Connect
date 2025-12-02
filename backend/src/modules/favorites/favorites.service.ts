@@ -9,7 +9,7 @@ interface FavoriteFilters {
     maxPrice?: number;
     state?: string;
     city?: string;
-    search?: string; // 🔹 novo campo
+    search?: string;
 }
 
 @Injectable()
@@ -28,28 +28,26 @@ export class FavoriteService {
             relations: ["consumer", "service", "service.provider"],
         });
 
-        if (existing) {
-            return existing; // já favoritado, retorna
-        }
+        if (existing) return existing;
 
-        const favorite = this.favoriteRepository.create({
-            consumer: { id: consumerId },
-            service: { id: serviceId },
-        });
-
-        return this.favoriteRepository.save(favorite);
+        return this.favoriteRepository.save(
+            this.favoriteRepository.create({
+                consumer: { id: consumerId },
+                service: { id: serviceId },
+            })
+        );
     }
 
-    async findByUser(consumerId: number, filters?: any): Promise<Favorite[]> {
+    async findByUser(consumerId: number, filters?: FavoriteFilters): Promise<Favorite[]> {
         const query = this.favoriteRepository
             .createQueryBuilder('favorite')
             .leftJoinAndSelect('favorite.consumer', 'consumer')
             .leftJoinAndSelect('favorite.service', 'service')
             .leftJoinAndSelect('service.images', 'images')
             .leftJoinAndSelect('service.provider', 'provider')
-            .where('consumer.id = :consumerId', { consumerId })
+            .where('consumer.id = :consumerId', { consumerId });
 
-        // Filtros opcionais
+        // filtros opcionais
         if (filters?.category) query.andWhere('service.category = :category', { category: filters.category });
         if (filters?.state) query.andWhere('service.state ILIKE :state', { state: `%${filters.state}%` });
         if (filters?.city) query.andWhere('service.city ILIKE :city', { city: `%${filters.city}%` });
@@ -58,33 +56,30 @@ export class FavoriteService {
         if (filters?.search) {
             query.andWhere(
                 '(service.name ILIKE :search OR service.description ILIKE :search)',
-                { search: `%${filters.search}%` },
+                { search: `%${filters.search}%` }
             );
         }
 
         const favorites = await query.getMany();
 
-        return favorites.map(favorite => ({
-            ...favorite,
+        return favorites.map(fav => ({
+            ...fav,
             service: {
-                ...favorite.service,
-                images: favorite.service.images ?? [],
-                isFavorite: true,
-            },
+                ...fav.service,
+                images: fav.service.images ?? [],
+                isFavorite: true
+            }
         }));
     }
 
     async removeFavorite(consumerId: number, serviceId: number): Promise<void> {
-        const favorite = await this.favoriteRepository.findOne({
-            where: {
-                consumer: { id: consumerId },
-                service: { id: serviceId },
-            },
+        const result = await this.favoriteRepository.delete({
+            consumer: { id: consumerId },
+            service: { id: serviceId },
         });
 
-        if (!favorite) throw new NotFoundException("Favorite not found");
-
-        await this.favoriteRepository.remove(favorite);
+        if (result.affected === 0) {
+            throw new NotFoundException("Favorite not found");
+        }
     }
-
 }
