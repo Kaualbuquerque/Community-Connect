@@ -1,10 +1,10 @@
 "use client";
 
-import Chat from "../../../components/Chat/Chat";
+import { Conversation } from "@/utils/interfaces";
 import styles from "./page.module.scss";
 import { useCallback, useEffect, useState } from "react";
-import { Conversation } from "../../../utils/interfaces";
-import { getConversations } from "../../../services/conversation";
+import { getConversations } from "@/services/conversation";
+import Chat from "@/components/Chat/Chat";
 
 export default function ChatsPage() {
     const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
@@ -79,7 +79,7 @@ export default function ChatsPage() {
                             id={conversation.id}
                             provider={formatName(conversation.participants[0].user.name)}
                             date={formatDate(conversation.updatedAt)}
-                            // 🔹 Passa callback para atualizar lista após exclusão
+                            // Passa callback para atualizar lista após exclusão
                             onDelete={() => handleConversationDeleted(conversation.id)}
                         />
                     ))

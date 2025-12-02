@@ -2,10 +2,10 @@
 
 import "@/styles/global.scss";
 import Header from "../components/Header/Header";
-import { ThemeProvider } from "../context/ThemeContext";
 import { usePathname } from "next/navigation";
-import { useAutoLogout } from "../utils/useAutoLogout";
-import Sidebar from "../components/Sidebar/Sidebar";
+import { useAutoLogout } from "@/utils/useAutoLogout";
+import { ThemeProvider } from "@/context/ThemeContext";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 export default function RootLayout({
   children,
