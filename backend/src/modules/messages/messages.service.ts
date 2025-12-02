@@ -18,33 +18,52 @@ export class MessageService {
     ) { }
 
     async create(dto: CreateMessageDto): Promise<Message> {
-        const sender = await this.usersRepository.findOneBy({ id: dto.senderId });
-        const conversation = await this.conversationsRepository.findOneBy({ id: dto.conversationId });
-        if (!sender || !conversation) throw new NotFoundException('Sender or conversation not found');
+        // Busca paralela: User + Conversation
+        const [sender, conversation] = await Promise.all([
+            this.usersRepository.findOneBy({ id: dto.senderId }),
+            this.conversationsRepository.findOneBy({ id: dto.conversationId })
+        ]);
+
+        if (!sender || !conversation) {
+            throw new NotFoundException("Sender or conversation not found");
+        }
 
         const message = this.messageRepository.create({
             content: dto.content,
             sender,
             conversation,
         });
+
         return this.messageRepository.save(message);
     }
 
-    async findByConversation(conversationId: number, page: number = 1, limit: number = 20) {
-        const [messages, total] = await this.messageRepository.findAndCount({
-            where: { conversationId },
-            order: { timestamp: 'ASC' }, // mais antigos primeiro
-            skip: (page - 1) * limit,
-            take: limit,
-        });
+    async findByConversation(
+        conversationId: number,
+        page: number = 1,
+        limit: number = 20
+    ) {
+        const skip = (page - 1) * limit;
 
-        return {
-            total, page, limit, messages,
-        };
+        // find + count feitos em paralelo
+        const [messages, total] = await Promise.all([
+            this.messageRepository.find({
+                where: { conversationId },
+                order: { timestamp: 'ASC' },
+                skip,
+                take: limit,
+            }),
+            this.messageRepository.count({
+                where: { conversationId }
+            })
+        ]);
+
+        return { total, page, limit, messages };
     }
 
     async remove(id: number): Promise<void> {
         const result = await this.messageRepository.delete(id);
-        if (result.affected === 0) throw new NotFoundException(`Message #${id} not found`);
+        if (!result.affected) {
+            throw new NotFoundException(`Message #${id} not found`);
+        }
     }
 }

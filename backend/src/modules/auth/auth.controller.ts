@@ -1,5 +1,12 @@
 // src/modules/auth/auth.controller.ts
-import { Controller, Post, Body, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Request,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -8,7 +15,7 @@ import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @ApiOperation({
@@ -16,9 +23,12 @@ export class AuthController {
     description: 'Cria uma nova conta de usuário com os dados fornecidos.',
   })
   @ApiResponse({ status: 201, description: 'Usuário registrado com sucesso.' })
-  @ApiResponse({ status: 400, description: 'Dados inválidos ou usuário já existe.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou usuário já existe.',
+  })
   @ApiBody({ type: RegisterDto })
-  async register(@Body() dto: RegisterDto) {
+  register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }
 
@@ -30,11 +40,13 @@ export class AuthController {
   })
   @ApiResponse({ status: 200, description: 'Login realizado com sucesso.' })
   @ApiResponse({ status: 401, description: 'Credenciais inválidas.' })
-  @ApiBody({ description: 'Email e senha do usuário', type: LoginDto }) // pode criar um LoginDto específico
-  async login(@Request() req) {
-    if (!req.user) {
+  @ApiBody({ type: LoginDto })
+  login(@Request() req: { user?: any }) {
+    const user = req.user;
+    if (!user) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
-    return this.authService.login(req.user);
+
+    return this.authService.login(user);
   }
 }

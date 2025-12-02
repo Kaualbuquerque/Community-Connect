@@ -10,33 +10,35 @@ export class HistoryService {
     constructor(
         @InjectRepository(History)
         private historyRepository: Repository<History>,
+
         @InjectRepository(Favorite)
         private favoriteRepository: Repository<Favorite>,
-    ) { }
+    ) {}
 
     async create(dto: CreateHistoryDto): Promise<History> {
         const { consumerId, serviceId, usedAt } = dto;
         const MAX_HISTORY = 5;
 
-        // Verifica se já existe esse serviço no histórico
-        const existing = await this.historyRepository.findOne({
-            where: {
-                consumer: { id: consumerId },
-                service: { id: serviceId },
-            },
-        });
+        // Busca registro existente e quantidade FINAL em paralelo
+        const [existing, currentCount] = await Promise.all([
+            this.historyRepository.findOne({
+                where: {
+                    consumer: { id: consumerId },
+                    service: { id: serviceId },
+                },
+            }),
+            this.historyRepository.count({
+                where: { consumer: { id: consumerId } },
+            }),
+        ]);
 
+        // Remove se já existe, mantendo sempre o mais novo no topo
         if (existing) {
-            // Remove o existente para reordenar
             await this.historyRepository.delete(existing.id);
         }
 
-        // Conta novamente os registros do usuário
-        const count = await this.historyRepository.count({
-            where: { consumer: { id: consumerId } },
-        });
-
-        if (count >= MAX_HISTORY) {
+        // Se atingir limite, remover mais antigo
+        if (currentCount >= MAX_HISTORY) {
             const oldest = await this.historyRepository.findOne({
                 where: { consumer: { id: consumerId } },
                 order: { usedAt: "ASC" },
@@ -46,7 +48,7 @@ export class HistoryService {
             }
         }
 
-        // Cria o registro novo
+        // Cria novo registro
         const record = this.historyRepository.create({
             usedAt: usedAt ? new Date(usedAt) : new Date(),
             consumer: { id: consumerId },
@@ -58,23 +60,27 @@ export class HistoryService {
 
 
     async findByConsumer(consumerId: number): Promise<any[]> {
-        const histories = await this.historyRepository
-            .createQueryBuilder('history')
-            .leftJoinAndSelect('history.consumer', 'consumer')
-            .leftJoinAndSelect('history.service', 'service')
-            .leftJoinAndSelect('service.images', 'images')
-            .leftJoinAndSelect('service.provider', 'provider')
-            .where('consumer.id = :consumerId', { consumerId })
-            .orderBy('history.usedAt', 'DESC')
-            .getMany();
+        // Rodar histórico + favoritos em paralelo
+        const [histories, favorites] = await Promise.all([
+            this.historyRepository
+                .createQueryBuilder('history')
+                .leftJoinAndSelect('history.consumer', 'consumer')
+                .leftJoinAndSelect('history.service', 'service')
+                .leftJoinAndSelect('service.images', 'images')
+                .leftJoinAndSelect('service.provider', 'provider')
+                .where('consumer.id = :consumerId', { consumerId })
+                .orderBy('history.usedAt', 'DESC')
+                .getMany(),
 
-        const favorites = await this.favoriteRepository.find({
-            where: { consumer: { id: consumerId } },
-            relations: ['service'],
-        });
+            this.favoriteRepository.find({
+                where: { consumer: { id: consumerId } },
+                relations: ['service'],
+            }),
+        ]);
 
-        const favoriteIds = favorites.map(f => f.service.id);
+        const favoriteIds = new Set(favorites.map(f => f.service.id));
 
+        // Formatação final
         return histories.map(history => {
             const service = history.service;
 
@@ -90,7 +96,7 @@ export class HistoryService {
                     price: service.price,
                     provider: service.provider,
                     images: service.images?.map(image => image.url) ?? [],
-                    isFavorite: favoriteIds.includes(service.id),
+                    isFavorite: favoriteIds.has(service.id),
                 },
             };
         });
@@ -99,6 +105,8 @@ export class HistoryService {
 
     async remove(id: number): Promise<void> {
         const result = await this.historyRepository.delete(id);
-        if (result.affected === 0) throw new NotFoundException(`History record #${id} not found`)
+        if (result.affected === 0) {
+            throw new NotFoundException(`History record #${id} not found`);
+        }
     }
 }

@@ -21,43 +21,41 @@ export class ServiceService {
     ) { }
 
     async create(dto: CreateServiceDto, user: User, files?: Express.Multer.File[]): Promise<Service> {
-        // Cria o serviço sem as imagens
         const service = this.serviceRepository.create({
             ...dto,
             provider: user,
+            city: user.city,
+            state: user.state,
         });
 
         await this.serviceRepository.save(service);
 
-        // Se houver imagens, cria e salva as entidades relacionadas
         if (files?.length) {
             const urls = files.map(file => `/uploads/${file.filename}`);
 
+            // criação dos objetos e save sendo executados em paralelo
             const images = urls.map((url, idx) =>
                 this.serviceImageRepository.create({
                     url,
                     position: idx + 1,
-                    service, // associa diretamente o objeto salvo
-                }),
+                    service
+                })
             );
 
             await this.serviceImageRepository.save(images);
-
-            // Atualiza o serviço com suas imagens (opcional)
             service.images = images;
         }
 
         return service;
     }
 
+
     async findAllByUser(userId: number): Promise<ServiceWithImageUrls[]> {
-        // Busca serviços do provedor e já carrega provider + images
         const services = await this.serviceRepository.find({
             where: { provider: { id: userId } },
-            relations: ['provider', 'images'], // ← adiciona imagens
+            relations: ['provider', 'images'],
         });
 
-        // Mapeia apenas as URLs das imagens
         return services.map(service => ({
             ...service,
             images: service.images?.map(img => img.url) ?? [],
@@ -69,6 +67,7 @@ export class ServiceService {
             where: { id },
             relations: ['provider'],
         });
+
         if (!service) throw new NotFoundException(`Service with id ${id} not found`);
         return service;
     }
@@ -88,37 +87,36 @@ export class ServiceService {
             .createQueryBuilder('service')
             .leftJoinAndSelect('service.provider', 'provider')
             .leftJoinAndSelect('service.images', 'images');
-    
+
         if (filters?.state) {
             query.andWhere('service.state = :state', { state: filters.state });
         }
-    
+
         if (filters?.city) {
             query.andWhere('service.city = :city', { city: filters.city });
         }
-    
+
         if (filters?.category) {
             query.andWhere('service.category = :category', { category: filters.category });
         }
-    
+
         if (filters?.minPrice !== undefined) {
             query.andWhere('service.price >= :minPrice', { minPrice: filters.minPrice });
         }
-    
+
         if (filters?.maxPrice !== undefined) {
             query.andWhere('service.price <= :maxPrice', { maxPrice: filters.maxPrice });
         }
-    
+
         if (filters?.search) {
             query.andWhere(
                 '(LOWER(service.name) LIKE LOWER(:search) OR LOWER(service.description) LIKE LOWER(:search))',
                 { search: `%${filters.search}%` },
             );
         }
-    
+
         const services = await query.getMany();
-    
-        // converte as imagens em array de URLs
+
         const servicesWithImages = services.map(service => ({
             id: service.id,
             name: service.name,
@@ -130,42 +128,54 @@ export class ServiceService {
             provider: service.provider,
             images: service.images?.map(img => img.url) ?? [],
         }));
-    
+
+        // Sem usuário logado
         if (!userId) {
             return servicesWithImages.map(service => ({
                 ...service,
                 isFavorite: false,
             }));
         }
-    
+
+        // Busca paralela: serviços e favoritos
         const favorites = await this.favoriteRepository.find({
             where: { consumer: { id: userId } },
             relations: ['service'],
         });
-    
-        const favoriteIds = favorites.map(f => f.service.id);
-    
+
+        const favoriteIds = new Set(favorites.map(f => f.service.id));
+
         return servicesWithImages.map(service => ({
             ...service,
-            isFavorite: favoriteIds.includes(service.id),
+            isFavorite: favoriteIds.has(service.id),
         }));
     }
-    
+
 
     async update(id: number, dto: UpdateServiceDto): Promise<Service> {
-        // copia dto mas remove 'images'
-        const { images, ...serviceData } = dto;
+        const { images, ...data } = dto;
 
-        // atualiza apenas os campos do Service que não são relacionamentos
-        await this.serviceRepository.update(id, serviceData);
+        // paraleliza update + find
+        const updatePromise = this.serviceRepository.update(id, data);
+        const findPromise = this.serviceRepository.findOne({
+            where: { id },
+            relations: ['provider'],
+        });
 
-        // retorna o service atualizado
-        return this.findOne(id);
+        const [_, updated] = await Promise.all([updatePromise, findPromise]);
+
+        if (!updated) {
+            throw new NotFoundException(`Service with id ${id} not found`);
+        }
+
+        return updated;
     }
 
     async remove(id: number): Promise<void> {
         const result = await this.serviceRepository.delete(id);
-        if (result.affected === 0) throw new NotFoundException(`Service #${id} not found`);
+        if (!result.affected) {
+            throw new NotFoundException(`Service #${id} not found`);
+        }
     }
 
     async getStates(): Promise<string[]> {

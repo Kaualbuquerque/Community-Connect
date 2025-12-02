@@ -1,17 +1,9 @@
-import {
-    WebSocketGateway,
-    WebSocketServer,
-    SubscribeMessage,
-    OnGatewayConnection,
-    OnGatewayDisconnect,
-    ConnectedSocket,
-    MessageBody,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket, MessageBody, } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MessageService } from '../messages/messages.service';
 
 @WebSocketGateway({
-    cors: { origin: 'http://localhost:3000' }, // ajuste para seu frontend
+    cors: { origin: 'http://localhost:3000' },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
@@ -19,9 +11,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     constructor(private readonly messageService: MessageService) { }
 
-    // ----------------------
-    // Conexão / Desconexão
-    // ----------------------
     handleConnection(client: Socket) {
         console.log(`Client connected: ${client.id}`);
     }
@@ -30,9 +19,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log(`Client disconnected: ${client.id}`);
     }
 
-    // ----------------------
-    // Entrar em uma conversa
-    // ----------------------
     @SubscribeMessage('joinConversation')
     handleJoinConversation(
         @ConnectedSocket() client: Socket,
@@ -42,9 +28,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log(`Client ${client.id} entrou na conversa ${conversationId}`);
     }
 
-    // ----------------------
-    // Sair de uma conversa (opcional)
-    // ----------------------
     @SubscribeMessage('leaveConversation')
     handleLeaveConversation(
         @ConnectedSocket() client: Socket,
@@ -55,31 +38,54 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     // ----------------------
-    // Enviar mensagem
+    // Enviar mensagem (paralelizado + UX instantâneo)
     // ----------------------
     @SubscribeMessage('sendMessage')
     async handleMessage(
         @ConnectedSocket() client: Socket,
         @MessageBody() payload: { conversationId: number; senderId: number; content: string },
     ) {
+        const { conversationId, senderId, content } = payload;
+
         console.log('Mensagem recebida no gateway:', payload);
 
-        try {
-            // salva no banco
-            const message = await this.messageService.create({
-                conversationId: payload.conversationId,
-                senderId: payload.senderId,
-                content: payload.content,
+        // --- (1) Envia imediatamente uma mensagem temporária ---
+        const tempMessage = {
+            id: null,               // cliente substitui depois
+            conversationId,
+            senderId,
+            content,
+            createdAt: new Date(),
+            tempId: Date.now(),     // identificação até salvar no DB
+        };
+
+        this.server.to(conversationId.toString()).emit('message', tempMessage);
+
+        // --- (2) Salva em background sem bloquear ---
+        this.messageService.create({
+            conversationId,
+            senderId,
+            content,
+        })
+            .then(savedMessage => {
+                // envia update para sincronizar cliente (opcional)
+                this.server
+                    .to(conversationId.toString())
+                    .emit('messageConfirmed', {
+                        tempId: tempMessage.tempId,
+                        ...savedMessage,
+                    });
+            })
+            .catch(err => {
+                console.error('Erro ao salvar a mensagem:', err);
+
+                client.emit('errorMessage', {
+                    error: 'Não foi possível salvar a mensagem',
+                    tempId: tempMessage.tempId,
+                });
             });
 
-            // envia para todos na room da conversa
-            this.server.to(payload.conversationId.toString()).emit('message', message);
-
-            // opcional: retorna ao socket que enviou (não é obrigatório)
-            return message;
-        } catch (error) {
-            console.error('Erro ao salvar mensagem:', error);
-            client.emit('errorMessage', { error: 'Não foi possível salvar a mensagem' });
-        }
+        // retorna imediatemente a temp message
+        return tempMessage;
     }
 }

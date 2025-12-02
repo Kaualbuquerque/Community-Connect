@@ -18,6 +18,7 @@ export class NoteService {
             ...dto,
             user,
         });
+
         return this.noteRepository.save(note);
     }
 
@@ -29,18 +30,29 @@ export class NoteService {
 
     async findNotesByUser(user: User): Promise<Note[]> {
         return this.noteRepository.find({
-            where: { user: { id: user.id } }, // Filtra pelo ID do usuário através do relacionamento
-            relations: ['user'] // Carrega automaticamente os dados do usuário relacionado
+            where: { user: { id: user.id } },
+            relations: ['user'],
         });
     }
 
     async update(id: number, dto: UpdateNoteDto): Promise<Note> {
-        await this.noteRepository.update(id, dto);
-        return this.findOne(id);
+        // Executa o update e o findOne em paralelo
+        const updatePromise = this.noteRepository.update(id, dto);
+        const findPromise = this.noteRepository.findOneBy({ id });
+
+        const [_, updated] = await Promise.all([updatePromise, findPromise]);
+
+        if (!updated) {
+            throw new NotFoundException(`Note with id ${id} not found`);
+        }
+
+        return updated;
     }
 
     async remove(id: number): Promise<void> {
         const result = await this.noteRepository.delete(id);
-        if (result.affected === 0) throw new NotFoundException(`Note #${id} not found`);
+        if (!result.affected) {
+            throw new NotFoundException(`Note #${id} not found`);
+        }
     }
 }

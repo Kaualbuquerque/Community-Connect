@@ -12,36 +12,38 @@ import type { UploadApiResponse } from 'cloudinary';
 export class ServiceImageService {
     constructor(
         @InjectRepository(ServiceImage)
-        private readonly imageRepository: Repository<ServiceImage>, @InjectRepository(Service)
+        private readonly imageRepository: Repository<ServiceImage>,
+
+        @InjectRepository(Service)
         private readonly serviceRepository: Repository<Service>,
 
         @Inject('CLOUDINARY')
         private readonly cloudinary: typeof import('cloudinary').v2,
     ) { }
 
+    private uploadToCloudinary(buffer: Buffer): Promise<UploadApiResponse> {
+        return new Promise((resolve, reject) => {
+            const uploadStream = this.cloudinary.uploader.upload_stream(
+                { folder: 'community_connect/services' },
+                (error, result) => {
+                    if (error) return reject(error);
+                    if (!result) return reject(new Error('Upload failed'));
+                    resolve(result);
+                }
+            );
+
+            Readable.from(buffer).pipe(uploadStream);
+        });
+    }
+
     async addImage(serviceId: number, file: Express.Multer.File): Promise<ServiceImage> {
-        // Verifica se já atingiu o limite de 5 imagens
         const count = await this.imageRepository.count({ where: { service: { id: serviceId } } });
         if (count >= 5) {
             throw new BadRequestException('Limit of 5 images per service reached');
         }
 
-        // Faz upload da imagem para o Cloudinary
-        const uploadResult = await new Promise<UploadApiResponse>((resolve, reject) => {
-            const uploadStream = this.cloudinary.uploader.upload_stream(
-                { folder: 'community_connect/services' },
-                (error, result) => {
-                    if (error) return reject(error);
-                    if (!result) return reject(new Error('No upload result from Cloudinary'));
-                    resolve(result);
-                },
-            );
+        const uploadResult = await this.uploadToCloudinary(file.buffer);
 
-            const stream = Readable.from(file.buffer);
-            stream.pipe(uploadStream);
-        });
-
-        // Cria o registro da imagem no banco de dados
         const image = this.imageRepository.create({
             service: { id: serviceId } as any,
             url: uploadResult.secure_url,
@@ -49,11 +51,14 @@ export class ServiceImageService {
             position: count + 1,
         });
 
-        return this.imageRepository.save(image);
+        return await this.imageRepository.save(image);
     }
 
     async getImageByService(serviceId: number): Promise<ServiceImage[]> {
-        return this.imageRepository.find({ where: { service: { id: serviceId } }, order: { position: "ASC" } })
+        return await this.imageRepository.find({
+            where: { service: { id: serviceId } },
+            order: { position: "ASC" }
+        });
     }
 
     async updateImages(
@@ -62,7 +67,7 @@ export class ServiceImageService {
         user: User,
         files?: Express.Multer.File[],
     ): Promise<Service> {
-        // Busca o serviço com imagens
+
         const service = await this.serviceRepository.findOne({
             where: { id, provider: { id: user.id } },
             relations: ['images'],
@@ -72,7 +77,6 @@ export class ServiceImageService {
             throw new NotFoundException('Service not found or does not belong to this user!');
         }
 
-        // Atualiza dados do serviço
         Object.assign(service, dto);
 
         if (files?.length) {
@@ -80,43 +84,35 @@ export class ServiceImageService {
                 throw new BadRequestException('Maximum limit of 5 images reached!');
             }
 
-            // Deleta imagens antigas do Cloudinary
+            // 1. Deleção paralela das imagens antigas
             if (service.images.length > 0) {
-                for (const img of service.images) {
-                    if (img.public_id) {
-                        await this.cloudinary.uploader.destroy(img.public_id);
-                    }
-                }
+                await Promise.all(
+                    service.images.map(img => {
+                        if (img.public_id) {
+                            return this.cloudinary.uploader.destroy(img.public_id);
+                        }
+                        return Promise.resolve();
+                    }),
+                );
+
                 await this.imageRepository.remove(service.images);
             }
 
-            // Faz upload das novas imagens para o Cloudinary
-            const newImages: ServiceImage[] = [];
-            for (let idx = 0; idx < files.length; idx++) {
-                const file = files[idx];
-                const uploadResult = await new Promise<UploadApiResponse>((resolve, reject) => {
-                    const uploadStream = this.cloudinary.uploader.upload_stream(
-                        { folder: 'community_connect/services' },
-                        (error, result) => {
-                            if (error) return reject(error);
-                            if (!result) return reject(new Error('No upload result from Cloudinary'));
-                            resolve(result);
-                        },
-                    );
-                    Readable.from(file.buffer).pipe(uploadStream);
-                });
+            // 2. Upload paralelo das novas imagens
+            const uploaded = await Promise.all(
+                files.map(file => this.uploadToCloudinary(file.buffer))
+            );
 
-                const image = this.imageRepository.create({
-                    url: uploadResult.secure_url,
-                    public_id: uploadResult.public_id,
+            // 3. Criação dos registros
+            const newImages = uploaded.map((upload, idx) =>
+                this.imageRepository.create({
+                    url: upload.secure_url,
+                    public_id: upload.public_id,
                     position: idx + 1,
                     service,
-                } as DeepPartial<ServiceImage>);
+                } as DeepPartial<ServiceImage>)
+            );
 
-                newImages.push(image);
-            }
-
-            // Salva novas imagens no banco
             await this.imageRepository.save(newImages);
             service.images = newImages;
         }
@@ -125,19 +121,13 @@ export class ServiceImageService {
     }
 
     async deleteImage(id: number): Promise<void> {
-        // Busca a imagem no banco
         const image = await this.imageRepository.findOne({ where: { id } });
-        if (!image) {
-            throw new NotFoundException('Image not found');
-        }
+        if (!image) throw new NotFoundException('Image not found');
 
-        // Deleta do Cloudinary, se tiver public_id
         if (image.public_id) {
             await this.cloudinary.uploader.destroy(image.public_id);
         }
 
-        // Deleta do banco
         await this.imageRepository.delete(id);
     }
-
 }
