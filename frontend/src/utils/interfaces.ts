@@ -62,7 +62,7 @@ export interface ServiceImage {
 export interface Service {
     id: number;
     name: string;
-    provider: RegisterData | UserData;
+    provider: UserData | RegisterData;
     description: string;
     state: string;
     city: string;

@@ -10,7 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 import styles from "./ServiceBanner.module.scss";
-import { ServiceBannerProps } from "../../utils/interfaces";
+import { ServiceBannerProps, UserData } from "../../utils/interfaces";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -44,8 +44,10 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
 
         try {
             // Criar ou obter a conversa existente
+            const provider = service.provider as UserData;
+
             const conversation = await createConversation({
-                participantId: parseInt(service.provider.id),
+                participantId: Number(provider.id),
             });
 
             // Salvar no histórico
@@ -104,7 +106,7 @@ export default function ServiceBanner({ role, service, onEdit, onDelete }: Servi
             }
         }
     }, []);
-    
+
     return (
         <article className={styles.serviceBanner}>
             <header className={styles.header}>
