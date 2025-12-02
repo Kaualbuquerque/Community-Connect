@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Message from "../../../../components/Message/Message";
-import Input from "../../../../components/Input/Input";
 import styles from "./page.module.scss";
-import { Messages } from "../../../../utils/interfaces";
-import { getMessages } from "../../../../services/conversation";
 import { useParams } from "next/navigation";
-import { socket } from "../../../../services/api";
+import { Messages } from "@/utils/interfaces";
+import { socket } from "@/lib/socket";
+import { getMessages } from "@/services/conversation";
+import Message from "@/components/Message/Message";
+import Input from "@/components/Input/Input";
 
 export default function ChatConversationPage() {
   const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
@@ -63,7 +63,6 @@ export default function ChatConversationPage() {
       try {
         setLoading(true);
         const data = await getMessages(conversationId);
-        console.log("Mensagens recebidas:", data);
         setMessages(data);
       } catch (error) {
         console.error("Erro ao carregar as mensagens:", error);

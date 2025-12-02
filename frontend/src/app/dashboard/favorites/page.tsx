@@ -1,17 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useTheme } from "../../../context/ThemeContext";
-import Input from "../../../components/Input/Input";
-import Button from "../../../components/Button/Button";
+import { useCallback, useEffect,useState } from "react";
 import styles from "./page.module.scss";
 
-import filter_light from "../../../../public/icons/favorite/filter_dark.png";
+import filter_light from "../../../../public/icons/favorite/filter_light.png";
 import filter_dark from "../../../../public/icons/favorite/filter_dark.png";
-import Filter from "../../../components/Filter/Filter";
-import { FiltersState, Service } from "../../../utils/interfaces";
-import ServiceBanner from "../../../components/ServiceBanner/ServiceBanner";
-import { getFavorites } from "../../../services/favorite";
+import { useTheme } from "@/context/ThemeContext";
+import { FiltersState, Service } from "@/utils/interfaces";
+import { getFavorites } from "@/services/favorite";
+import Input from "@/components/Input/Input";
+import Button from "@/components/Button/Button";
+import Filter from "@/components/Filter/Filter";
+import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
 
 export default function FavoritesPage() {
     const { theme } = useTheme();
