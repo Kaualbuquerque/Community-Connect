@@ -1,11 +1,11 @@
 'use client';
 
 import "@/styles/global.scss";
-import Header from "../components/Header/Header";
 import { usePathname } from "next/navigation";
 import { useAutoLogout } from "@/utils/useAutoLogout";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import Header from "@/components/Header/Header";
 
 export default function RootLayout({
   children,
