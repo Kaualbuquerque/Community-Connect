@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 import styles from "./page.module.scss";
-import { HistoryService, Notes } from "@/utils/interfaces";
-import { deleteNote, getNotes } from "@/services/note";
-import { getHistory } from "@/services/service";
-import ServiceBanner from "@/components/serviceBanner/serviceBanner";
-import Note from "@/components/note/note";
-import Button from "@/components/button/button";
-import NoteModal from "@/components/noteModal/noteModal";
+import { HistoryService, Notes } from "../../utils/interfaces";
+import { deleteNote, getNotes } from "../../services/note";
+import { getHistory } from "../../services/service";
+import ServiceBanner from "../../components/serviceBanner/serviceBanner";
+import Note from "../../components/note/note";
+import Button from "../../components/button/button";
+import NoteModal from "../../components/noteModal/noteModal";
 
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);

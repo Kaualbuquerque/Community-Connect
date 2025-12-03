@@ -1,6 +1,6 @@
 "use client";
 
-import LoginForm from "@/components/loginForm/loginForm";
+import LoginForm from "../../../components/loginForm/loginForm";
 import styles from "./page.module.scss";
 
 export default function LoginPage() {

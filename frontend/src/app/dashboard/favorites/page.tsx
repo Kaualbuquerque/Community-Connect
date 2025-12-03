@@ -5,13 +5,13 @@ import styles from "./page.module.scss";
 
 import filter_light from "../../../../public/icons/favorite/filter_light.png";
 import filter_dark from "../../../../public/icons/favorite/filter_dark.png";
-import { useTheme } from "@/context/themeContext";
-import { FiltersState, Service } from "@/utils/interfaces";
-import { getFavorites } from "@/services/favorite";
-import Input from "@/components/input/input";
-import Button from "@/components/button/button";
-import Filter from "@/components/filter/filter";
-import ServiceBanner from "@/components/serviceBanner/serviceBanner";
+import { useTheme } from "../../../context/themeContext";
+import { FiltersState, Service } from "../../../utils/interfaces";
+import { getFavorites } from "../../../services/favorite";
+import Input from "../../../components/input/input";
+import Button from "../../../components/button/button";
+import Filter from "../../../components/filter/filter";
+import ServiceBanner from "../../../components/serviceBanner/serviceBanner";
 
 export default function FavoritesPage() {
     const { theme } = useTheme();

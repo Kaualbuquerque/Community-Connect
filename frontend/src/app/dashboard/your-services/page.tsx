@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useCallback } from "react";
 import styles from "./page.module.scss";
-import Button from "@/components/button/button";
-import { Service } from "@/utils/interfaces";
-import { createService, deleteService, getMyServices, updateService } from "@/services/service";
-import ServiceBanner from "@/components/serviceBanner/serviceBanner";
-import ServiceModal from "@/components/serviceModal/serviceModal";
+import Button from "../../../components/button/button";
+import { Service } from "../../../utils/interfaces";
+import { createService, deleteService, getMyServices, updateService } from "../../../services/service";
+import ServiceBanner from "../../../components/serviceBanner/serviceBanner";
+import ServiceModal from "../../../components/serviceModal/serviceModal";
 
 export default function YourServicesPage() {
     const [services, setServices] = useState<Service[]>([]);
