@@ -1,7 +1,7 @@
 import { NoteProps } from "../../utils/interfaces";
 
-import styles from "./Note.module.scss";
-import Button from "../Button/Button";
+import styles from "./note.module.scss";
+import Button from "../button/button";
 
 export default function Note({ content, date, onDelete }: NoteProps) {
     const formattedDate = date

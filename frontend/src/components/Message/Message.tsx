@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import styles from "./Message.module.scss"
+import styles from "./message.module.scss"
 import { MessageProps } from "../../utils/interfaces";
 
 export default function Message({ text, type }: MessageProps) {

@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../context/themeContext";
 import { loginUser } from "../../services/auth";
 
-import Input from "../Input/Input";
-import Button from "../Button/Button";
+import Input from "../input/input";
+import Button from "../button/button";
 
-import styles from "./LoginForm.module.scss";
+import styles from "./loginForm.module.scss";
 
 import logoLight from "../../../public/icons/logo/community_connect_logo_light.png";
 import logoDark from "../../../public/icons/logo/community_connect_logo_dark.png";

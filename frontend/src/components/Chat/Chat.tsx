@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import styles from "./Chat.module.scss";
+import styles from "./chat.module.scss";
 import { ChatProps } from "../../utils/interfaces";
 import trash from "../../../public/icons/others/trash.png";
 import { deleteConversation } from "../../services/conversation";

@@ -3,9 +3,9 @@
 import "@/styles/global.scss";
 import { usePathname } from "next/navigation";
 import { useAutoLogout } from "@/utils/useAutoLogout";
-import { ThemeProvider } from "@/context/ThemeContext";
-import Header from "@/components/Header/Header";
-import Sidebar from "@/components/Sidebar/Sidebar";
+import { ThemeProvider } from "@/context/themeContext";
+import Header from "@/components/header/header";
+import Sidebar from "@/components/sidebar/sidebar";
 
 export default function RootLayout({
   children,

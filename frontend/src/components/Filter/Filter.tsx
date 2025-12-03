@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { options } from "../../utils/options";
 
-import Button from "../Button/Button";
-import Input from "../Input/Input";
+import Button from "../button/button";
+import Input from "../input/input";
 
-import styles from "./Filter.module.scss";
+import styles from "./filter.module.scss";
 import { FilterProps, FiltersState } from "../../utils/interfaces";
 import { fetchCities, fetchStates } from "../../services/service";
 

@@ -6,8 +6,8 @@ import { useParams } from "next/navigation";
 import { Messages } from "@/utils/interfaces";
 import { socket } from "@/lib/socket";
 import { getMessages } from "@/services/conversation";
-import Message from "@/components/Message/Message";
-import Input from "@/components/Input/Input";
+import Message from "@/components/message/message";
+import Input from "@/components/input/input";
 
 export default function ChatConversationPage() {
   const [loggedUserId, setLoggedUserId] = useState<number | null>(null);

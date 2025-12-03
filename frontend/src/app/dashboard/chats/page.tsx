@@ -4,7 +4,7 @@ import { Conversation } from "@/utils/interfaces";
 import styles from "./page.module.scss";
 import { useCallback, useEffect, useState } from "react";
 import { getConversations } from "@/services/conversation";
-import Chat from "@/components/Chat/Chat";
+import Chat from "@/components/chat/chat";
 
 export default function ChatsPage() {
     const [loggedUserId, setLoggedUserId] = useState<number | null>(null);

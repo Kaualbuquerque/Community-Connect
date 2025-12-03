@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
-import Button from "../Button/Button";
-import Input from "../Input/Input";
+import Button from "../button/button";
+import Input from "../input/input";
 
-import styles from "./NoteModal.module.scss";
+import styles from "./noteModal.module.scss";
 import { CreateNoteDTO, NoteModalProps } from "../../utils/interfaces";
 import { createNote } from "../../services/note";
 

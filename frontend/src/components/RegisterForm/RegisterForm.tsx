@@ -1,13 +1,13 @@
 "use client"
 
 import Image from "next/image";
-import styles from "./RegisterForm.module.scss";
-import Input from "../Input/Input";
-import { useTheme } from "../../context/ThemeContext";
+import styles from "./registerForm.module.scss";
+import Input from "../input/input";
+import { useTheme } from "../../context/themeContext";
 import { useState } from "react";
 import { maskCep, maskPhone } from "../../utils/masks";
 import { fetchAddressByCep } from "../../utils/cep";
-import Button from "../Button/Button";
+import Button from "../button/button";
 import Link from "next/link";
 import logo from "../../../public/icons/logo/community_connect_logo_light.png";
 import logo_dark from "../../../public/icons/logo/community_connect_logo_dark.png";
