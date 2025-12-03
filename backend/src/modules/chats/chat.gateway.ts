@@ -6,7 +6,7 @@ import { MessageService } from '../messages/messages.service';
     cors: {
         origin: [
             'http://localhost:3000',
-            'https://community-connect-1cuie364h-kauas-projects-5d7f1c1a.vercel.app/auth/register'
+            `${process.env.FRONTEND_URL}`
         ]
     },
 })

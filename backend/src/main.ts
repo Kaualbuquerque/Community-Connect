@@ -11,7 +11,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://community-connect-1cuie364h-kauas-projects-5d7f1c1a.vercel.app/auth/register'],
+      `${process.env.FRONTEND_URL}`],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
