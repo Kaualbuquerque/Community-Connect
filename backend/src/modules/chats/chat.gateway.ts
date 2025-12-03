@@ -3,7 +3,12 @@ import { Server, Socket } from 'socket.io';
 import { MessageService } from '../messages/messages.service';
 
 @WebSocketGateway({
-    cors: { origin: 'http://localhost:3000' },
+    cors: {
+        origin: [
+            'http://localhost:3000',
+            'https://community-connect-1cuie364h-kauas-projects-5d7f1c1a.vercel.app/auth/register'
+        ]
+    },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
