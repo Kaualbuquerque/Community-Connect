@@ -5,13 +5,13 @@ import styles from "./page.module.scss";
 
 import filter_light from "../../../../public/icons/favorite/filter_light.png";
 import filter_dark from "../../../../public/icons/favorite/filter_dark.png";
-import { useTheme } from "@/context/ThemeContext";
-import { FiltersState, Service } from "@/utils/interfaces";
-import { getAllServices } from "@/services/service";
-import Input from "@/components/Input/Input";
-import Button from "@/components/Button/Button";
-import Filter from "@/components/Filter/Filter";
-import ServiceBanner from "@/components/ServiceBanner/ServiceBanner";
+import { useTheme } from "../../../context/themeContext";
+import { FiltersState, Service } from "../../../utils/interfaces";
+import { getAllServices } from "../../../services/service";
+import Input from "../../../components/input/input";
+import Button from "../../../components/button/button";
+import Filter from "../../../components/filter/filter";
+import ServiceBanner from "../../../components/serviceBanner/serviceBanner";
 
 export default function SearchServicePage() {
   const { theme } = useTheme();

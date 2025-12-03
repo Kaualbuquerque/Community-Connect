@@ -9,7 +9,23 @@ async function bootstrap() {
 
   // Habilita CORS
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: (origin, callback) => {
+      const allowedLocalhost = 'http://localhost:3000';
+      const vercelRegex = /\.vercel\.app$/;
+
+      // Permite localhost (desenvolvimento)
+      if (!origin || origin === allowedLocalhost) {
+        return callback(null, true);
+      }
+
+      // Permite QUALQUER domínio da Vercel
+      if (vercelRegex.test(origin)) {
+        return callback(null, true);
+      }
+
+      // Caso contrário → bloqueia
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

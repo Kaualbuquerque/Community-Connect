@@ -3,7 +3,26 @@ import { Server, Socket } from 'socket.io';
 import { MessageService } from '../messages/messages.service';
 
 @WebSocketGateway({
-    cors: { origin: 'http://localhost:3000' },
+    cors: {
+        origin: (origin, callback) => {
+            const allowedLocalhost = 'http://localhost:3000';
+            const vercelRegex = /\.vercel\.app$/;
+
+            // Permite localhost
+            if (!origin || origin === allowedLocalhost) {
+                return callback(null, true);
+            }
+
+            // Permite QUALQUER domínio da Vercel
+            if (vercelRegex.test(origin)) {
+                return callback(null, true);
+            }
+
+            // Bloqueia qualquer outra origem
+            return callback(new Error('Not allowed by CORS (WebSocket)'), false);
+        },
+        credentials: true,
+    },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()

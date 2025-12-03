@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-import { useTheme } from "../../context/ThemeContext";
-import Button from "../Button/Button";
+import { useTheme } from "../../context/themeContext";
+import Button from "../button/button";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
-import styles from "./ServiceBanner.module.scss";
+import styles from "./serviceBanner.module.scss";
 import { ServiceBannerProps, UserData } from "../../utils/interfaces";
 
 import "swiper/css";

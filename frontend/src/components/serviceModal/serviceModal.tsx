@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "./ServiceModal.module.scss";
+import styles from "./serviceModal.module.scss";
 
-import Button from "../Button/Button";
-import Input from "../Input/Input";
+import Button from "../button/button";
+import Input from "../input/input";
 import { options } from "../../utils/options";
 import { CreateServiceDTO, RegisterData, Service, ServiceModalProps } from "../../utils/interfaces";
 import { uploadImages } from "../../services/serviceImages";

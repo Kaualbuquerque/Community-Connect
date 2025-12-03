@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./Sidebar.module.scss";
+import styles from "./sidebar.module.scss";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../context/themeContext";
 
 import dashboard_icon_light from "../../../public/icons/sidebar/home-light.png";
 import search_icon_light from "../../../public/icons/sidebar/find-light.png";
@@ -18,7 +18,7 @@ import search_icon_dark from "../../../public/icons/sidebar/find-dark.png";
 import favorites_icon_dark from "../../../public/icons/sidebar/heart-dark.png";
 import services_icon_dark from "../../../public/icons/sidebar/service-dark.png";
 import chats_icon_dark from "../../../public/icons/sidebar/chats-dark.png";
-import Button from "../Button/Button";
+import Button from "../button/button";
 
 export default function Sidebar() {
     const { theme } = useTheme();

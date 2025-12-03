@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import styles from "./Button.module.scss";
+import styles from "./button.module.scss";
 import { ButtonProps } from "../../utils/interfaces";
 
 export default function Button({

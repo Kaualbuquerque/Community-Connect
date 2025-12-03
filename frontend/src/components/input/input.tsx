@@ -1,5 +1,5 @@
 import { InputProps } from "../../utils/interfaces";
-import styles from "./Input.module.scss";
+import styles from "./input.module.scss";
 
 export default function Input({
     id,

@@ -1,7 +1,7 @@
 "use client";
 
-import { useTheme } from "../../context/ThemeContext";
-import styles from "./ThemeButton.module.scss";
+import { useTheme } from "../../context/themeContext";
+import styles from "./themeButton.module.scss";
 import Image from "next/image";
 import sun from "../../../public/icons/theme/sun.png";
 import moon from "../../../public/icons/theme/moon.png";
